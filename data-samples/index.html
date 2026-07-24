@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Training Data Samples — SFT & RL (DPO)</title>
+<style>
+  :root{--bg:#0f1216;--panel:#161b22;--panel2:#1c232d;--border:#2b333d;--text:#e6edf3;--muted:#8b98a5;--accent:#58a6ff;--green:#3fb950;--rose:#f7768e;--amber:#d8a33a}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);font:14px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+  .wrap{max-width:1040px;margin:0 auto;padding:20px 22px 80px}
+  a.back{color:var(--muted);text-decoration:none;font-size:13px}
+  a.back:hover{color:var(--text)}
+  h1{font-size:21px;margin:10px 0 4px}
+  p.sub{color:var(--muted);margin:0 0 14px;font-size:13.5px}
+  .tabs{display:flex;gap:8px;margin:18px 0 6px;border-bottom:1px solid var(--border)}
+  .tab{padding:8px 16px;cursor:pointer;border:1px solid transparent;border-bottom:none;border-radius:8px 8px 0 0;color:var(--muted);font-weight:600}
+  .tab.on{background:var(--panel);border-color:var(--border);color:var(--text)}
+  .note{background:var(--panel2);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:6px;padding:10px 12px;color:var(--muted);font-size:12.5px;margin:12px 0}
+  .card{background:var(--panel);border:1px solid var(--border);border-radius:10px;margin:12px 0;overflow:hidden}
+  .card>.hd{padding:11px 14px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;border-bottom:1px solid var(--border)}
+  .card>.hd .idx{color:var(--muted);font-variant-numeric:tabular-nums;font-weight:700}
+  .card>.hd .who{font-weight:650}
+  .pill{display:inline-block;padding:1px 9px;border-radius:20px;font-size:11px;font-weight:650;border:1px solid var(--border);color:var(--muted)}
+  .pill.route{color:#a6c8ff;border-color:#2d4a7a}
+  .pill.src{color:var(--amber);border-color:#5c4a1e}
+  .pill.mg{color:var(--green);border-color:#22492b}
+  .case{padding:8px 14px 0;color:var(--muted);font-size:12.5px}
+  .bd{padding:6px 14px 12px}
+  details{border:1px solid var(--border);border-radius:7px;margin:8px 0;background:var(--panel2)}
+  summary{cursor:pointer;padding:8px 12px;font-weight:600;font-size:12.5px;list-style:none}
+  summary::-webkit-details-marker{display:none}
+  summary:before{content:"▸ ";color:var(--muted)}
+  details[open]>summary:before{content:"▾ "}
+  pre{margin:0 12px 12px;background:#0b0e12;border:1px solid var(--border);border-radius:6px;padding:10px;overflow:auto;font:12px/1.55 ui-monospace,SFMono-Regular,Menlo,monospace;white-space:pre-wrap;word-break:break-word;max-height:420px}
+  .cols{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .cols .h{font-size:12px;font-weight:700;padding:6px 12px 0}
+  .chosen .h{color:var(--green)} .rejected .h{color:var(--rose)}
+  .chosen pre{border-color:#22492b} .rejected pre{border-color:#5a2530}
+  @media(max-width:760px){.cols{grid-template-columns:1fr}}
+  .loading{color:var(--muted);padding:30px;text-align:center}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="../index.html">← back to project home</a>
+  <h1>Training Data — SFT &amp; RL (DPO) samples</h1>
+  <p class="sub">A small, diversity-sampled demo of the data behind the idea-proposal models. Full sets are much larger; these are ~10 representative examples per stage.</p>
+  <div class="tabs">
+    <div class="tab on" data-tab="sft" id="tab-sft">SFT</div>
+    <div class="tab" data-tab="dpo" id="tab-dpo">RL · DPO pairs</div>
+  </div>
+  <div id="view"><div class="loading">Loading…</div></div>
+</div>
+<script>
+let DATA=null, TAB="sft";
+function esc(s){return (s==null?"":String(s)).replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));}
+function fr(x){ if(!x||typeof x!=="object") return ""; const parts=Object.entries(x).map(([k,v])=>`${k}=${v}`); return parts.join(" · "); }
+
+function renderSFT(){
+  const m=DATA.meta.sft;
+  let h=`<div class="note"><b>SFT · ${m.total.toLocaleString()} examples</b> (showing ${m.shown}, diverse over route × researcher). ${esc(m.note)}<br>Routes: ${m.routes.map(r=>`<span class="pill route">${esc(r)}</span>`).join(" ")} · file <code>${esc(m.file)}</code></div>`;
+  DATA.sft.forEach((r,i)=>{
+    h+=`<div class="card"><div class="hd"><span class="idx">#${i+1}</span> <span class="who">${esc(r.researcher)}</span> <span class="pill route">${esc(r.route)}</span> <span class="pill">reward ${esc((r.format_reward&&r.format_reward.score))}</span></div>`;
+    if(r.case_title) h+=`<div class="case">${esc(r.case_title)}</div>`;
+    h+=`<div class="bd">`;
+    if(r.system) h+=`<details><summary>system prompt</summary><pre>${esc(r.system)}</pre></details>`;
+    h+=`<details><summary>user — task / researcher case</summary><pre>${esc(r.user)}</pre></details>`;
+    h+=`<details open><summary>assistant — generated proposal (target)</summary><pre>${esc(r.assistant)}</pre></details>`;
+    if(r.format_reward) h+=`<div class="case">format-reward anchors: ${esc(fr(r.format_reward))}</div>`;
+    h+=`</div></div>`;
+  });
+  return h;
+}
+function renderDPO(){
+  const m=DATA.meta.dpo;
+  let h=`<div class="note"><b>RL · ${m.total.toLocaleString()} preference pairs</b> (showing ${m.shown}, diverse over source × researcher × margin). ${esc(m.note)}<br>Sources: ${m.sources.map(s=>`<span class="pill src">${esc(s)}</span>`).join(" ")} · file <code>${esc(m.file)}</code></div>`;
+  DATA.dpo.forEach((r,i)=>{
+    h+=`<div class="card"><div class="hd"><span class="idx">#${i+1}</span> <span class="who">${esc(r.researcher)}</span> <span class="pill src">${esc(r.source)}</span> <span class="pill mg">margin ${esc(r.margin)}</span></div>`;
+    if(r.case) h+=`<div class="case">${esc(r.case)}</div>`;
+    h+=`<div class="bd">`;
+    h+=`<details><summary>prompt</summary><pre>${esc(r.prompt)}</pre></details>`;
+    h+=`<div class="cols"><div class="chosen"><div class="h">✓ chosen</div><pre>${esc(r.chosen)}</pre></div>`;
+    h+=`<div class="rejected"><div class="h">✗ rejected</div><pre>${esc(r.rejected)}</pre></div></div>`;
+    h+=`</div></div>`;
+  });
+  return h;
+}
+function render(){ document.getElementById("view").innerHTML = TAB==="sft"?renderSFT():renderDPO(); }
+document.querySelectorAll(".tab").forEach(t=>t.addEventListener("click",()=>{
+  TAB=t.dataset.tab;
+  document.querySelectorAll(".tab").forEach(x=>x.classList.toggle("on",x===t));
+  render();
+}));
+(async function(){
+  try{ DATA=await (await fetch("./data.json")).json(); render(); }
+  catch(e){ document.getElementById("view").innerHTML=`<div class="loading">Failed to load data.json — serve over HTTP. ${esc(e.message)}</div>`; }
+})();
+</script>
+</body>
+</html>

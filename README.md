@@ -4,13 +4,16 @@ Static GitHub Pages site hosting faithful result dashboards for the research-ide
 project (SFT + RL across model families; worker = Claude fable-5). Built to hold multiple benchmarks.
 
 ```
-index.html          project landing page (links to each benchmark)
+index.html          project landing page (links to each benchmark + data samples)
 .nojekyll           serve files verbatim (no Jekyll build)
 mls-bench-lite/     MLS-Bench-Lite dashboard (30 tasks × 18 arms)  ← LIVE
   index.html          the results matrix + clickable cell detail
   index.json          matrix data
   tasks/ cells/ raw_scores/
   README.md           data model + faithfulness notes
+data-samples/       SFT & RL (DPO) training-data demo  ← LIVE
+  index.html          SFT / DPO tabbed viewer
+  data.json           ~10 diverse SFT records + ~10 diverse DPO pairs
 # mab/              MLAgentBench dashboard  ← coming soon
 ```
 

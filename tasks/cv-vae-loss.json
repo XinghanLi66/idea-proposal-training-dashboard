@@ -1,0 +1,57 @@
+{
+ "slug": "cv-vae-loss",
+ "domain": "Vision & Generation",
+ "name": "Frequency-Aware Autoencoding Loss",
+ "description": "# VAE Loss Function Design for Image Reconstruction\n\n## Objective\n\nDesign a training loss function for a Variational Autoencoder (VAE) that achieves\nthe best reconstruction quality on CIFAR-10.\n\n## Background\n\nVariational Autoencoders encode images into a compressed latent representation and\ndecode them back. The quality of reconstruction depends critically on the training\nloss function. Standard approaches use combinations of:\n\n- **Reconstruction loss**: L1 or L2 pixel-level error\n- **KL divergence**: Regularizes the latent space toward a standard normal prior\n- **Perceptual loss**: LPIPS or VGG-based feature matching for perceptual quality\n- **Adversarial loss**: Discriminator-based training for sharpness\n- **Frequency-domain loss**: FFT-based weighting to preserve fine detail\n\nRecent work on the Prism Hypothesis (UAE, Fan et al.) demonstrates that explicitly\nhandling different frequency bands in the training objective can significantly\nimprove reconstruction quality. The key insight is that semantic information\nconcentrates at low frequencies while fine perceptual detail lives in higher bands.\n\n## Task\n\nImplement the `VAELoss` class in `custom_train.py` (lines 32–76). Your loss\nfunction will be used to train an `AutoencoderKL` model from the diffusers library\non CIFAR-10 32×32 images.\n\n### Editable Region (lines 32–76)\n\n```python\nclass VAELoss(nn.Module):\n    def __init__(self, device):\n        super().__init__()\n        # Initialize your loss components here\n\n    def forward(self, recon, target, posterior, step):\n        # recon:     [B, 3, 32, 32] reconstructed images in [-1, 1]\n        # target:    [B, 3, 32, 32] original images in [-1, 1]\n        # posterior:  DiagonalGaussianDistribution\n        #             - posterior.kl() -> KL divergence per sample\n        #             - posterior.mean, posterior.logvar\n        # step:       current training step (int)\n        #\n        # Return: (loss_tensor, metrics_dict)\n        ...\n```\n\n### Available Libraries\n\n- `torch`, `torch.nn`, `torch.nn.functional` — standard PyTorch\n- `torch.fft` — frequency-domain operations (fft2, ifft2, fftshift, etc.)\n- `lpips` — learned perceptual loss: `lpips.LPIPS(net='vgg').to(device)`\n- `numpy`, `math`\n\n### Architecture (Fixed)\n\nThe model is `AutoencoderKL` from diffusers with 3 blocks and 2 downsample\nstages, giving latent resolution 8×8 (f=4 compression) suited for 32×32 input:\n- `latent_channels=4`, `layers_per_block=2`\n- GroupNorm (32 groups) + SiLU activation\n\nChannel widths and latent channels scale via environment variables:\n- Small: `BLOCK_OUT_CHANNELS=(64,128,256)`, `LATENT_CHANNELS=4` — lightweight\n- Medium: `BLOCK_OUT_CHANNELS=(96,192,384)`, `LATENT_CHANNELS=8` — standard\n- Large: `BLOCK_OUT_CHANNELS=(128,256,512)`, `LATENT_CHANNELS=16` — wide\n\n### Training (Fixed)\n\n- Optimizer: AdamW, lr=4e-4, weight_decay=1e-4\n- LR schedule: 5% warmup + cosine decay\n- Mixed precision (autocast + GradScaler)\n- Gradient clipping at 1.0\n- EMA with rate 0.999\n\n## Evaluation\n\nReconstruction quality is measured on the full CIFAR-10 test set (10,000 images):\n\n| Metric | Direction | Description |\n|--------|-----------|-------------|\n| **rFID** | lower is better | Reconstruction FID between original and reconstructed test images (primary metric) |\n| **PSNR** | higher is better | Peak signal-to-noise ratio in dB |\n| **SSIM** | higher is better | Structural similarity index |\n\nTraining scales:\n- **Small** (group 1): 20,000 steps, channels (64,128,256), latent_channels=4\n- **Medium** (group 2): 30,000 steps, channels (96,192,384), latent_channels=8\n- **Large** (group 3): 30,000 steps, channels (128,256,512), latent_channels=16\n\n## Baselines\n\n| Name | Strategy | Description |\n|------|----------|-------------|\n| **l2-kl** | MSE + KL | Simplest VAE loss: pixel-level L2 reconstruction + KL regularization |\n| **perceptual** | MSE + LPIPS + KL | Standard practice: adds learned perceptual similarity (VGG features) |\n| **freq-weighted** | L1 + LPIPS + GAN + KL | Multi-objective: combines L1 reconstruction, LPIPS perceptual loss, and PatchGAN adversarial training |\n",
+ "metric": "best_rfid_small",
+ "lower_is_better": true,
+ "master_prompt": {
+  "system": "You are a world-class AI researcher. You are given a machine-learning task with a specific editable code component. Reason step by step in your own distinctive style toward ONE genuinely novel, non-obvious idea to improve that component. Make the creative core unmistakably clear and explain how you arrived at it. Focus on ideas and mechanisms, not full implementation code.",
+  "user": "# VAE Loss Function Design for Image Reconstruction\n\n## Objective\n\nDesign a training loss function for a Variational Autoencoder (VAE) that achieves\nthe best reconstruction quality on CIFAR-10.\n\n## Background\n\nVariational Autoencoders encode images into a compressed latent representation and\ndecode them back. The quality of reconstruction depends critically on the training\nloss function. Standard approaches use combinations of:\n\n- **Reconstruction loss**: L1 or L2 pixel-level error\n- **KL divergence**: Regularizes the latent space toward a standard normal prior\n- **Perceptual loss**: LPIPS or VGG-based feature matching for perceptual quality\n- **Adversarial loss**: Discriminator-based training for sharpness\n- **Frequency-domain loss**: FFT-based weighting to preserve fine detail\n\nRecent work on the Prism Hypothesis (UAE, Fan et al.) demonstrates that explicitly\nhandling different frequency bands in the training objective can significantly\nimprove reconstruction quality. The key insight is that semantic information\nconcentrates at low frequencies while fine perceptual detail lives in higher bands.\n\n## Task\n\nImplement the `VAELoss` class in `custom_train.py` (lines 32–76). Your loss\nfunction will be used to train an `AutoencoderKL` model from the diffusers library\non CIFAR-10 32×32 images.\n\n### Editable Region (lines 32–76)\n\n```python\nclass VAELoss(nn.Module):\n    def __init__(self, device):\n        super().__init__()\n        # Initialize your loss components here\n\n    def forward(self, recon, target, posterior, step):\n        # recon:     [B, 3, 32, 32] reconstructed images in [-1, 1]\n        # target:    [B, 3, 32, 32] original images in [-1, 1]\n        # posterior:  DiagonalGaussianDistribution\n        #             - posterior.kl() -> KL divergence per sample\n        #             - posterior.mean, posterior.logvar\n        # step:       current training step (int)\n        #\n        # Return: (loss_tensor, metrics_dict)\n        ...\n```\n\n### Available Libraries\n\n- `torch`, `torch.nn`, `torch.nn.functional` — standard PyTorch\n- `torch.fft` — frequency-domain operations (fft2, ifft2, fftshift, etc.)\n- `lpips` — learned perceptual loss: `lpips.LPIPS(net='vgg').to(device)`\n- `numpy`, `math`\n\n### Architecture (Fixed)\n\nThe model is `AutoencoderKL` from diffusers with 3 blocks and 2 downsample\nstages, giving latent resolution 8×8 (f=4 compression) suited for 32×32 input:\n- `latent_channels=4`, `layers_per_block=2`\n- GroupNorm (32 groups) + SiLU activation\n\nChannel widths and latent channels scale via environment variables:\n- Small: `BLOCK_OUT_CHANNELS=(64,128,2\n\nThe editable component is `diffusers-main/custom_train.py` (evaluation setting: train_small). Propose ONE concrete, novel idea to improve it. Conclude with two lines: 'Core idea:' and 'Non-trivial crux:'."
+ },
+ "baselines": {
+  "methods": [
+   {
+    "name": "l2-kl",
+    "metrics": {
+     "best_rfid_small": "53.00",
+     "best_rfid_medium": "15.75",
+     "best_rfid_large": "5.35"
+    }
+   },
+   {
+    "name": "perceptual",
+    "metrics": {
+     "best_rfid_small": "19.64",
+     "best_rfid_medium": "10.69",
+     "best_rfid_large": "3.84"
+    }
+   },
+   {
+    "name": "vqgan",
+    "metrics": {
+     "best_rfid_small": "15.80",
+     "best_rfid_medium": "7.25",
+     "best_rfid_large": "3.38"
+    }
+   },
+   {
+    "name": "freq-weighted",
+    "metrics": {
+     "best_rfid_large": "5.96",
+     "elapsed_train_medium": "1490.8",
+     "elapsed_train_small": "24.7",
+     "rfid_large": "5.96",
+     "psnr_large": "33.48",
+     "ssim_large": "0.9821",
+     "rfid": "5.96",
+     "psnr": "33.48",
+     "ssim": "0.9821",
+     "best_rfid": "5.96",
+     "elapsed_train_large": "4053.4"
+    }
+   }
+  ],
+  "note": "rescaled cells: 50 = strong baseline, 100 = theoretical upper bound. Baseline methods below are the reference implementations the proposals compete against."
+ }
+}

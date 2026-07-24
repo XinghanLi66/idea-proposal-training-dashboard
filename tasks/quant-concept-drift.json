@@ -1,0 +1,104 @@
+{
+ "slug": "quant-concept-drift",
+ "domain": "Time Series & Forecasting",
+ "name": "Concept-Drift-Aware Quantitative Forecasting",
+ "description": "# Concept Drift Adaptation in Stock Prediction on CSI300\n\n## Objective\nDesign and implement a stock prediction model that handles concept drift and temporal distribution shift in CSI300 stocks. Your code goes in `custom_model.py`. Three reference implementations (TRA, AdaRNN, LightGBM) are provided as read-only.\n\n## Evaluation\nSignal quality: IC, ICIR, Rank IC. Portfolio (TopkDropout, top 50, drop 5): Annualized Return, Max Drawdown, Information Ratio. Automatic via qlib's workflow.\n\nEvaluation uses three fixed temporal regimes on the same CSI300 universe:\n- `csi300`: long-horizon split ending in the 2017-2020 regime\n- `csi300_shifted`: shifted split with a 2016-2018 test regime\n- `csi300_recent` (hidden): the most recent 2019-2020 regime\n\nThis task is about temporal drift adaptation, not cross-universe transfer.\n\n## Workflow Configuration\n`workflow_config.yaml` lines 13-26 and 32-45 are editable. This covers the model plus dataset adapter/processor configuration needed by methods like TRA. Instruments, date ranges, train/valid/test splits, and evaluation settings are fixed.\n",
+ "metric": "ic_csi300",
+ "lower_is_better": false,
+ "master_prompt": {
+  "system": "You are a world-class AI researcher. You are given a machine-learning task with a specific editable code component. Reason step by step in your own distinctive style toward ONE genuinely novel, non-obvious idea to improve that component. Make the creative core unmistakably clear and explain how you arrived at it. Focus on ideas and mechanisms, not full implementation code.",
+  "user": "# Concept Drift Adaptation in Stock Prediction on CSI300\n\n## Objective\nDesign and implement a stock prediction model that handles concept drift and temporal distribution shift in CSI300 stocks. Your code goes in `custom_model.py`. Three reference implementations (TRA, AdaRNN, LightGBM) are provided as read-only.\n\n## Evaluation\nSignal quality: IC, ICIR, Rank IC. Portfolio (TopkDropout, top 50, drop 5): Annualized Return, Max Drawdown, Information Ratio. Automatic via qlib's workflow.\n\nEvaluation uses three fixed temporal regimes on the same CSI300 universe:\n- `csi300`: long-horizon split ending in the 2017-2020 regime\n- `csi300_shifted`: shifted split with a 2016-2018 test regime\n- `csi300_recent` (hidden): the most recent 2019-2020 regime\n\nThis task is about temporal drift adaptation, not cross-universe transfer.\n\n## Workflow Configuration\n`workflow_config.yaml` lines 13-26 and 32-45 are editable. This covers the model plus dataset adapter/processor configuration needed by methods like TRA. Instruments, date ranges, train/valid/test splits, and evaluation settings are fixed.\n\n\nThe editable component is `qlib/custom_model.py` (evaluation setting: csi300). Propose ONE concrete, novel idea to improve it. Conclude with two lines: 'Core idea:' and 'Non-trivial crux:'."
+ },
+ "baselines": {
+  "methods": [
+   {
+    "name": "tra",
+    "metrics": {
+     "ic_csi300_shifted": "0.051277",
+     "icir_csi300_shifted": "0.428264",
+     "rank_ic_csi300_shifted": "0.054641",
+     "rank_icir_csi300_shifted": "0.458959",
+     "annualized_return_csi300_shifted": "0.122284",
+     "max_drawdown_csi300_shifted": "-0.0843",
+     "information_ratio_csi300_shifted": "1.586883",
+     "elapsed_csi300_shifted": "1250.5",
+     "ic_csi300_recent": "0.023703",
+     "icir_csi300_recent": "0.192256",
+     "rank_ic_csi300_recent": "0.039709",
+     "rank_icir_csi300_recent": "0.329632",
+     "annualized_return_csi300_recent": "0.032592",
+     "max_drawdown_csi300_recent": "-0.071431",
+     "information_ratio_csi300_recent": "0.479804",
+     "elapsed_csi300_recent": "1321.5",
+     "ic_csi300": "0.04197",
+     "icir_csi300": "0.335485",
+     "rank_ic_csi300": "0.050394",
+     "rank_icir_csi300": "0.423179",
+     "annualized_return_csi300": "0.064122",
+     "max_drawdown_csi300": "-0.100267",
+     "information_ratio_csi300": "1.008134",
+     "elapsed_csi300": "1505.9"
+    }
+   },
+   {
+    "name": "lgbm",
+    "metrics": {
+     "ic_csi300_shifted": "0.054956",
+     "icir_csi300_shifted": "0.429609",
+     "rank_ic_csi300_shifted": "0.063939",
+     "rank_icir_csi300_shifted": "0.509556",
+     "annualized_return_csi300_shifted": "0.103335",
+     "max_drawdown_csi300_shifted": "-0.079467",
+     "information_ratio_csi300_shifted": "1.29932",
+     "elapsed_csi300_shifted": "367.5",
+     "ic_csi300_recent": "0.025456",
+     "icir_csi300_recent": "0.185089",
+     "rank_ic_csi300_recent": "0.043982",
+     "rank_icir_csi300_recent": "0.321687",
+     "annualized_return_csi300_recent": "0.080709",
+     "max_drawdown_csi300_recent": "-0.051103",
+     "information_ratio_csi300_recent": "1.103678",
+     "elapsed_csi300_recent": "194.6",
+     "ic_csi300": "0.045716",
+     "icir_csi300": "0.363961",
+     "rank_ic_csi300": "0.056853",
+     "rank_icir_csi300": "0.465979",
+     "annualized_return_csi300": "0.092344",
+     "max_drawdown_csi300": "-0.05794",
+     "information_ratio_csi300": "1.347324",
+     "elapsed_csi300": "365.3"
+    }
+   },
+   {
+    "name": "adarnn",
+    "metrics": {
+     "ic_csi300_shifted": "0.056839",
+     "icir_csi300_shifted": "0.516149",
+     "rank_ic_csi300_shifted": "0.058742",
+     "rank_icir_csi300_shifted": "0.518721",
+     "annualized_return_csi300_shifted": "0.122409",
+     "max_drawdown_csi300_shifted": "-0.081397",
+     "information_ratio_csi300_shifted": "1.48152",
+     "elapsed_csi300_shifted": "1702.5",
+     "ic_csi300_recent": "0.017431",
+     "icir_csi300_recent": "0.169455",
+     "rank_ic_csi300_recent": "0.027549",
+     "rank_icir_csi300_recent": "0.27417",
+     "annualized_return_csi300_recent": "0.000302",
+     "max_drawdown_csi300_recent": "-0.0833",
+     "information_ratio_csi300_recent": "0.004027",
+     "elapsed_csi300_recent": "3398.1",
+     "ic_csi300": "0.039286",
+     "icir_csi300": "0.309792",
+     "rank_ic_csi300": "0.049615",
+     "rank_icir_csi300": "0.391881",
+     "annualized_return_csi300": "0.075862",
+     "max_drawdown_csi300": "-0.086957",
+     "information_ratio_csi300": "1.194903",
+     "elapsed_csi300": "1687.4"
+    }
+   }
+  ],
+  "note": "rescaled cells: 50 = strong baseline, 100 = theoretical upper bound. Baseline methods below are the reference implementations the proposals compete against."
+ }
+}

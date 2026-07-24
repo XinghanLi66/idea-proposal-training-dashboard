@@ -1,0 +1,143 @@
+{
+ "slug": "optimization-multi-objective",
+ "domain": "Optimization & Theory",
+ "name": "Multi-Objective Evolutionary Survival and Variation",
+ "description": "# Multi-Objective Optimization: Custom Evolutionary Strategy Design\n\n## Research Question\nDesign a novel multi-objective evolutionary algorithm (MOEA) strategy that achieves better convergence, diversity, and spread on standard benchmark problems than classic approaches like NSGA-II, MOEA/D, and SPEA2.\n\n## Background\nMulti-objective optimization aims to find a set of Pareto-optimal solutions that represent the best trade-offs among conflicting objectives. Evolutionary algorithms are the dominant approach, differing primarily in three components:\n\n- **Parent selection**: How to choose individuals for mating (e.g., tournament with crowding distance, reference-vector-based).\n- **Variation**: How to produce offspring via crossover and mutation operators.\n- **Environmental selection (survival)**: How to prune the combined parent+offspring pool back to population size (e.g., non-dominated sorting + crowding, decomposition into subproblems, indicator-based selection).\n\nClassic algorithms include:\n- **NSGA-II** (Deb et al., 2002): Non-dominated sorting + crowding distance for diversity.\n- **MOEA/D** (Zhang & Li, 2007): Decomposes the problem into scalar subproblems using weight vectors.\n- **SPEA2** (Zitzler et al., 2001): Strength-based fitness with density estimation via k-nearest neighbors.\n\nState-of-the-art methods include:\n- **NSGA-III** (Deb & Jain, 2014): Reference-point-based selection for many-objective problems.\n- **RVEA** (Cheng et al., 2016): Angle-penalized distance with adaptive reference vectors.\n- **AGE-MOEA** (Panichella, 2019): Adaptive geometry estimation for survival selection.\n\nThere is active research into strategies that combine ideas across these paradigms, adapt to problem geometry, or use novel diversity maintenance mechanisms.\n\n## Task\nImplement a custom multi-objective evolutionary strategy by modifying the `CustomMOEA` class in `deap/custom_moea.py`. You should implement the `select`, `vary`, `survive`, and optionally `on_generation` methods. The algorithm must work for both 2-objective and 3-objective problems.\n\n## Interface\n```python\nclass CustomMOEA:\n    def __init__(self, pop_size, n_obj, n_var, bounds, cx_eta=20.0, mut_eta=20.0, mut_prob=None):\n        \"\"\"Initialize the MOEA with problem parameters.\"\"\"\n\n    def select(self, population: list, k: int) -> list:\n        \"\"\"Select k parents from the population for mating.\n        Returns: list of k selected individuals.\"\"\"\n\n    def vary(self, parents: list) -> list:\n        \"\"\"Apply crossover and mutation to produce offspring.\n        Returns: list of offspring (fitness invalidated).\"\"\"\n\n    def survive(self, population: list, offspring: list) -> list:\n        \"\"\"Environmental selection: choose pop_size individuals from combined pool.\n        Returns: list of pop_size individuals for next generation.\"\"\"\n\n    def on_generation(self, gen: int, population: list):\n        \"\"\"Optional per-generation callback for adaptive strategies.\"\"\"\n```\n\nIndividual interface:\n- `ind.fitness.values` -> tuple of objective values (all minimized)\n- `ind.fitness.dominates(other.fitness)` -> bool\n- `ind.fitness.valid` -> bool (True if evaluated)\n\nAvailable DEAP utilities:\n- `tools.sortNondominated(pop, k)` -> list of fronts\n- `tools.selTournamentDCD(pop, k)` -> tournament selection (needs crowding dist)\n- `tools.selNSGA3(pop, k, ref_points)` -> NSGA-III selection\n- `tools.cxSimulatedBinaryBounded(ind1, ind2, eta, low, up)` -> SBX crossover\n- `tools.mutPolynomialBounded(ind, eta, low, up, indpb)` -> polynomial mutation\n- `tools.uniform_reference_points(nobj, p)` -> generate reference points\n- `compute_crowding_distance(individuals)` -> sets `.fitness.crowding_dist`\n- `get_nondominated(population)` -> first non-dominated front\n\n## Evaluation\nEvaluated on four benchmark problems (run with multiple seeds):\n- **ZDT1** (2D objectives, convex front, 30 variables, 200 generations)\n- **ZDT3** (2D objectives, disconnected front, 30 variables, 200 generations)\n- **DTLZ2** (3D objectives, spherical front, 12 variables, 250 generations)\n- **DTLZ1** (3D objectives, linear front with many local fronts, 7 variables, 400 generations)\n\nThree metrics are reported:\n- **Hypervolume (HV)**: Volume of objective space dominated by the Pareto front approximation. **Higher is better.**\n- **Inverted Generational Distance (IGD)**: Average distance from true Pareto front points to nearest found solution. **Lower is better.**\n- **Spread**: Uniformity of the Pareto front approximation. **Lower is better.**\n\n",
+ "metric": "hv_zdt1",
+ "lower_is_better": false,
+ "master_prompt": {
+  "system": "You are a world-class AI researcher. You are given a machine-learning task with a specific editable code component. Reason step by step in your own distinctive style toward ONE genuinely novel, non-obvious idea to improve that component. Make the creative core unmistakably clear and explain how you arrived at it. Focus on ideas and mechanisms, not full implementation code.",
+  "user": "# Multi-Objective Optimization: Custom Evolutionary Strategy Design\n\n## Research Question\nDesign a novel multi-objective evolutionary algorithm (MOEA) strategy that achieves better convergence, diversity, and spread on standard benchmark problems than classic approaches like NSGA-II, MOEA/D, and SPEA2.\n\n## Background\nMulti-objective optimization aims to find a set of Pareto-optimal solutions that represent the best trade-offs among conflicting objectives. Evolutionary algorithms are the dominant approach, differing primarily in three components:\n\n- **Parent selection**: How to choose individuals for mating (e.g., tournament with crowding distance, reference-vector-based).\n- **Variation**: How to produce offspring via crossover and mutation operators.\n- **Environmental selection (survival)**: How to prune the combined parent+offspring pool back to population size (e.g., non-dominated sorting + crowding, decomposition into subproblems, indicator-based selection).\n\nClassic algorithms include:\n- **NSGA-II** (Deb et al., 2002): Non-dominated sorting + crowding distance for diversity.\n- **MOEA/D** (Zhang & Li, 2007): Decomposes the problem into scalar subproblems using weight vectors.\n- **SPEA2** (Zitzler et al., 2001): Strength-based fitness with density estimation via k-nearest neighbors.\n\nState-of-the-art methods include:\n- **NSGA-III** (Deb & Jain, 2014): Reference-point-based selection for many-objective problems.\n- **RVEA** (Cheng et al., 2016): Angle-penalized distance with adaptive reference vectors.\n- **AGE-MOEA** (Panichella, 2019): Adaptive geometry estimation for survival selection.\n\nThere is active research into strategies that combine ideas across these paradigms, adapt to problem geometry, or use novel diversity maintenance mechanisms.\n\n## Task\nImplement a custom multi-objective evolutionary strategy by modifying the `CustomMOEA` class in `deap/custom_moea.py`. You should implement the `select`, `vary`, `survive`, and optionally `on_generation` methods. The algorithm must work for both 2-objective and 3-objective problems.\n\n## Interface\n```python\nclass CustomMOEA:\n    def __init__(self, pop_size, n_obj, n_var, bounds, cx_eta=20.0, mut_eta=20.0, mut_prob=None):\n        \"\"\"Initialize the MOEA with problem parameters.\"\"\"\n\n    def select(self, population: list, k: int) -> list:\n        \"\"\"Select k parents from the population for mating.\n        Returns: list of k selected individuals.\"\"\"\n\n    def vary(self, parents: list) -> list:\n        \"\"\"Apply crossover and mutation to produce offspring.\n        Returns: list of offspring (fitness invalidated).\"\n\nThe editable component is `deap/custom_moea.py` (evaluation setting: zdt1). Propose ONE concrete, novel idea to improve it. Conclude with two lines: 'Core idea:' and 'Non-trivial crux:'."
+ },
+ "baselines": {
+  "methods": [
+   {
+    "name": "agemoea",
+    "metrics": {
+     "hv_zdt1": "0.862315",
+     "igd_zdt1": "0.008046",
+     "spread_zdt1": "0.577339",
+     "hv_zdt3": "1.319455",
+     "igd_zdt3": "0.008213",
+     "spread_zdt3": "0.797826",
+     "hv_dtlz2": "2.608721",
+     "igd_dtlz2": "0.094496",
+     "spread_dtlz2": "0.563211",
+     "hv_dtlz1": "0.957994",
+     "igd_dtlz1": "0.024981",
+     "spread_dtlz1": "0.711593",
+     "elapsed_zdt1": "11.6",
+     "elapsed_zdt3": "11.7",
+     "elapsed_dtlz2": "33.9",
+     "elapsed_dtlz1": "40.3"
+    }
+   },
+   {
+    "name": "moead",
+    "metrics": {
+     "hv_zdt1": "0.853753",
+     "igd_zdt1": "0.018339",
+     "spread_zdt1": "0.653059",
+     "hv_zdt3": "1.321243",
+     "igd_zdt3": "0.008975",
+     "spread_zdt3": "0.861657",
+     "hv_dtlz2": "2.732675",
+     "igd_dtlz2": "0.076572",
+     "spread_dtlz2": "0.874195",
+     "hv_dtlz1": "0.947858",
+     "igd_dtlz1": "0.034879",
+     "spread_dtlz1": "4.126954",
+     "elapsed_zdt1": "3.7",
+     "elapsed_zdt3": "3.8",
+     "elapsed_dtlz2": "3.8",
+     "elapsed_dtlz1": "4.7"
+    }
+   },
+   {
+    "name": "nsga2",
+    "metrics": {
+     "hv_zdt1": "0.867747",
+     "igd_zdt1": "0.005287",
+     "spread_zdt1": "0.334358",
+     "hv_zdt3": "1.325581",
+     "igd_zdt3": "0.005892",
+     "spread_zdt3": "0.57439",
+     "hv_dtlz2": "2.739722",
+     "igd_dtlz2": "0.065272",
+     "spread_dtlz2": "0.635657",
+     "hv_dtlz1": "0.967098",
+     "igd_dtlz1": "0.033324",
+     "spread_dtlz1": "1.492978",
+     "elapsed_zdt1": "2",
+     "elapsed_zdt3": "2",
+     "elapsed_dtlz2": "2",
+     "elapsed_dtlz1": "2"
+    }
+   },
+   {
+    "name": "nsga3",
+    "metrics": {
+     "hv_zdt1": "0.869105",
+     "igd_zdt1": "0.004391",
+     "spread_zdt1": "0.287988",
+     "hv_zdt3": "1.322083",
+     "igd_zdt3": "0.006203",
+     "spread_zdt3": "0.601382",
+     "hv_dtlz2": "2.790014",
+     "igd_dtlz2": "0.052089",
+     "spread_dtlz2": "0.629828",
+     "hv_dtlz1": "0.973402",
+     "igd_dtlz1": "0.0193",
+     "spread_dtlz1": "0.631512",
+     "elapsed_zdt1": "2",
+     "elapsed_zdt3": "2",
+     "elapsed_dtlz2": "2",
+     "elapsed_dtlz1": "2"
+    }
+   },
+   {
+    "name": "rvea",
+    "metrics": {
+     "hv_zdt1": "0.864918",
+     "igd_zdt1": "0.005981",
+     "spread_zdt1": "0.378785",
+     "hv_zdt3": "1.315601",
+     "igd_zdt3": "0.008558",
+     "spread_zdt3": "0.572325",
+     "hv_dtlz2": "2.788573",
+     "igd_dtlz2": "0.054797",
+     "spread_dtlz2": "0.347273",
+     "hv_dtlz1": "0.944364",
+     "igd_dtlz1": "0.109667",
+     "spread_dtlz1": "3.447015",
+     "elapsed_zdt1": "2.5",
+     "elapsed_zdt3": "2.4",
+     "elapsed_dtlz2": "2.6",
+     "elapsed_dtlz1": "3.0"
+    }
+   },
+   {
+    "name": "spea2",
+    "metrics": {
+     "hv_zdt1": "0.868908",
+     "igd_zdt1": "0.004544",
+     "spread_zdt1": "0.144986",
+     "hv_zdt3": "1.324487",
+     "igd_zdt3": "0.005055",
+     "spread_zdt3": "0.428284",
+     "hv_dtlz2": "2.783049",
+     "igd_dtlz2": "0.049667",
+     "spread_dtlz2": "0.11675",
+     "hv_dtlz1": "0.974132",
+     "igd_dtlz1": "0.017975",
+     "spread_dtlz1": "0.170534",
+     "elapsed_zdt1": "13.8",
+     "elapsed_zdt3": "13.2",
+     "elapsed_dtlz2": "60.1",
+     "elapsed_dtlz1": "48.9"
+    }
+   }
+  ],
+  "note": "rescaled cells: 50 = strong baseline, 100 = theoretical upper bound. Baseline methods below are the reference implementations the proposals compete against."
+ }
+}

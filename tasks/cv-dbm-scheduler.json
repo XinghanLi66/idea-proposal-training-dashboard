@@ -1,0 +1,45 @@
+{
+ "slug": "cv-dbm-scheduler",
+ "domain": "Vision & Generation",
+ "name": "Low-Step Diffusion Bridge Sampling",
+ "description": "# Task: Time Scheduler for Diffusion Bridge Models (NFE=5)\n\n## Background\nIn diffusion bridge sampling, the time schedule controls the discretization step sizes. Currently, the `uniform` (linear) and `karras` schedules are the most widely used baselines in the field.\n\n## Objective\nDesign a novel time schedule optimized specifically for extremely low-step sampling (**NFE = 5**). Your goal is to achieve a better generation quality (lower FID) than the standard baselines.\n\n⚠️ **CRITICAL CONSTRAINT**: \nTo maintain compatibility with our evaluation interface, your code **MUST** be written inside the function named `get_sigmas_uniform`. Please ignore the function name—do **NOT** implement a basic linear/uniform schedule. Use this exact function slot to implement your new, advanced mathematical curve.\n\n## Implementation\n```python\nimport torch\n\ndef get_sigmas_uniform(n, t_min, t_max, device=\"cpu\"):\n    \"\"\"\n    Requirements:\n    1. Length: Must return a 1D PyTorch tensor of exactly length `n + 1`.\n    2. Monotonic: The sequence must strictly decrease from `t_max` to `t_min`.\n    3. Terminal Value: The final element (index `n`) must exactly equal `t_min`.\n    4. Device: Move the tensor to the requested `device`.\n    \"\"\"\n    # For this task, n will typically be 5 (NFE=5).\n    # Implement your novel schedule formulation here...\n    \n    # Example return:\n    # return sigmas.to(device)\n```\n",
+ "metric": "best_fid_edges2handbags",
+ "lower_is_better": true,
+ "master_prompt": {
+  "system": "You are a world-class AI researcher. You are given a machine-learning task with a specific editable code component. Reason step by step in your own distinctive style toward ONE genuinely novel, non-obvious idea to improve that component. Make the creative core unmistakably clear and explain how you arrived at it. Focus on ideas and mechanisms, not full implementation code.",
+  "user": "# Task: Time Scheduler for Diffusion Bridge Models (NFE=5)\n\n## Background\nIn diffusion bridge sampling, the time schedule controls the discretization step sizes. Currently, the `uniform` (linear) and `karras` schedules are the most widely used baselines in the field.\n\n## Objective\nDesign a novel time schedule optimized specifically for extremely low-step sampling (**NFE = 5**). Your goal is to achieve a better generation quality (lower FID) than the standard baselines.\n\n⚠️ **CRITICAL CONSTRAINT**: \nTo maintain compatibility with our evaluation interface, your code **MUST** be written inside the function named `get_sigmas_uniform`. Please ignore the function name—do **NOT** implement a basic linear/uniform schedule. Use this exact function slot to implement your new, advanced mathematical curve.\n\n## Implementation\n```python\nimport torch\n\ndef get_sigmas_uniform(n, t_min, t_max, device=\"cpu\"):\n    \"\"\"\n    Requirements:\n    1. Length: Must return a 1D PyTorch tensor of exactly length `n + 1`.\n    2. Monotonic: The sequence must strictly decrease from `t_max` to `t_min`.\n    3. Terminal Value: The final element (index `n`) must exactly equal `t_min`.\n    4. Device: Move the tensor to the requested `device`.\n    \"\"\"\n    # For this task, n will typically be 5 (NFE=5).\n    # Implement your novel schedule formulation here...\n    \n    # Example return:\n    # return sigmas.to(device)\n```\n\n\nThe editable component is `dbim-codebase/ddbm/karras_diffusion.py` (evaluation setting: edges2handbags). Propose ONE concrete, novel idea to improve it. Conclude with two lines: 'Core idea:' and 'Non-trivial crux:'."
+ },
+ "baselines": {
+  "methods": [
+   {
+    "name": "karras",
+    "metrics": {
+     "best_fid_edges2handbags": "4.416",
+     "best_fid_Imagenet": "12.025"
+    }
+   },
+   {
+    "name": "uniform",
+    "metrics": {
+     "best_fid_edges2handbags": "5.180",
+     "best_fid_Imagenet": "6.070"
+    }
+   },
+   {
+    "name": "cosine",
+    "metrics": {
+     "best_fid_edges2handbags": "4.905",
+     "best_fid_Imagenet": "5.438"
+    }
+   },
+   {
+    "name": "loglinear",
+    "metrics": {
+     "best_fid_edges2handbags": "5.634",
+     "best_fid_Imagenet": "13.748"
+    }
+   }
+  ],
+  "note": "rescaled cells: 50 = strong baseline, 100 = theoretical upper bound. Baseline methods below are the reference implementations the proposals compete against."
+ }
+}

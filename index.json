@@ -1,0 +1,4119 @@
+{
+ "tasks": [
+  {
+   "slug": "ai4bio-mutation-effect-prediction",
+   "domain": "AI for Science",
+   "name": "Mutation Fitness Predictor"
+  },
+  {
+   "slug": "ai4sci-inverse-diffusion-algo",
+   "domain": "AI for Science",
+   "name": "Diffusion-Prior Inverse Solver"
+  },
+  {
+   "slug": "ai4sci-pla-binding-affinity",
+   "domain": "AI for Science",
+   "name": "Protein-Ligand Interaction Model"
+  },
+  {
+   "slug": "causal-discovery-discrete",
+   "domain": "Structured & Causal Reasoning",
+   "name": "Discrete Causal Graph Discovery"
+  },
+  {
+   "slug": "graph-generation",
+   "domain": "Structured & Causal Reasoning",
+   "name": "Unconditional Graph Generator Architecture"
+  },
+  {
+   "slug": "cv-3dgs-densification",
+   "domain": "Vision & Generation",
+   "name": "3D Scene Densification Strategy"
+  },
+  {
+   "slug": "cv-dbm-scheduler",
+   "domain": "Vision & Generation",
+   "name": "Low-Step Diffusion Bridge Sampling"
+  },
+  {
+   "slug": "cv-vae-loss",
+   "domain": "Vision & Generation",
+   "name": "Frequency-Aware Autoencoding Loss"
+  },
+  {
+   "slug": "cv-pooling-aggregation",
+   "domain": "Deep Learning",
+   "name": "Spatial Feature Aggregation"
+  },
+  {
+   "slug": "dl-activation-function",
+   "domain": "Deep Learning",
+   "name": "Convolutional Activation Nonlinearity"
+  },
+  {
+   "slug": "jepa-planning",
+   "domain": "Robotics",
+   "name": "Latent World-Model Planner"
+  },
+  {
+   "slug": "robo-diffusion-guidance",
+   "domain": "Robotics",
+   "name": "Guided Diffusion Sampling for Robot Actions"
+  },
+  {
+   "slug": "robo-diffusion-policy",
+   "domain": "Robotics",
+   "name": "Diffusion Policy Learning for Robot Control"
+  },
+  {
+   "slug": "robomimic-bc-loss",
+   "domain": "Robotics",
+   "name": "Behavioral Cloning Loss for Manipulation"
+  },
+  {
+   "slug": "llm-dllm-demask-strategy",
+   "domain": "Language Models",
+   "name": "Masked Diffusion Demasking Policy"
+  },
+  {
+   "slug": "llm-pretrain-optimizer",
+   "domain": "Language Models",
+   "name": "Pretraining Optimizer Design"
+  },
+  {
+   "slug": "llm-rl-importance-sampling",
+   "domain": "Language Models",
+   "name": "Reasoning RL Importance-Sampling Granularity"
+  },
+  {
+   "slug": "llm-ptq-algorithm",
+   "domain": "ML Systems & Efficient ML",
+   "name": "Post-Training Weight Quantization"
+  },
+  {
+   "slug": "llm-qat-algorithm",
+   "domain": "ML Systems & Efficient ML",
+   "name": "Quantization-Aware Language-Model Training"
+  },
+  {
+   "slug": "mlsys-sparse-attention-inference",
+   "domain": "ML Systems & Efficient ML",
+   "name": "Long-Context Inference-Time Sparse Attention"
+  },
+  {
+   "slug": "ml-clustering-algorithm",
+   "domain": "Classical & Adaptive Learning",
+   "name": "Geometry-Robust Clustering Algorithm"
+  },
+  {
+   "slug": "ml-dimensionality-reduction",
+   "domain": "Classical & Adaptive Learning",
+   "name": "Nonlinear 2D Structure-Preserving Embedding"
+  },
+  {
+   "slug": "optimization-multi-objective",
+   "domain": "Optimization & Theory",
+   "name": "Multi-Objective Evolutionary Survival and Variation"
+  },
+  {
+   "slug": "optimization-variance-reduction",
+   "domain": "Optimization & Theory",
+   "name": "Variance-Reduced Stochastic Optimization"
+  },
+  {
+   "slug": "quant-concept-drift",
+   "domain": "Time Series & Forecasting",
+   "name": "Concept-Drift-Aware Quantitative Forecasting"
+  },
+  {
+   "slug": "ts-exogenous-forecast",
+   "domain": "Time Series & Forecasting",
+   "name": "Exogenous-Variable Target Forecasting Model"
+  },
+  {
+   "slug": "ts-imputation",
+   "domain": "Time Series & Forecasting",
+   "name": "Masked Multivariate Time-Series Imputation"
+  },
+  {
+   "slug": "rl-value-discrete",
+   "domain": "Reinforcement Learning",
+   "name": "Value-Based Discrete Control"
+  },
+  {
+   "slug": "security-membership-inference-defense",
+   "domain": "Trustworthy Learning",
+   "name": "Training Regularization for Membership Privacy"
+  },
+  {
+   "slug": "robo-humanoid-sim2real-algo",
+   "domain": "Robotics",
+   "name": "Humanoid Sim2Real (dropped)"
+  }
+ ],
+ "arms": [
+  {
+   "key": "base8b",
+   "label": "Qwen3-8B (base)",
+   "family": "Qwen3-8B",
+   "kind": "base"
+  },
+  {
+   "key": "sft8b",
+   "label": "Qwen3-8B SFT",
+   "family": "Qwen3-8B",
+   "kind": "sft"
+  },
+  {
+   "key": "qwen3-8b-rl",
+   "label": "Qwen3-8B RL",
+   "family": "Qwen3-8B",
+   "kind": "rl"
+  },
+  {
+   "key": "base14b",
+   "label": "Qwen3-14B (base)",
+   "family": "Qwen3-14B",
+   "kind": "base"
+  },
+  {
+   "key": "sft14b",
+   "label": "Qwen3-14B SFT",
+   "family": "Qwen3-14B",
+   "kind": "sft"
+  },
+  {
+   "key": "qwen3-14b-rl",
+   "label": "Qwen3-14B RL",
+   "family": "Qwen3-14B",
+   "kind": "rl"
+  },
+  {
+   "key": "base32bq3",
+   "label": "Qwen3-32B (base)",
+   "family": "Qwen3-32B",
+   "kind": "base"
+  },
+  {
+   "key": "sft32b",
+   "label": "Qwen3-32B SFT",
+   "family": "Qwen3-32B",
+   "kind": "sft"
+  },
+  {
+   "key": "qwen3-32b-rl",
+   "label": "Qwen3-32B RL",
+   "family": "Qwen3-32B",
+   "kind": "rl"
+  },
+  {
+   "key": "base32b",
+   "label": "Qwen2.5-32B-Inst (base)",
+   "family": "Qwen2.5-32B-Inst",
+   "kind": "base"
+  },
+  {
+   "key": "qwen25sft",
+   "label": "Qwen2.5-32B SFT",
+   "family": "Qwen2.5-32B-Inst",
+   "kind": "sft"
+  },
+  {
+   "key": "rl",
+   "label": "Qwen2.5-32B RL",
+   "family": "Qwen2.5-32B-Inst",
+   "kind": "rl"
+  },
+  {
+   "key": "d1base",
+   "label": "DeepSeek-R1-Qwen3-8B (base)",
+   "family": "DeepSeek-R1-Qwen3-8B",
+   "kind": "base"
+  },
+  {
+   "key": "d1sft",
+   "label": "DeepSeek-R1-Qwen3-8B SFT",
+   "family": "DeepSeek-R1-Qwen3-8B",
+   "kind": "sft"
+  },
+  {
+   "key": "d1rl",
+   "label": "DeepSeek-R1-Qwen3-8B RL",
+   "family": "DeepSeek-R1-Qwen3-8B",
+   "kind": "rl"
+  },
+  {
+   "key": "m2base",
+   "label": "Qwen3-235B-A22B (base)",
+   "family": "Qwen3-235B-A22B",
+   "kind": "base"
+  },
+  {
+   "key": "m2sft",
+   "label": "Qwen3-235B-A22B SFT",
+   "family": "Qwen3-235B-A22B",
+   "kind": "sft"
+  },
+  {
+   "key": "m2rl",
+   "label": "Qwen3-235B-A22B RL",
+   "family": "Qwen3-235B-A22B",
+   "kind": "rl"
+  }
+ ],
+ "cells": {
+  "ai4bio-mutation-effect-prediction": {
+   "base8b": {
+    "status": "failed",
+    "score": null,
+    "n_runs": 3,
+    "n_scored": 0,
+    "detail": true
+   },
+   "sft8b": {
+    "status": "failed",
+    "score": null,
+    "n_runs": 3,
+    "n_scored": 0,
+    "detail": true
+   },
+   "qwen3-8b-rl": {
+    "status": "failed",
+    "score": null,
+    "n_runs": 3,
+    "n_scored": 0,
+    "detail": true
+   },
+   "base14b": {
+    "status": "failed",
+    "score": null,
+    "n_runs": 3,
+    "n_scored": 0,
+    "detail": true
+   },
+   "sft14b": {
+    "status": "failed",
+    "score": null,
+    "n_runs": 3,
+    "n_scored": 0,
+    "detail": true
+   },
+   "qwen3-14b-rl": {
+    "status": "failed",
+    "score": null,
+    "n_runs": 3,
+    "n_scored": 0,
+    "detail": true
+   },
+   "base32bq3": {
+    "status": "failed",
+    "score": null,
+    "n_runs": 3,
+    "n_scored": 0,
+    "detail": true
+   },
+   "sft32b": {
+    "status": "failed",
+    "score": null,
+    "n_runs": 3,
+    "n_scored": 0,
+    "detail": true
+   },
+   "qwen3-32b-rl": {
+    "status": "failed",
+    "score": null,
+    "n_runs": 3,
+    "n_scored": 0,
+    "detail": true
+   },
+   "base32b": {
+    "status": "failed",
+    "score": null,
+    "n_runs": 3,
+    "n_scored": 0,
+    "detail": true
+   },
+   "qwen25sft": {
+    "status": "failed",
+    "score": null,
+    "n_runs": 3,
+    "n_scored": 0,
+    "detail": true
+   },
+   "rl": {
+    "status": "failed",
+    "score": null,
+    "n_runs": 3,
+    "n_scored": 0,
+    "detail": true
+   },
+   "d1base": {
+    "status": "failed",
+    "score": null,
+    "n_runs": 3,
+    "n_scored": 0,
+    "detail": true
+   },
+   "d1sft": {
+    "status": "failed",
+    "score": null,
+    "n_runs": 3,
+    "n_scored": 0,
+    "detail": true
+   },
+   "d1rl": {
+    "status": "failed",
+    "score": null,
+    "n_runs": 3,
+    "n_scored": 0,
+    "detail": true
+   },
+   "m2base": {
+    "status": "failed",
+    "score": null,
+    "n_runs": 3,
+    "n_scored": 0,
+    "detail": true
+   },
+   "m2sft": {
+    "status": "failed",
+    "score": null,
+    "n_runs": 3,
+    "n_scored": 0,
+    "detail": true
+   },
+   "m2rl": {
+    "status": "unfinished",
+    "score": null,
+    "n_runs": 3,
+    "n_scored": 0,
+    "detail": false
+   }
+  },
+  "ai4sci-inverse-diffusion-algo": {
+   "base8b": {
+    "status": "ok",
+    "score": 0.0,
+    "n_runs": 3,
+    "n_scored": 15,
+    "detail": true
+   },
+   "sft8b": {
+    "status": "ok",
+    "score": 0.0,
+    "n_runs": 3,
+    "n_scored": 6,
+    "detail": true
+   },
+   "qwen3-8b-rl": {
+    "status": "ok",
+    "score": 0.0,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "base14b": {
+    "status": "ok",
+    "score": 0.0,
+    "n_runs": 3,
+    "n_scored": 15,
+    "detail": true
+   },
+   "sft14b": {
+    "status": "ok",
+    "score": 0.0,
+    "n_runs": 3,
+    "n_scored": 6,
+    "detail": true
+   },
+   "qwen3-14b-rl": {
+    "status": "ok",
+    "score": 0.0,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "base32bq3": {
+    "status": "ok",
+    "score": 0.0,
+    "n_runs": 3,
+    "n_scored": 9,
+    "detail": true
+   },
+   "sft32b": {
+    "status": "ok",
+    "score": 0.0,
+    "n_runs": 3,
+    "n_scored": 6,
+    "detail": true
+   },
+   "qwen3-32b-rl": {
+    "status": "ok",
+    "score": 0.0,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "base32b": {
+    "status": "ok",
+    "score": 0.0,
+    "n_runs": 3,
+    "n_scored": 6,
+    "detail": true
+   },
+   "qwen25sft": {
+    "status": "ok",
+    "score": 0.0,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "rl": {
+    "status": "ok",
+    "score": 0.0,
+    "n_runs": 3,
+    "n_scored": 5,
+    "detail": true
+   },
+   "d1base": {
+    "status": "zero",
+    "score": 0.0,
+    "n_runs": 3,
+    "n_scored": 0,
+    "detail": true
+   },
+   "d1sft": {
+    "status": "ok",
+    "score": 0.0,
+    "n_runs": 3,
+    "n_scored": 6,
+    "detail": true
+   },
+   "d1rl": {
+    "status": "ok",
+    "score": 0.0,
+    "n_runs": 3,
+    "n_scored": 6,
+    "detail": true
+   },
+   "m2base": {
+    "status": "ok",
+    "score": 0.0,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "m2sft": {
+    "status": "ok",
+    "score": 0.0,
+    "n_runs": 3,
+    "n_scored": 8,
+    "detail": true
+   },
+   "m2rl": {
+    "status": "unfinished",
+    "score": null,
+    "n_runs": 3,
+    "n_scored": 2,
+    "detail": false
+   }
+  },
+  "ai4sci-pla-binding-affinity": {
+   "base8b": {
+    "status": "failed",
+    "score": null,
+    "n_runs": 3,
+    "n_scored": 0,
+    "detail": true
+   },
+   "sft8b": {
+    "status": "failed",
+    "score": null,
+    "n_runs": 3,
+    "n_scored": 0,
+    "detail": true
+   },
+   "qwen3-8b-rl": {
+    "status": "failed",
+    "score": null,
+    "n_runs": 3,
+    "n_scored": 0,
+    "detail": true
+   },
+   "base14b": {
+    "status": "failed",
+    "score": null,
+    "n_runs": 3,
+    "n_scored": 0,
+    "detail": true
+   },
+   "sft14b": {
+    "status": "failed",
+    "score": null,
+    "n_runs": 3,
+    "n_scored": 0,
+    "detail": true
+   },
+   "qwen3-14b-rl": {
+    "status": "failed",
+    "score": null,
+    "n_runs": 3,
+    "n_scored": 0,
+    "detail": true
+   },
+   "base32bq3": {
+    "status": "failed",
+    "score": null,
+    "n_runs": 3,
+    "n_scored": 0,
+    "detail": true
+   },
+   "sft32b": {
+    "status": "failed",
+    "score": null,
+    "n_runs": 3,
+    "n_scored": 0,
+    "detail": true
+   },
+   "qwen3-32b-rl": {
+    "status": "failed",
+    "score": null,
+    "n_runs": 3,
+    "n_scored": 0,
+    "detail": true
+   },
+   "base32b": {
+    "status": "failed",
+    "score": null,
+    "n_runs": 3,
+    "n_scored": 0,
+    "detail": true
+   },
+   "qwen25sft": {
+    "status": "failed",
+    "score": null,
+    "n_runs": 3,
+    "n_scored": 0,
+    "detail": true
+   },
+   "rl": {
+    "status": "failed",
+    "score": null,
+    "n_runs": 3,
+    "n_scored": 0,
+    "detail": true
+   },
+   "d1base": {
+    "status": "failed",
+    "score": null,
+    "n_runs": 3,
+    "n_scored": 0,
+    "detail": true
+   },
+   "d1sft": {
+    "status": "failed",
+    "score": null,
+    "n_runs": 3,
+    "n_scored": 0,
+    "detail": true
+   },
+   "d1rl": {
+    "status": "failed",
+    "score": null,
+    "n_runs": 3,
+    "n_scored": 0,
+    "detail": true
+   },
+   "m2base": {
+    "status": "failed",
+    "score": null,
+    "n_runs": 3,
+    "n_scored": 0,
+    "detail": true
+   },
+   "m2sft": {
+    "status": "failed",
+    "score": null,
+    "n_runs": 3,
+    "n_scored": 0,
+    "detail": true
+   },
+   "m2rl": {
+    "status": "unfinished",
+    "score": null,
+    "n_runs": 3,
+    "n_scored": 0,
+    "detail": false
+   }
+  },
+  "causal-discovery-discrete": {
+   "base8b": {
+    "status": "ok",
+    "score": 30.6,
+    "n_runs": 3,
+    "n_scored": 10,
+    "detail": true
+   },
+   "sft8b": {
+    "status": "ok",
+    "score": 42.0,
+    "n_runs": 3,
+    "n_scored": 2,
+    "detail": true
+   },
+   "qwen3-8b-rl": {
+    "status": "failed",
+    "score": null,
+    "n_runs": 3,
+    "n_scored": 0,
+    "detail": true
+   },
+   "base14b": {
+    "status": "ok",
+    "score": 24.5,
+    "n_runs": 3,
+    "n_scored": 8,
+    "detail": true
+   },
+   "sft14b": {
+    "status": "ok",
+    "score": 49.8,
+    "n_runs": 2,
+    "n_scored": 2,
+    "detail": true
+   },
+   "qwen3-14b-rl": {
+    "status": "ok",
+    "score": 23.6,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "base32bq3": {
+    "status": "ok",
+    "score": 34.9,
+    "n_runs": 3,
+    "n_scored": 1,
+    "detail": true
+   },
+   "sft32b": {
+    "status": "ok",
+    "score": 40.7,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "qwen3-32b-rl": {
+    "status": "ok",
+    "score": 30.0,
+    "n_runs": 3,
+    "n_scored": 1,
+    "detail": true
+   },
+   "base32b": {
+    "status": "ok",
+    "score": 39.1,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "qwen25sft": {
+    "status": "failed",
+    "score": null,
+    "n_runs": 3,
+    "n_scored": 0,
+    "detail": true
+   },
+   "rl": {
+    "status": "ok",
+    "score": 14.3,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "d1base": {
+    "status": "failed",
+    "score": null,
+    "n_runs": 3,
+    "n_scored": 0,
+    "detail": true
+   },
+   "d1sft": {
+    "status": "ok",
+    "score": 40.9,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "d1rl": {
+    "status": "ok",
+    "score": 18.5,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "m2base": {
+    "status": "ok",
+    "score": 36.0,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "m2sft": {
+    "status": "ok",
+    "score": 27.6,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "m2rl": {
+    "status": "unfinished",
+    "score": null,
+    "n_runs": 3,
+    "n_scored": 2,
+    "detail": false
+   }
+  },
+  "graph-generation": {
+   "base8b": {
+    "status": "ok",
+    "score": 71.5,
+    "n_runs": 3,
+    "n_scored": 9,
+    "detail": true
+   },
+   "sft8b": {
+    "status": "failed",
+    "score": null,
+    "n_runs": 3,
+    "n_scored": 0,
+    "detail": true
+   },
+   "qwen3-8b-rl": {
+    "status": "failed",
+    "score": null,
+    "n_runs": 3,
+    "n_scored": 0,
+    "detail": true
+   },
+   "base14b": {
+    "status": "ok",
+    "score": 72.0,
+    "n_runs": 3,
+    "n_scored": 6,
+    "detail": true
+   },
+   "sft14b": {
+    "status": "failed",
+    "score": null,
+    "n_runs": 3,
+    "n_scored": 0,
+    "detail": true
+   },
+   "qwen3-14b-rl": {
+    "status": "failed",
+    "score": null,
+    "n_runs": 3,
+    "n_scored": 0,
+    "detail": true
+   },
+   "base32bq3": {
+    "status": "ok",
+    "score": 40.8,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "sft32b": {
+    "status": "ok",
+    "score": 59.4,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "qwen3-32b-rl": {
+    "status": "ok",
+    "score": 66.9,
+    "n_runs": 3,
+    "n_scored": 1,
+    "detail": true
+   },
+   "base32b": {
+    "status": "failed",
+    "score": null,
+    "n_runs": 3,
+    "n_scored": 0,
+    "detail": true
+   },
+   "qwen25sft": {
+    "status": "ok",
+    "score": 66.1,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "rl": {
+    "status": "ok",
+    "score": 22.5,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "d1base": {
+    "status": "ok",
+    "score": 58.0,
+    "n_runs": 3,
+    "n_scored": 2,
+    "detail": true
+   },
+   "d1sft": {
+    "status": "ok",
+    "score": 75.1,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "d1rl": {
+    "status": "ok",
+    "score": 0.0,
+    "n_runs": 3,
+    "n_scored": 1,
+    "detail": true
+   },
+   "m2base": {
+    "status": "ok",
+    "score": 39.5,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "m2sft": {
+    "status": "ok",
+    "score": 45.1,
+    "n_runs": 2,
+    "n_scored": 1,
+    "detail": true
+   },
+   "m2rl": {
+    "status": "unfinished",
+    "score": null,
+    "n_runs": 3,
+    "n_scored": 2,
+    "detail": false
+   }
+  },
+  "cv-3dgs-densification": {
+   "base8b": {
+    "status": "ok",
+    "score": 0.0,
+    "n_runs": 3,
+    "n_scored": 13,
+    "detail": true
+   },
+   "sft8b": {
+    "status": "ok",
+    "score": 0.0,
+    "n_runs": 3,
+    "n_scored": 9,
+    "detail": true
+   },
+   "qwen3-8b-rl": {
+    "status": "ok",
+    "score": 0.0,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "base14b": {
+    "status": "ok",
+    "score": 0.0,
+    "n_runs": 3,
+    "n_scored": 11,
+    "detail": true
+   },
+   "sft14b": {
+    "status": "ok",
+    "score": 0.0,
+    "n_runs": 3,
+    "n_scored": 8,
+    "detail": true
+   },
+   "qwen3-14b-rl": {
+    "status": "ok",
+    "score": 0.0,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "base32bq3": {
+    "status": "ok",
+    "score": 0.0,
+    "n_runs": 3,
+    "n_scored": 11,
+    "detail": true
+   },
+   "sft32b": {
+    "status": "ok",
+    "score": 0.0,
+    "n_runs": 3,
+    "n_scored": 9,
+    "detail": true
+   },
+   "qwen3-32b-rl": {
+    "status": "ok",
+    "score": 0.0,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "base32b": {
+    "status": "ok",
+    "score": 0.0,
+    "n_runs": 3,
+    "n_scored": 11,
+    "detail": true
+   },
+   "qwen25sft": {
+    "status": "ok",
+    "score": 0.0,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "rl": {
+    "status": "ok",
+    "score": 0.0,
+    "n_runs": 3,
+    "n_scored": 9,
+    "detail": true
+   },
+   "d1base": {
+    "status": "ok",
+    "score": 0.0,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "d1sft": {
+    "status": "ok",
+    "score": 0.0,
+    "n_runs": 3,
+    "n_scored": 4,
+    "detail": true
+   },
+   "d1rl": {
+    "status": "ok",
+    "score": 0.0,
+    "n_runs": 3,
+    "n_scored": 4,
+    "detail": true
+   },
+   "m2base": {
+    "status": "ok",
+    "score": 0.0,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "m2sft": {
+    "status": "ok",
+    "score": 0.0,
+    "n_runs": 3,
+    "n_scored": 4,
+    "detail": true
+   },
+   "m2rl": {
+    "status": "unfinished",
+    "score": null,
+    "n_runs": 3,
+    "n_scored": 0,
+    "detail": false
+   }
+  },
+  "cv-dbm-scheduler": {
+   "base8b": {
+    "status": "ok",
+    "score": 0.0,
+    "n_runs": 3,
+    "n_scored": 9,
+    "detail": true
+   },
+   "sft8b": {
+    "status": "ok",
+    "score": 0.0,
+    "n_runs": 3,
+    "n_scored": 6,
+    "detail": true
+   },
+   "qwen3-8b-rl": {
+    "status": "ok",
+    "score": 0.0,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "base14b": {
+    "status": "ok",
+    "score": 0.0,
+    "n_runs": 3,
+    "n_scored": 9,
+    "detail": true
+   },
+   "sft14b": {
+    "status": "ok",
+    "score": 0.0,
+    "n_runs": 3,
+    "n_scored": 6,
+    "detail": true
+   },
+   "qwen3-14b-rl": {
+    "status": "ok",
+    "score": 0.0,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "base32bq3": {
+    "status": "ok",
+    "score": 0.0,
+    "n_runs": 3,
+    "n_scored": 9,
+    "detail": true
+   },
+   "sft32b": {
+    "status": "ok",
+    "score": 0.0,
+    "n_runs": 3,
+    "n_scored": 6,
+    "detail": true
+   },
+   "qwen3-32b-rl": {
+    "status": "ok",
+    "score": 0.0,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "base32b": {
+    "status": "ok",
+    "score": 0.0,
+    "n_runs": 3,
+    "n_scored": 4,
+    "detail": true
+   },
+   "qwen25sft": {
+    "status": "ok",
+    "score": 0.0,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "rl": {
+    "status": "ok",
+    "score": 0.0,
+    "n_runs": 3,
+    "n_scored": 6,
+    "detail": true
+   },
+   "d1base": {
+    "status": "ok",
+    "score": 0.0,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "d1sft": {
+    "status": "ok",
+    "score": 0.0,
+    "n_runs": 3,
+    "n_scored": 6,
+    "detail": true
+   },
+   "d1rl": {
+    "status": "ok",
+    "score": 0.0,
+    "n_runs": 3,
+    "n_scored": 5,
+    "detail": true
+   },
+   "m2base": {
+    "status": "ok",
+    "score": 0.0,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "m2sft": {
+    "status": "ok",
+    "score": 0.0,
+    "n_runs": 3,
+    "n_scored": 5,
+    "detail": true
+   },
+   "m2rl": {
+    "status": "unfinished",
+    "score": null,
+    "n_runs": 3,
+    "n_scored": 0,
+    "detail": false
+   }
+  },
+  "cv-vae-loss": {
+   "base8b": {
+    "status": "ok",
+    "score": 12.1,
+    "n_runs": 3,
+    "n_scored": 8,
+    "detail": true
+   },
+   "sft8b": {
+    "status": "ok",
+    "score": 4.0,
+    "n_runs": 3,
+    "n_scored": 6,
+    "detail": true
+   },
+   "qwen3-8b-rl": {
+    "status": "ok",
+    "score": 46.9,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "base14b": {
+    "status": "ok",
+    "score": 47.9,
+    "n_runs": 3,
+    "n_scored": 8,
+    "detail": true
+   },
+   "sft14b": {
+    "status": "ok",
+    "score": 52.2,
+    "n_runs": 3,
+    "n_scored": 6,
+    "detail": true
+   },
+   "qwen3-14b-rl": {
+    "status": "ok",
+    "score": 49.2,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "base32bq3": {
+    "status": "ok",
+    "score": 47.5,
+    "n_runs": 3,
+    "n_scored": 9,
+    "detail": true
+   },
+   "sft32b": {
+    "status": "ok",
+    "score": 31.9,
+    "n_runs": 3,
+    "n_scored": 6,
+    "detail": true
+   },
+   "qwen3-32b-rl": {
+    "status": "ok",
+    "score": 2.9,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "base32b": {
+    "status": "ok",
+    "score": 3.8,
+    "n_runs": 3,
+    "n_scored": 6,
+    "detail": true
+   },
+   "qwen25sft": {
+    "status": "ok",
+    "score": 48.1,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "rl": {
+    "status": "ok",
+    "score": 50.5,
+    "n_runs": 3,
+    "n_scored": 6,
+    "detail": true
+   },
+   "d1base": {
+    "status": "ok",
+    "score": 47.9,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "d1sft": {
+    "status": "ok",
+    "score": 0.0,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "d1rl": {
+    "status": "ok",
+    "score": 3.8,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "m2base": {
+    "status": "ok",
+    "score": 51.1,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "m2sft": {
+    "status": "ok",
+    "score": 49.3,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "m2rl": {
+    "status": "unfinished",
+    "score": null,
+    "n_runs": 3,
+    "n_scored": 0,
+    "detail": false
+   }
+  },
+  "cv-pooling-aggregation": {
+   "base8b": {
+    "status": "ok",
+    "score": 42.6,
+    "n_runs": 3,
+    "n_scored": 2,
+    "detail": true
+   },
+   "sft8b": {
+    "status": "ok",
+    "score": 44.4,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "qwen3-8b-rl": {
+    "status": "ok",
+    "score": 43.7,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "base14b": {
+    "status": "ok",
+    "score": 46.3,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "sft14b": {
+    "status": "ok",
+    "score": 47.8,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "qwen3-14b-rl": {
+    "status": "ok",
+    "score": 43.3,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "base32bq3": {
+    "status": "ok",
+    "score": 49.5,
+    "n_runs": 3,
+    "n_scored": 6,
+    "detail": true
+   },
+   "sft32b": {
+    "status": "ok",
+    "score": 45.8,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "qwen3-32b-rl": {
+    "status": "ok",
+    "score": 48.4,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "base32b": {
+    "status": "ok",
+    "score": 47.2,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "qwen25sft": {
+    "status": "ok",
+    "score": 44.6,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "rl": {
+    "status": "ok",
+    "score": 46.5,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "d1base": {
+    "status": "failed",
+    "score": null,
+    "n_runs": 3,
+    "n_scored": 0,
+    "detail": true
+   },
+   "d1sft": {
+    "status": "ok",
+    "score": 48.5,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "d1rl": {
+    "status": "ok",
+    "score": 43.2,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "m2base": {
+    "status": "ok",
+    "score": 43.9,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "m2sft": {
+    "status": "ok",
+    "score": 44.9,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "m2rl": {
+    "status": "unfinished",
+    "score": null,
+    "n_runs": 3,
+    "n_scored": 0,
+    "detail": false
+   }
+  },
+  "dl-activation-function": {
+   "base8b": {
+    "status": "ok",
+    "score": 54.3,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "sft8b": {
+    "status": "ok",
+    "score": 3.5,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "qwen3-8b-rl": {
+    "status": "ok",
+    "score": 48.5,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "base14b": {
+    "status": "ok",
+    "score": 55.0,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "sft14b": {
+    "status": "ok",
+    "score": 12.7,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "qwen3-14b-rl": {
+    "status": "ok",
+    "score": 39.3,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "base32bq3": {
+    "status": "ok",
+    "score": 11.6,
+    "n_runs": 3,
+    "n_scored": 6,
+    "detail": true
+   },
+   "sft32b": {
+    "status": "ok",
+    "score": 0.0,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "qwen3-32b-rl": {
+    "status": "ok",
+    "score": 14.2,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "base32b": {
+    "status": "ok",
+    "score": 48.0,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "qwen25sft": {
+    "status": "ok",
+    "score": 13.5,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "rl": {
+    "status": "ok",
+    "score": 0.0,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "d1base": {
+    "status": "ok",
+    "score": 51.2,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "d1sft": {
+    "status": "ok",
+    "score": 53.6,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "d1rl": {
+    "status": "ok",
+    "score": 54.2,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "m2base": {
+    "status": "ok",
+    "score": 54.0,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "m2sft": {
+    "status": "ok",
+    "score": 44.0,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "m2rl": {
+    "status": "unfinished",
+    "score": null,
+    "n_runs": 3,
+    "n_scored": 0,
+    "detail": false
+   }
+  },
+  "jepa-planning": {
+   "base8b": {
+    "status": "ok",
+    "score": 46.7,
+    "n_runs": 3,
+    "n_scored": 1,
+    "detail": true
+   },
+   "sft8b": {
+    "status": "failed",
+    "score": null,
+    "n_runs": 3,
+    "n_scored": 0,
+    "detail": true
+   },
+   "qwen3-8b-rl": {
+    "status": "unfinished",
+    "score": null,
+    "n_runs": 0,
+    "n_scored": 0,
+    "detail": false
+   },
+   "base14b": {
+    "status": "failed",
+    "score": null,
+    "n_runs": 3,
+    "n_scored": 0,
+    "detail": true
+   },
+   "sft14b": {
+    "status": "failed",
+    "score": null,
+    "n_runs": 1,
+    "n_scored": 0,
+    "detail": true
+   },
+   "qwen3-14b-rl": {
+    "status": "failed",
+    "score": null,
+    "n_runs": 1,
+    "n_scored": 0,
+    "detail": true
+   },
+   "base32bq3": {
+    "status": "ok",
+    "score": 37.4,
+    "n_runs": 1,
+    "n_scored": 1,
+    "detail": true
+   },
+   "sft32b": {
+    "status": "ok",
+    "score": 67.9,
+    "n_runs": 3,
+    "n_scored": 1,
+    "detail": true
+   },
+   "qwen3-32b-rl": {
+    "status": "ok",
+    "score": 71.7,
+    "n_runs": 1,
+    "n_scored": 1,
+    "detail": true
+   },
+   "base32b": {
+    "status": "ok",
+    "score": 76.0,
+    "n_runs": 3,
+    "n_scored": 1,
+    "detail": true
+   },
+   "qwen25sft": {
+    "status": "ok",
+    "score": 38.4,
+    "n_runs": 1,
+    "n_scored": 1,
+    "detail": true
+   },
+   "rl": {
+    "status": "ok",
+    "score": 63.0,
+    "n_runs": 3,
+    "n_scored": 1,
+    "detail": true
+   },
+   "d1base": {
+    "status": "ok",
+    "score": 74.4,
+    "n_runs": 1,
+    "n_scored": 1,
+    "detail": true
+   },
+   "d1sft": {
+    "status": "failed",
+    "score": null,
+    "n_runs": 1,
+    "n_scored": 0,
+    "detail": true
+   },
+   "d1rl": {
+    "status": "ok",
+    "score": 75.1,
+    "n_runs": 1,
+    "n_scored": 1,
+    "detail": true
+   },
+   "m2base": {
+    "status": "ok",
+    "score": 75.1,
+    "n_runs": 1,
+    "n_scored": 1,
+    "detail": true
+   },
+   "m2sft": {
+    "status": "ok",
+    "score": 32.1,
+    "n_runs": 1,
+    "n_scored": 1,
+    "detail": true
+   },
+   "m2rl": {
+    "status": "unfinished",
+    "score": null,
+    "n_runs": 0,
+    "n_scored": 0,
+    "detail": false
+   }
+  },
+  "robo-diffusion-guidance": {
+   "base8b": {
+    "status": "ok",
+    "score": 50.6,
+    "n_runs": 3,
+    "n_scored": 1,
+    "detail": true
+   },
+   "sft8b": {
+    "status": "ok",
+    "score": 51.5,
+    "n_runs": 3,
+    "n_scored": 1,
+    "detail": true
+   },
+   "qwen3-8b-rl": {
+    "status": "failed",
+    "score": null,
+    "n_runs": 1,
+    "n_scored": 0,
+    "detail": true
+   },
+   "base14b": {
+    "status": "ok",
+    "score": 54.0,
+    "n_runs": 3,
+    "n_scored": 1,
+    "detail": true
+   },
+   "sft14b": {
+    "status": "ok",
+    "score": 49.8,
+    "n_runs": 1,
+    "n_scored": 1,
+    "detail": true
+   },
+   "qwen3-14b-rl": {
+    "status": "failed",
+    "score": null,
+    "n_runs": 1,
+    "n_scored": 0,
+    "detail": true
+   },
+   "base32bq3": {
+    "status": "ok",
+    "score": 51.7,
+    "n_runs": 1,
+    "n_scored": 1,
+    "detail": true
+   },
+   "sft32b": {
+    "status": "failed",
+    "score": null,
+    "n_runs": 3,
+    "n_scored": 0,
+    "detail": true
+   },
+   "qwen3-32b-rl": {
+    "status": "failed",
+    "score": null,
+    "n_runs": 1,
+    "n_scored": 0,
+    "detail": true
+   },
+   "base32b": {
+    "status": "ok",
+    "score": 52.9,
+    "n_runs": 3,
+    "n_scored": 1,
+    "detail": true
+   },
+   "qwen25sft": {
+    "status": "failed",
+    "score": null,
+    "n_runs": 1,
+    "n_scored": 0,
+    "detail": true
+   },
+   "rl": {
+    "status": "ok",
+    "score": 11.0,
+    "n_runs": 3,
+    "n_scored": 1,
+    "detail": true
+   },
+   "d1base": {
+    "status": "ok",
+    "score": 50.3,
+    "n_runs": 1,
+    "n_scored": 1,
+    "detail": true
+   },
+   "d1sft": {
+    "status": "ok",
+    "score": 53.9,
+    "n_runs": 1,
+    "n_scored": 1,
+    "detail": true
+   },
+   "d1rl": {
+    "status": "ok",
+    "score": 51.3,
+    "n_runs": 1,
+    "n_scored": 1,
+    "detail": true
+   },
+   "m2base": {
+    "status": "ok",
+    "score": 52.9,
+    "n_runs": 1,
+    "n_scored": 1,
+    "detail": true
+   },
+   "m2sft": {
+    "status": "failed",
+    "score": null,
+    "n_runs": 1,
+    "n_scored": 0,
+    "detail": true
+   },
+   "m2rl": {
+    "status": "unfinished",
+    "score": null,
+    "n_runs": 0,
+    "n_scored": 0,
+    "detail": false
+   }
+  },
+  "robo-diffusion-policy": {
+   "base8b": {
+    "status": "ok",
+    "score": 53.0,
+    "n_runs": 3,
+    "n_scored": 1,
+    "detail": true
+   },
+   "sft8b": {
+    "status": "ok",
+    "score": 25.0,
+    "n_runs": 3,
+    "n_scored": 1,
+    "detail": true
+   },
+   "qwen3-8b-rl": {
+    "status": "failed",
+    "score": null,
+    "n_runs": 1,
+    "n_scored": 0,
+    "detail": true
+   },
+   "base14b": {
+    "status": "ok",
+    "score": 52.3,
+    "n_runs": 3,
+    "n_scored": 1,
+    "detail": true
+   },
+   "sft14b": {
+    "status": "ok",
+    "score": 54.3,
+    "n_runs": 1,
+    "n_scored": 1,
+    "detail": true
+   },
+   "qwen3-14b-rl": {
+    "status": "failed",
+    "score": null,
+    "n_runs": 1,
+    "n_scored": 0,
+    "detail": true
+   },
+   "base32bq3": {
+    "status": "ok",
+    "score": 51.7,
+    "n_runs": 1,
+    "n_scored": 1,
+    "detail": true
+   },
+   "sft32b": {
+    "status": "ok",
+    "score": 28.1,
+    "n_runs": 3,
+    "n_scored": 1,
+    "detail": true
+   },
+   "qwen3-32b-rl": {
+    "status": "failed",
+    "score": null,
+    "n_runs": 1,
+    "n_scored": 0,
+    "detail": true
+   },
+   "base32b": {
+    "status": "ok",
+    "score": 48.7,
+    "n_runs": 3,
+    "n_scored": 1,
+    "detail": true
+   },
+   "qwen25sft": {
+    "status": "failed",
+    "score": null,
+    "n_runs": 1,
+    "n_scored": 0,
+    "detail": true
+   },
+   "rl": {
+    "status": "ok",
+    "score": 45.7,
+    "n_runs": 3,
+    "n_scored": 1,
+    "detail": true
+   },
+   "d1base": {
+    "status": "failed",
+    "score": null,
+    "n_runs": 1,
+    "n_scored": 0,
+    "detail": true
+   },
+   "d1sft": {
+    "status": "ok",
+    "score": 52.0,
+    "n_runs": 1,
+    "n_scored": 1,
+    "detail": true
+   },
+   "d1rl": {
+    "status": "ok",
+    "score": 50.8,
+    "n_runs": 1,
+    "n_scored": 1,
+    "detail": true
+   },
+   "m2base": {
+    "status": "failed",
+    "score": null,
+    "n_runs": 1,
+    "n_scored": 0,
+    "detail": true
+   },
+   "m2sft": {
+    "status": "ok",
+    "score": 49.9,
+    "n_runs": 1,
+    "n_scored": 1,
+    "detail": true
+   },
+   "m2rl": {
+    "status": "unfinished",
+    "score": null,
+    "n_runs": 0,
+    "n_scored": 0,
+    "detail": false
+   }
+  },
+  "robomimic-bc-loss": {
+   "base8b": {
+    "status": "failed",
+    "score": null,
+    "n_runs": 3,
+    "n_scored": 0,
+    "detail": true
+   },
+   "sft8b": {
+    "status": "failed",
+    "score": null,
+    "n_runs": 3,
+    "n_scored": 0,
+    "detail": true
+   },
+   "qwen3-8b-rl": {
+    "status": "failed",
+    "score": null,
+    "n_runs": 1,
+    "n_scored": 0,
+    "detail": true
+   },
+   "base14b": {
+    "status": "failed",
+    "score": null,
+    "n_runs": 3,
+    "n_scored": 0,
+    "detail": true
+   },
+   "sft14b": {
+    "status": "failed",
+    "score": null,
+    "n_runs": 1,
+    "n_scored": 0,
+    "detail": true
+   },
+   "qwen3-14b-rl": {
+    "status": "failed",
+    "score": null,
+    "n_runs": 1,
+    "n_scored": 0,
+    "detail": true
+   },
+   "base32bq3": {
+    "status": "failed",
+    "score": null,
+    "n_runs": 1,
+    "n_scored": 0,
+    "detail": true
+   },
+   "sft32b": {
+    "status": "failed",
+    "score": null,
+    "n_runs": 3,
+    "n_scored": 0,
+    "detail": true
+   },
+   "qwen3-32b-rl": {
+    "status": "failed",
+    "score": null,
+    "n_runs": 1,
+    "n_scored": 0,
+    "detail": true
+   },
+   "base32b": {
+    "status": "failed",
+    "score": null,
+    "n_runs": 3,
+    "n_scored": 0,
+    "detail": true
+   },
+   "qwen25sft": {
+    "status": "failed",
+    "score": null,
+    "n_runs": 1,
+    "n_scored": 0,
+    "detail": true
+   },
+   "rl": {
+    "status": "failed",
+    "score": null,
+    "n_runs": 3,
+    "n_scored": 0,
+    "detail": true
+   },
+   "d1base": {
+    "status": "failed",
+    "score": null,
+    "n_runs": 1,
+    "n_scored": 0,
+    "detail": true
+   },
+   "d1sft": {
+    "status": "ok",
+    "score": 69.0,
+    "n_runs": 1,
+    "n_scored": 4,
+    "detail": true
+   },
+   "d1rl": {
+    "status": "failed",
+    "score": null,
+    "n_runs": 1,
+    "n_scored": 0,
+    "detail": true
+   },
+   "m2base": {
+    "status": "failed",
+    "score": null,
+    "n_runs": 1,
+    "n_scored": 0,
+    "detail": true
+   },
+   "m2sft": {
+    "status": "failed",
+    "score": null,
+    "n_runs": 1,
+    "n_scored": 0,
+    "detail": true
+   },
+   "m2rl": {
+    "status": "unfinished",
+    "score": null,
+    "n_runs": 0,
+    "n_scored": 0,
+    "detail": false
+   }
+  },
+  "llm-dllm-demask-strategy": {
+   "base8b": {
+    "status": "ok",
+    "score": 0.0,
+    "n_runs": 3,
+    "n_scored": 9,
+    "detail": true
+   },
+   "sft8b": {
+    "status": "ok",
+    "score": 0.0,
+    "n_runs": 3,
+    "n_scored": 9,
+    "detail": true
+   },
+   "qwen3-8b-rl": {
+    "status": "ok",
+    "score": 0.0,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "base14b": {
+    "status": "ok",
+    "score": 0.0,
+    "n_runs": 3,
+    "n_scored": 8,
+    "detail": true
+   },
+   "sft14b": {
+    "status": "ok",
+    "score": 0.0,
+    "n_runs": 3,
+    "n_scored": 5,
+    "detail": true
+   },
+   "qwen3-14b-rl": {
+    "status": "ok",
+    "score": 0.0,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "base32bq3": {
+    "status": "ok",
+    "score": 0.0,
+    "n_runs": 3,
+    "n_scored": 7,
+    "detail": true
+   },
+   "sft32b": {
+    "status": "ok",
+    "score": 0.0,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "qwen3-32b-rl": {
+    "status": "ok",
+    "score": 0.0,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "base32b": {
+    "status": "ok",
+    "score": 0.0,
+    "n_runs": 3,
+    "n_scored": 6,
+    "detail": true
+   },
+   "qwen25sft": {
+    "status": "ok",
+    "score": 0.0,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "rl": {
+    "status": "ok",
+    "score": 0.0,
+    "n_runs": 3,
+    "n_scored": 4,
+    "detail": true
+   },
+   "d1base": {
+    "status": "ok",
+    "score": 0.0,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "d1sft": {
+    "status": "ok",
+    "score": 0.0,
+    "n_runs": 3,
+    "n_scored": 5,
+    "detail": true
+   },
+   "d1rl": {
+    "status": "ok",
+    "score": 0.0,
+    "n_runs": 3,
+    "n_scored": 6,
+    "detail": true
+   },
+   "m2base": {
+    "status": "ok",
+    "score": 0.0,
+    "n_runs": 3,
+    "n_scored": 1,
+    "detail": true
+   },
+   "m2sft": {
+    "status": "ok",
+    "score": 0.0,
+    "n_runs": 3,
+    "n_scored": 4,
+    "detail": true
+   },
+   "m2rl": {
+    "status": "unfinished",
+    "score": null,
+    "n_runs": 3,
+    "n_scored": 0,
+    "detail": false
+   }
+  },
+  "llm-pretrain-optimizer": {
+   "base8b": {
+    "status": "ok",
+    "score": 56.4,
+    "n_runs": 3,
+    "n_scored": 1,
+    "detail": true
+   },
+   "sft8b": {
+    "status": "ok",
+    "score": 56.3,
+    "n_runs": 3,
+    "n_scored": 2,
+    "detail": true
+   },
+   "qwen3-8b-rl": {
+    "status": "failed",
+    "score": null,
+    "n_runs": 1,
+    "n_scored": 0,
+    "detail": true
+   },
+   "base14b": {
+    "status": "ok",
+    "score": 55.3,
+    "n_runs": 3,
+    "n_scored": 2,
+    "detail": true
+   },
+   "sft14b": {
+    "status": "ok",
+    "score": 56.3,
+    "n_runs": 1,
+    "n_scored": 2,
+    "detail": true
+   },
+   "qwen3-14b-rl": {
+    "status": "failed",
+    "score": null,
+    "n_runs": 1,
+    "n_scored": 0,
+    "detail": true
+   },
+   "base32bq3": {
+    "status": "ok",
+    "score": 54.6,
+    "n_runs": 1,
+    "n_scored": 2,
+    "detail": true
+   },
+   "sft32b": {
+    "status": "ok",
+    "score": 56.5,
+    "n_runs": 3,
+    "n_scored": 2,
+    "detail": true
+   },
+   "qwen3-32b-rl": {
+    "status": "failed",
+    "score": null,
+    "n_runs": 1,
+    "n_scored": 0,
+    "detail": true
+   },
+   "base32b": {
+    "status": "ok",
+    "score": 56.8,
+    "n_runs": 3,
+    "n_scored": 2,
+    "detail": true
+   },
+   "qwen25sft": {
+    "status": "failed",
+    "score": null,
+    "n_runs": 1,
+    "n_scored": 0,
+    "detail": true
+   },
+   "rl": {
+    "status": "ok",
+    "score": 50.2,
+    "n_runs": 1,
+    "n_scored": 2,
+    "detail": true
+   },
+   "d1base": {
+    "status": "failed",
+    "score": null,
+    "n_runs": 1,
+    "n_scored": 0,
+    "detail": true
+   },
+   "d1sft": {
+    "status": "ok",
+    "score": 54.9,
+    "n_runs": 1,
+    "n_scored": 1,
+    "detail": true
+   },
+   "d1rl": {
+    "status": "ok",
+    "score": 57.0,
+    "n_runs": 1,
+    "n_scored": 1,
+    "detail": true
+   },
+   "m2base": {
+    "status": "failed",
+    "score": null,
+    "n_runs": 1,
+    "n_scored": 0,
+    "detail": true
+   },
+   "m2sft": {
+    "status": "ok",
+    "score": 56.4,
+    "n_runs": 1,
+    "n_scored": 1,
+    "detail": true
+   },
+   "m2rl": {
+    "status": "unfinished",
+    "score": null,
+    "n_runs": 0,
+    "n_scored": 0,
+    "detail": false
+   }
+  },
+  "llm-rl-importance-sampling": {
+   "base8b": {
+    "status": "ok",
+    "score": 0.0,
+    "n_runs": 3,
+    "n_scored": 1,
+    "detail": true
+   },
+   "sft8b": {
+    "status": "failed",
+    "score": null,
+    "n_runs": 3,
+    "n_scored": 0,
+    "detail": true
+   },
+   "qwen3-8b-rl": {
+    "status": "failed",
+    "score": null,
+    "n_runs": 1,
+    "n_scored": 0,
+    "detail": true
+   },
+   "base14b": {
+    "status": "ok",
+    "score": 28.6,
+    "n_runs": 3,
+    "n_scored": 1,
+    "detail": true
+   },
+   "sft14b": {
+    "status": "failed",
+    "score": null,
+    "n_runs": 1,
+    "n_scored": 0,
+    "detail": true
+   },
+   "qwen3-14b-rl": {
+    "status": "failed",
+    "score": null,
+    "n_runs": 1,
+    "n_scored": 0,
+    "detail": true
+   },
+   "base32bq3": {
+    "status": "ok",
+    "score": 13.9,
+    "n_runs": 1,
+    "n_scored": 1,
+    "detail": true
+   },
+   "sft32b": {
+    "status": "failed",
+    "score": null,
+    "n_runs": 3,
+    "n_scored": 0,
+    "detail": true
+   },
+   "qwen3-32b-rl": {
+    "status": "failed",
+    "score": null,
+    "n_runs": 1,
+    "n_scored": 0,
+    "detail": true
+   },
+   "base32b": {
+    "status": "failed",
+    "score": null,
+    "n_runs": 3,
+    "n_scored": 0,
+    "detail": true
+   },
+   "qwen25sft": {
+    "status": "failed",
+    "score": null,
+    "n_runs": 1,
+    "n_scored": 0,
+    "detail": true
+   },
+   "rl": {
+    "status": "ok",
+    "score": 16.3,
+    "n_runs": 1,
+    "n_scored": 2,
+    "detail": true
+   },
+   "d1base": {
+    "status": "failed",
+    "score": null,
+    "n_runs": 1,
+    "n_scored": 0,
+    "detail": true
+   },
+   "d1sft": {
+    "status": "ok",
+    "score": 14.0,
+    "n_runs": 1,
+    "n_scored": 1,
+    "detail": true
+   },
+   "d1rl": {
+    "status": "ok",
+    "score": 0.0,
+    "n_runs": 1,
+    "n_scored": 1,
+    "detail": true
+   },
+   "m2base": {
+    "status": "failed",
+    "score": null,
+    "n_runs": 1,
+    "n_scored": 0,
+    "detail": true
+   },
+   "m2sft": {
+    "status": "failed",
+    "score": null,
+    "n_runs": 1,
+    "n_scored": 0,
+    "detail": true
+   },
+   "m2rl": {
+    "status": "unfinished",
+    "score": null,
+    "n_runs": 0,
+    "n_scored": 0,
+    "detail": false
+   }
+  },
+  "llm-ptq-algorithm": {
+   "base8b": {
+    "status": "ok",
+    "score": 3.3,
+    "n_runs": 3,
+    "n_scored": 6,
+    "detail": true
+   },
+   "sft8b": {
+    "status": "ok",
+    "score": 75.2,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "qwen3-8b-rl": {
+    "status": "ok",
+    "score": 0.0,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "base14b": {
+    "status": "ok",
+    "score": 55.3,
+    "n_runs": 3,
+    "n_scored": 4,
+    "detail": true
+   },
+   "sft14b": {
+    "status": "ok",
+    "score": 3.2,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "qwen3-14b-rl": {
+    "status": "ok",
+    "score": 68.6,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "base32bq3": {
+    "status": "ok",
+    "score": 66.0,
+    "n_runs": 2,
+    "n_scored": 2,
+    "detail": true
+   },
+   "sft32b": {
+    "status": "ok",
+    "score": 2.5,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "qwen3-32b-rl": {
+    "status": "ok",
+    "score": 56.3,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "base32b": {
+    "status": "ok",
+    "score": 65.8,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "qwen25sft": {
+    "status": "ok",
+    "score": 2.5,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "rl": {
+    "status": "ok",
+    "score": 42.9,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "d1base": {
+    "status": "ok",
+    "score": 58.2,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "d1sft": {
+    "status": "ok",
+    "score": 63.3,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "d1rl": {
+    "status": "ok",
+    "score": 59.8,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "m2base": {
+    "status": "ok",
+    "score": 56.2,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "m2sft": {
+    "status": "ok",
+    "score": 53.6,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "m2rl": {
+    "status": "unfinished",
+    "score": null,
+    "n_runs": 3,
+    "n_scored": 0,
+    "detail": false
+   }
+  },
+  "llm-qat-algorithm": {
+   "base8b": {
+    "status": "ok",
+    "score": 64.8,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "sft8b": {
+    "status": "ok",
+    "score": 63.9,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "qwen3-8b-rl": {
+    "status": "ok",
+    "score": 64.6,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "base14b": {
+    "status": "ok",
+    "score": 64.6,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "sft14b": {
+    "status": "ok",
+    "score": 64.7,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "qwen3-14b-rl": {
+    "status": "ok",
+    "score": 64.0,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "base32bq3": {
+    "status": "ok",
+    "score": 62.3,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "sft32b": {
+    "status": "ok",
+    "score": 64.7,
+    "n_runs": 3,
+    "n_scored": 2,
+    "detail": true
+   },
+   "qwen3-32b-rl": {
+    "status": "ok",
+    "score": 65.2,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "base32b": {
+    "status": "ok",
+    "score": 64.7,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "qwen25sft": {
+    "status": "ok",
+    "score": 61.2,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "rl": {
+    "status": "ok",
+    "score": 62.3,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "d1base": {
+    "status": "ok",
+    "score": 62.5,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "d1sft": {
+    "status": "ok",
+    "score": 65.4,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "d1rl": {
+    "status": "ok",
+    "score": 61.3,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "m2base": {
+    "status": "ok",
+    "score": 64.4,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "m2sft": {
+    "status": "ok",
+    "score": 65.0,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "m2rl": {
+    "status": "unfinished",
+    "score": null,
+    "n_runs": 1,
+    "n_scored": 0,
+    "detail": false
+   }
+  },
+  "mlsys-sparse-attention-inference": {
+   "base8b": {
+    "status": "ok",
+    "score": 16.2,
+    "n_runs": 3,
+    "n_scored": 2,
+    "detail": true
+   },
+   "sft8b": {
+    "status": "ok",
+    "score": 58.6,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "qwen3-8b-rl": {
+    "status": "ok",
+    "score": 49.5,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "base14b": {
+    "status": "ok",
+    "score": 58.4,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "sft14b": {
+    "status": "ok",
+    "score": 62.4,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "qwen3-14b-rl": {
+    "status": "ok",
+    "score": 22.6,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "base32bq3": {
+    "status": "ok",
+    "score": 61.3,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "sft32b": {
+    "status": "ok",
+    "score": 60.1,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "qwen3-32b-rl": {
+    "status": "ok",
+    "score": 50.0,
+    "n_runs": 3,
+    "n_scored": 1,
+    "detail": true
+   },
+   "base32b": {
+    "status": "ok",
+    "score": 57.2,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "qwen25sft": {
+    "status": "ok",
+    "score": 59.6,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "rl": {
+    "status": "ok",
+    "score": 54.7,
+    "n_runs": 3,
+    "n_scored": 2,
+    "detail": true
+   },
+   "d1base": {
+    "status": "ok",
+    "score": 58.1,
+    "n_runs": 3,
+    "n_scored": 2,
+    "detail": true
+   },
+   "d1sft": {
+    "status": "ok",
+    "score": 23.8,
+    "n_runs": 3,
+    "n_scored": 2,
+    "detail": true
+   },
+   "d1rl": {
+    "status": "ok",
+    "score": 57.7,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "m2base": {
+    "status": "ok",
+    "score": 59.3,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "m2sft": {
+    "status": "ok",
+    "score": 60.8,
+    "n_runs": 2,
+    "n_scored": 2,
+    "detail": true
+   },
+   "m2rl": {
+    "status": "unfinished",
+    "score": null,
+    "n_runs": 0,
+    "n_scored": 0,
+    "detail": false
+   }
+  },
+  "ml-clustering-algorithm": {
+   "base8b": {
+    "status": "ok",
+    "score": 67.6,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "sft8b": {
+    "status": "ok",
+    "score": 69.1,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "qwen3-8b-rl": {
+    "status": "ok",
+    "score": 67.0,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "base14b": {
+    "status": "ok",
+    "score": 37.6,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "sft14b": {
+    "status": "ok",
+    "score": 66.5,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "qwen3-14b-rl": {
+    "status": "ok",
+    "score": 69.0,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "base32bq3": {
+    "status": "ok",
+    "score": 69.3,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "sft32b": {
+    "status": "ok",
+    "score": 69.8,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "qwen3-32b-rl": {
+    "status": "ok",
+    "score": 69.0,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "base32b": {
+    "status": "ok",
+    "score": 64.7,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "qwen25sft": {
+    "status": "ok",
+    "score": 69.1,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "rl": {
+    "status": "ok",
+    "score": 16.6,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "d1base": {
+    "status": "failed",
+    "score": null,
+    "n_runs": 3,
+    "n_scored": 0,
+    "detail": true
+   },
+   "d1sft": {
+    "status": "ok",
+    "score": 64.3,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "d1rl": {
+    "status": "ok",
+    "score": 69.7,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "m2base": {
+    "status": "ok",
+    "score": 60.2,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "m2sft": {
+    "status": "ok",
+    "score": 69.9,
+    "n_runs": 1,
+    "n_scored": 1,
+    "detail": true
+   },
+   "m2rl": {
+    "status": "unfinished",
+    "score": null,
+    "n_runs": 0,
+    "n_scored": 0,
+    "detail": false
+   }
+  },
+  "ml-dimensionality-reduction": {
+   "base8b": {
+    "status": "ok",
+    "score": 17.2,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "sft8b": {
+    "status": "ok",
+    "score": 8.7,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "qwen3-8b-rl": {
+    "status": "ok",
+    "score": 33.0,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "base14b": {
+    "status": "ok",
+    "score": 45.8,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "sft14b": {
+    "status": "ok",
+    "score": 8.3,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "qwen3-14b-rl": {
+    "status": "ok",
+    "score": 17.2,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "base32bq3": {
+    "status": "ok",
+    "score": 47.4,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "sft32b": {
+    "status": "ok",
+    "score": 46.7,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "qwen3-32b-rl": {
+    "status": "ok",
+    "score": 9.9,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "base32b": {
+    "status": "ok",
+    "score": 30.7,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "qwen25sft": {
+    "status": "ok",
+    "score": 50.2,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "rl": {
+    "status": "ok",
+    "score": 44.2,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "d1base": {
+    "status": "failed",
+    "score": null,
+    "n_runs": 3,
+    "n_scored": 0,
+    "detail": true
+   },
+   "d1sft": {
+    "status": "ok",
+    "score": 49.4,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "d1rl": {
+    "status": "ok",
+    "score": 50.2,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "m2base": {
+    "status": "ok",
+    "score": 48.2,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "m2sft": {
+    "status": "ok",
+    "score": 31.9,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "m2rl": {
+    "status": "unfinished",
+    "score": null,
+    "n_runs": 0,
+    "n_scored": 0,
+    "detail": false
+   }
+  },
+  "optimization-multi-objective": {
+   "base8b": {
+    "status": "ok",
+    "score": 52.9,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "sft8b": {
+    "status": "ok",
+    "score": 44.2,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "qwen3-8b-rl": {
+    "status": "ok",
+    "score": 44.0,
+    "n_runs": 3,
+    "n_scored": 1,
+    "detail": true
+   },
+   "base14b": {
+    "status": "ok",
+    "score": 33.2,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "sft14b": {
+    "status": "ok",
+    "score": 46.4,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "qwen3-14b-rl": {
+    "status": "ok",
+    "score": 38.2,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "base32bq3": {
+    "status": "ok",
+    "score": 38.1,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "sft32b": {
+    "status": "ok",
+    "score": 46.5,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "qwen3-32b-rl": {
+    "status": "ok",
+    "score": 45.1,
+    "n_runs": 3,
+    "n_scored": 2,
+    "detail": true
+   },
+   "base32b": {
+    "status": "ok",
+    "score": 40.2,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "qwen25sft": {
+    "status": "ok",
+    "score": 34.9,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "rl": {
+    "status": "ok",
+    "score": 34.7,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "d1base": {
+    "status": "failed",
+    "score": null,
+    "n_runs": 3,
+    "n_scored": 0,
+    "detail": true
+   },
+   "d1sft": {
+    "status": "ok",
+    "score": 47.4,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "d1rl": {
+    "status": "ok",
+    "score": 12.4,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "m2base": {
+    "status": "ok",
+    "score": 30.3,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "m2sft": {
+    "status": "ok",
+    "score": 37.6,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "m2rl": {
+    "status": "unfinished",
+    "score": null,
+    "n_runs": 0,
+    "n_scored": 0,
+    "detail": false
+   }
+  },
+  "optimization-variance-reduction": {
+   "base8b": {
+    "status": "ok",
+    "score": 44.0,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "sft8b": {
+    "status": "ok",
+    "score": 13.7,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "qwen3-8b-rl": {
+    "status": "ok",
+    "score": 49.2,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "base14b": {
+    "status": "ok",
+    "score": 36.1,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "sft14b": {
+    "status": "ok",
+    "score": 58.5,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "qwen3-14b-rl": {
+    "status": "ok",
+    "score": 16.4,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "base32bq3": {
+    "status": "ok",
+    "score": 54.6,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "sft32b": {
+    "status": "ok",
+    "score": 40.3,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "qwen3-32b-rl": {
+    "status": "ok",
+    "score": 13.0,
+    "n_runs": 3,
+    "n_scored": 2,
+    "detail": true
+   },
+   "base32b": {
+    "status": "ok",
+    "score": 4.6,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "qwen25sft": {
+    "status": "ok",
+    "score": 4.6,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "rl": {
+    "status": "ok",
+    "score": 65.3,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "d1base": {
+    "status": "ok",
+    "score": 47.8,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "d1sft": {
+    "status": "ok",
+    "score": 65.7,
+    "n_runs": 2,
+    "n_scored": 2,
+    "detail": true
+   },
+   "d1rl": {
+    "status": "ok",
+    "score": 57.8,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "m2base": {
+    "status": "ok",
+    "score": 44.1,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "m2sft": {
+    "status": "ok",
+    "score": 46.6,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "m2rl": {
+    "status": "unfinished",
+    "score": null,
+    "n_runs": 0,
+    "n_scored": 0,
+    "detail": false
+   }
+  },
+  "quant-concept-drift": {
+   "base8b": {
+    "status": "ok",
+    "score": 34.6,
+    "n_runs": 3,
+    "n_scored": 4,
+    "detail": true
+   },
+   "sft8b": {
+    "status": "ok",
+    "score": 50.2,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "qwen3-8b-rl": {
+    "status": "ok",
+    "score": 45.2,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "base14b": {
+    "status": "ok",
+    "score": 50.0,
+    "n_runs": 3,
+    "n_scored": 4,
+    "detail": true
+   },
+   "sft14b": {
+    "status": "ok",
+    "score": 15.0,
+    "n_runs": 3,
+    "n_scored": 2,
+    "detail": true
+   },
+   "qwen3-14b-rl": {
+    "status": "ok",
+    "score": 34.0,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "base32bq3": {
+    "status": "ok",
+    "score": 35.6,
+    "n_runs": 3,
+    "n_scored": 4,
+    "detail": true
+   },
+   "sft32b": {
+    "status": "ok",
+    "score": 26.2,
+    "n_runs": 3,
+    "n_scored": 4,
+    "detail": true
+   },
+   "qwen3-32b-rl": {
+    "status": "ok",
+    "score": 34.6,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "base32b": {
+    "status": "ok",
+    "score": 32.6,
+    "n_runs": 3,
+    "n_scored": 5,
+    "detail": true
+   },
+   "qwen25sft": {
+    "status": "ok",
+    "score": 2.9,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "rl": {
+    "status": "ok",
+    "score": 41.4,
+    "n_runs": 3,
+    "n_scored": 2,
+    "detail": true
+   },
+   "d1base": {
+    "status": "failed",
+    "score": null,
+    "n_runs": 3,
+    "n_scored": 0,
+    "detail": true
+   },
+   "d1sft": {
+    "status": "ok",
+    "score": 23.2,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "d1rl": {
+    "status": "ok",
+    "score": 53.6,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "m2base": {
+    "status": "ok",
+    "score": 22.1,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "m2sft": {
+    "status": "ok",
+    "score": 27.9,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "m2rl": {
+    "status": "unfinished",
+    "score": null,
+    "n_runs": 0,
+    "n_scored": 0,
+    "detail": false
+   }
+  },
+  "ts-exogenous-forecast": {
+   "base8b": {
+    "status": "ok",
+    "score": 48.1,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "sft8b": {
+    "status": "ok",
+    "score": 25.2,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "qwen3-8b-rl": {
+    "status": "ok",
+    "score": 43.1,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "base14b": {
+    "status": "ok",
+    "score": 44.8,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "sft14b": {
+    "status": "ok",
+    "score": 13.5,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "qwen3-14b-rl": {
+    "status": "ok",
+    "score": 42.1,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "base32bq3": {
+    "status": "ok",
+    "score": 46.9,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "sft32b": {
+    "status": "ok",
+    "score": 46.9,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "qwen3-32b-rl": {
+    "status": "ok",
+    "score": 44.9,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "base32b": {
+    "status": "ok",
+    "score": 39.8,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "qwen25sft": {
+    "status": "ok",
+    "score": 32.3,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "rl": {
+    "status": "ok",
+    "score": 44.3,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "d1base": {
+    "status": "failed",
+    "score": null,
+    "n_runs": 3,
+    "n_scored": 0,
+    "detail": true
+   },
+   "d1sft": {
+    "status": "ok",
+    "score": 42.1,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "d1rl": {
+    "status": "ok",
+    "score": 45.2,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "m2base": {
+    "status": "ok",
+    "score": 45.0,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "m2sft": {
+    "status": "ok",
+    "score": 44.0,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "m2rl": {
+    "status": "unfinished",
+    "score": null,
+    "n_runs": 0,
+    "n_scored": 0,
+    "detail": false
+   }
+  },
+  "ts-imputation": {
+   "base8b": {
+    "status": "ok",
+    "score": 69.3,
+    "n_runs": 3,
+    "n_scored": 2,
+    "detail": true
+   },
+   "sft8b": {
+    "status": "ok",
+    "score": 42.5,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "qwen3-8b-rl": {
+    "status": "ok",
+    "score": 60.3,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "base14b": {
+    "status": "ok",
+    "score": 58.3,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "sft14b": {
+    "status": "ok",
+    "score": 44.9,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "qwen3-14b-rl": {
+    "status": "ok",
+    "score": 43.1,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "base32bq3": {
+    "status": "failed",
+    "score": null,
+    "n_runs": 3,
+    "n_scored": 0,
+    "detail": true
+   },
+   "sft32b": {
+    "status": "ok",
+    "score": 42.1,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "qwen3-32b-rl": {
+    "status": "ok",
+    "score": 42.2,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "base32b": {
+    "status": "ok",
+    "score": 60.0,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "qwen25sft": {
+    "status": "ok",
+    "score": 53.9,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "rl": {
+    "status": "ok",
+    "score": 48.2,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "d1base": {
+    "status": "ok",
+    "score": 46.2,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "d1sft": {
+    "status": "ok",
+    "score": 52.0,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "d1rl": {
+    "status": "ok",
+    "score": 36.7,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "m2base": {
+    "status": "ok",
+    "score": 11.6,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "m2sft": {
+    "status": "ok",
+    "score": 60.7,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "m2rl": {
+    "status": "unfinished",
+    "score": null,
+    "n_runs": 0,
+    "n_scored": 0,
+    "detail": false
+   }
+  },
+  "rl-value-discrete": {
+   "base8b": {
+    "status": "ok",
+    "score": 12.0,
+    "n_runs": 3,
+    "n_scored": 24,
+    "detail": true
+   },
+   "sft8b": {
+    "status": "ok",
+    "score": 3.7,
+    "n_runs": 3,
+    "n_scored": 16,
+    "detail": true
+   },
+   "qwen3-8b-rl": {
+    "status": "ok",
+    "score": 1.7,
+    "n_runs": 3,
+    "n_scored": 12,
+    "detail": true
+   },
+   "base14b": {
+    "status": "ok",
+    "score": 9.2,
+    "n_runs": 3,
+    "n_scored": 24,
+    "detail": true
+   },
+   "sft14b": {
+    "status": "ok",
+    "score": 25.6,
+    "n_runs": 3,
+    "n_scored": 20,
+    "detail": true
+   },
+   "qwen3-14b-rl": {
+    "status": "ok",
+    "score": 31.8,
+    "n_runs": 3,
+    "n_scored": 12,
+    "detail": true
+   },
+   "base32bq3": {
+    "status": "ok",
+    "score": 17.4,
+    "n_runs": 3,
+    "n_scored": 24,
+    "detail": true
+   },
+   "sft32b": {
+    "status": "ok",
+    "score": 6.7,
+    "n_runs": 3,
+    "n_scored": 20,
+    "detail": true
+   },
+   "qwen3-32b-rl": {
+    "status": "ok",
+    "score": 29.0,
+    "n_runs": 3,
+    "n_scored": 12,
+    "detail": true
+   },
+   "base32b": {
+    "status": "ok",
+    "score": 2.2,
+    "n_runs": 3,
+    "n_scored": 24,
+    "detail": true
+   },
+   "qwen25sft": {
+    "status": "ok",
+    "score": 19.6,
+    "n_runs": 3,
+    "n_scored": 12,
+    "detail": true
+   },
+   "rl": {
+    "status": "ok",
+    "score": 3.2,
+    "n_runs": 3,
+    "n_scored": 24,
+    "detail": true
+   },
+   "d1base": {
+    "status": "ok",
+    "score": 9.9,
+    "n_runs": 3,
+    "n_scored": 8,
+    "detail": true
+   },
+   "d1sft": {
+    "status": "ok",
+    "score": 32.8,
+    "n_runs": 3,
+    "n_scored": 24,
+    "detail": true
+   },
+   "d1rl": {
+    "status": "ok",
+    "score": 8.2,
+    "n_runs": 3,
+    "n_scored": 20,
+    "detail": true
+   },
+   "m2base": {
+    "status": "ok",
+    "score": 36.4,
+    "n_runs": 3,
+    "n_scored": 12,
+    "detail": true
+   },
+   "m2sft": {
+    "status": "ok",
+    "score": 8.8,
+    "n_runs": 3,
+    "n_scored": 24,
+    "detail": true
+   },
+   "m2rl": {
+    "status": "unfinished",
+    "score": null,
+    "n_runs": 0,
+    "n_scored": 0,
+    "detail": false
+   }
+  },
+  "security-membership-inference-defense": {
+   "base8b": {
+    "status": "ok",
+    "score": 39.0,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "sft8b": {
+    "status": "ok",
+    "score": 27.9,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "qwen3-8b-rl": {
+    "status": "ok",
+    "score": 28.4,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "base14b": {
+    "status": "ok",
+    "score": 32.0,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "sft14b": {
+    "status": "ok",
+    "score": 14.7,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "qwen3-14b-rl": {
+    "status": "ok",
+    "score": 14.1,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "base32bq3": {
+    "status": "ok",
+    "score": 29.3,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "sft32b": {
+    "status": "ok",
+    "score": 24.5,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "qwen3-32b-rl": {
+    "status": "ok",
+    "score": 27.7,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "base32b": {
+    "status": "ok",
+    "score": 61.8,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "qwen25sft": {
+    "status": "ok",
+    "score": 43.2,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "rl": {
+    "status": "ok",
+    "score": 22.0,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "d1base": {
+    "status": "unfinished",
+    "score": null,
+    "n_runs": 0,
+    "n_scored": 0,
+    "detail": false
+   },
+   "d1sft": {
+    "status": "ok",
+    "score": 30.5,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "d1rl": {
+    "status": "unfinished",
+    "score": null,
+    "n_runs": 0,
+    "n_scored": 0,
+    "detail": false
+   },
+   "m2base": {
+    "status": "ok",
+    "score": 30.4,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "m2sft": {
+    "status": "ok",
+    "score": 33.5,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "m2rl": {
+    "status": "unfinished",
+    "score": null,
+    "n_runs": 0,
+    "n_scored": 0,
+    "detail": false
+   }
+  },
+  "robo-humanoid-sim2real-algo": {
+   "base8b": {
+    "status": "unfinished",
+    "score": null,
+    "n_runs": 0,
+    "n_scored": 0,
+    "detail": false
+   },
+   "sft8b": {
+    "status": "unfinished",
+    "score": null,
+    "n_runs": 0,
+    "n_scored": 0,
+    "detail": false
+   },
+   "qwen3-8b-rl": {
+    "status": "unfinished",
+    "score": null,
+    "n_runs": 0,
+    "n_scored": 0,
+    "detail": false
+   },
+   "base14b": {
+    "status": "unfinished",
+    "score": null,
+    "n_runs": 0,
+    "n_scored": 0,
+    "detail": false
+   },
+   "sft14b": {
+    "status": "unfinished",
+    "score": null,
+    "n_runs": 0,
+    "n_scored": 0,
+    "detail": false
+   },
+   "qwen3-14b-rl": {
+    "status": "unfinished",
+    "score": null,
+    "n_runs": 0,
+    "n_scored": 0,
+    "detail": false
+   },
+   "base32bq3": {
+    "status": "unfinished",
+    "score": null,
+    "n_runs": 0,
+    "n_scored": 0,
+    "detail": false
+   },
+   "sft32b": {
+    "status": "unfinished",
+    "score": null,
+    "n_runs": 0,
+    "n_scored": 0,
+    "detail": false
+   },
+   "qwen3-32b-rl": {
+    "status": "unfinished",
+    "score": null,
+    "n_runs": 0,
+    "n_scored": 0,
+    "detail": false
+   },
+   "base32b": {
+    "status": "unfinished",
+    "score": null,
+    "n_runs": 0,
+    "n_scored": 0,
+    "detail": false
+   },
+   "qwen25sft": {
+    "status": "unfinished",
+    "score": null,
+    "n_runs": 0,
+    "n_scored": 0,
+    "detail": false
+   },
+   "rl": {
+    "status": "unfinished",
+    "score": null,
+    "n_runs": 0,
+    "n_scored": 0,
+    "detail": false
+   },
+   "d1base": {
+    "status": "unfinished",
+    "score": null,
+    "n_runs": 0,
+    "n_scored": 0,
+    "detail": false
+   },
+   "d1sft": {
+    "status": "unfinished",
+    "score": null,
+    "n_runs": 0,
+    "n_scored": 0,
+    "detail": false
+   },
+   "d1rl": {
+    "status": "unfinished",
+    "score": null,
+    "n_runs": 0,
+    "n_scored": 0,
+    "detail": false
+   },
+   "m2base": {
+    "status": "unfinished",
+    "score": null,
+    "n_runs": 0,
+    "n_scored": 0,
+    "detail": false
+   },
+   "m2sft": {
+    "status": "unfinished",
+    "score": null,
+    "n_runs": 0,
+    "n_scored": 0,
+    "detail": false
+   },
+   "m2rl": {
+    "status": "unfinished",
+    "score": null,
+    "n_runs": 0,
+    "n_scored": 0,
+    "detail": false
+   }
+  }
+ },
+ "legend": {
+  "ok": "faithful run, real rescaled score (50=strong baseline, 100=upper bound)",
+  "zero": "genuine 0-floor (proposal ran, <= worst anchor); faithful",
+  "failed": "broken run: no valid metric (empty output / crash / OOM / infra)",
+  "unfinished": "dropped task / m2rl still training / never dispatched (no data)"
+ },
+ "counts": {
+  "ok": 390,
+  "zero": 1,
+  "failed": 99,
+  "unfinished": 50
+ },
+ "generated_from": "mls_dashboard_extract.py"
+}

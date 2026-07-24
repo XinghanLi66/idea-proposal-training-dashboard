@@ -1,0 +1,64 @@
+{
+ "slug": "ts-exogenous-forecast",
+ "domain": "Time Series & Forecasting",
+ "name": "Exogenous-Variable Target Forecasting Model",
+ "description": "# Exogenous Variable Forecasting: Custom Model Design\n\n## Objective\nDesign and implement a custom deep learning model for time series forecasting with exogenous (external) variables. Uses `features=MS`: all variables as input, predict only the target (last dimension). Your code goes in the `Model` class in `models/Custom.py`. Three reference implementations (DLinear, PatchTST, iTransformer) are provided as read-only.\n\n## Evaluation\nTrained and evaluated on three datasets with MS features:\n- **ETTh1** (7 → 1, hourly electricity data)\n- **Weather** (21 → 1, weather observations)\n- **ECL** (321 → 1, electricity consumption)\n\nAll use `seq_len=96`, `pred_len=96`. Metrics: MSE and MAE on the target variable (lower is better). The framework automatically extracts `outputs[:, :, -1:]`.\n",
+ "metric": "mse_ETTh1",
+ "lower_is_better": true,
+ "master_prompt": {
+  "system": "You are a world-class AI researcher. You are given a machine-learning task with a specific editable code component. Reason step by step in your own distinctive style toward ONE genuinely novel, non-obvious idea to improve that component. Make the creative core unmistakably clear and explain how you arrived at it. Focus on ideas and mechanisms, not full implementation code.",
+  "user": "# Exogenous Variable Forecasting: Custom Model Design\n\n## Objective\nDesign and implement a custom deep learning model for time series forecasting with exogenous (external) variables. Uses `features=MS`: all variables as input, predict only the target (last dimension). Your code goes in the `Model` class in `models/Custom.py`. Three reference implementations (DLinear, PatchTST, iTransformer) are provided as read-only.\n\n## Evaluation\nTrained and evaluated on three datasets with MS features:\n- **ETTh1** (7 → 1, hourly electricity data)\n- **Weather** (21 → 1, weather observations)\n- **ECL** (321 → 1, electricity consumption)\n\nAll use `seq_len=96`, `pred_len=96`. Metrics: MSE and MAE on the target variable (lower is better). The framework automatically extracts `outputs[:, :, -1:]`.\n\n\nThe editable component is `Time-Series-Library/models/Custom.py` (evaluation setting: ETTh1). Propose ONE concrete, novel idea to improve it. Conclude with two lines: 'Core idea:' and 'Non-trivial crux:'."
+ },
+ "baselines": {
+  "methods": [
+   {
+    "name": "dlinear",
+    "metrics": {
+     "mse_ETTh1": "0.06435929983854294",
+     "mae_ETTh1": "0.18783287703990936",
+     "mse_Weather": "0.005651962477713823",
+     "mae_Weather": "0.06266666948795319",
+     "mse_ECL": "0.38733312487602234",
+     "mae_ECL": "0.45122191309928894"
+    }
+   },
+   {
+    "name": "itransformer",
+    "metrics": {
+     "mse_ETTh1": "0.058922577649354935",
+     "mae_ETTh1": "0.18668043613433838",
+     "mse_Weather": "0.001346047967672348",
+     "mae_Weather": "0.026998326182365417",
+     "mse_ECL": "0.3014792203903198",
+     "mae_ECL": "0.4050401449203491"
+    }
+   },
+   {
+    "name": "patchtst",
+    "metrics": {
+     "mse_ETTh1": "0.05829169228672981",
+     "mae_ETTh1": "0.1825377643108368",
+     "mse_Weather": "0.0016519494820386171",
+     "mae_Weather": "0.029337307438254356",
+     "mse_ECL": "0.3178873658180237",
+     "mae_ECL": "0.39469659328460693"
+    }
+   },
+   {
+    "name": "timexer",
+    "metrics": {
+     "mse_ETTh1": "0.05707342177629471",
+     "mae_ETTh1": "0.18303056061267853",
+     "mse_Weather": "0.0013286545872688293",
+     "mae_Weather": "0.026885008439421654",
+     "mse_ECL": "0.2616448700428009",
+     "mae_ECL": "0.3646385669708252",
+     "elapsed_ETTh1": "49",
+     "elapsed_Weather": "246",
+     "elapsed_ECL": "573"
+    }
+   }
+  ],
+  "note": "rescaled cells: 50 = strong baseline, 100 = theoretical upper bound. Baseline methods below are the reference implementations the proposals compete against."
+ }
+}

@@ -1,0 +1,132 @@
+{
+ "slug": "mlsys-sparse-attention-inference",
+ "domain": "ML Systems & Efficient ML",
+ "name": "Long-Context Inference-Time Sparse Attention",
+ "description": "# Long-Context Inference-Time Sparse Attention\n\n## Research Question\nDesign a **sparse attention module** that drops into a pretrained 1.4B-param\ncausal LLM at inference time and preserves long-context task quality under a\nfixed sparsity budget — no retraining, no fine-tuning, no architectural\nsurgery beyond replacing the attention forward.\n\n## Background\nInference-time sparse attention has been studied along two axes:\n**static patterns** (sliding-window, sink + window, BigBird block-sparse,\ndilated) and **content-adaptive patterns** (Reformer LSH, NSA-style block-\ntop-K, Quest). KV-cache compression methods (H2O, SnapKV, StreamingLLM)\nare designed for autoregressive decode with a mutable KV cache and are not\nevaluated here — this benchmark uses a parallel-forward setup where every\nforward processes the full prefix in one shot and the same `SparseAttention`\nmodule replays at every generation step. Methods whose importance signal\nshifts with the observation window (H2O, SnapKV) drift during generation\nunder this setting; we therefore restrict the baseline set to methods that\noperate correctly under parallel forward.\n\nNIAH retrieval and LongBench QA evaluations need instruction-following\nability, so this task uses an instruction-tuned backbone rather than a\nbase model.\n\nThe agent's `SparseAttention` instance (one per attention layer) is\nmonkey-patched into `Qwen/Qwen2.5-1.5B-Instruct` (12 query heads, 2 KV\nheads — the harness handles GQA replication so this module sees 12 heads\non both Q and K/V). Three downstream tasks exercise different long-context\ncapabilities:\n\n| Env                       | Metric        | Notes                                                  |\n|---------------------------|---------------|--------------------------------------------------------|\n| niah_8k                   | retrieval acc | Synthetic Needle-In-A-Haystack at 8K context           |\n| longbench_qasper          | QA F1         | LongBench Qasper single-doc scientific paper QA        |\n| longbench_multifieldqa_en | QA F1         | LongBench MultiFieldQA-EN long-document multi-field QA |\n\n## Task\nEdit the `SparseAttention` class in\n`sparse-attn-eval/custom_sparse_attn.py` (lines 31-103). The rest of the\nfile, plus `harness.py` and `run_llm.py`, are read-only — they handle model\nloading, attention monkey-patching, density tracking, and metric computation.\n\n## Interface\n```python\nclass SparseAttention(nn.Module):\n    def __init__(self, head_dim, num_heads, block_size=64, density_budget=0.25): ...\n    def forward(self, q, k, v, is_causal=False, scale=None) -> torch.Tensor: ...\n```\n\n`q`, `k`, `v` arrive as `(B, H, N, D)` in float16/bfloat16. `is_causal=True`\nfor the causal LLM. Return the attention output in the same shape and dtype.\n\nAfter every forward, set `self.last_density` to the fraction of (q, k) pairs\nthat received non-zero attention (causal-adjusted: divide by `N(N+1)/2` when\n`is_causal=True`). The harness aggregates `last_density` across all attention\nlayers and **aborts the run if the mean exceeds the density budget\n(0.25 + 0.02 slack)** for any non-`dense` baseline. Missing, NaN, infinite,\nnegative, or >1 density reports are treated as harness errors, not as zero\ndensity.\n\n## Sparsity Budget\n- `density_budget = 0.25`.\n- Only the reference `dense` baseline is allowed to exceed it: it reports\n  the true `last_density = 1.0`, and the dense run is invoked with\n  `ALLOW_DENSE_FLAG=1` (set as a baseline-level env var in `config.json`)\n  which forwards `--allow-dense` to `run_llm.py` so\n  `harness.enforce_budget(allow_dense=True)` skips the budget check.\n\n## Constraints\n- Inference only — do **not** modify weights, do **not** add training.\n- Single A100 80GB; FP16 only (no FP8).\n- No Triton kernels; pure PyTorch ops or `torch.nn.attention.flex_attention`\n  if available in this PyTorch version.\n- Branching on `is_causal` and on `N` is fine. The forward signature includes\n  `is_causal` for forward compatibility (currently always True).\n\n## Baselines (already implemented for reference)\n1. **dense** — full attention oracle (density 1.0; the only baseline allowed\n   to exceed the 0.25 budget).\n2. **streaming_llm** — 4 attention sinks + sliding window (Xiao et al., ICLR\n   2024). Canonical static sink+window pattern.\n3. **bigbird** — global + window + random block-sparse pattern (Zaheer et\n   al., NeurIPS 2020). Static, theoretically full-rank.\n4. **block_topk** — content-adaptive block-level top-K via mean-pooled-key\n   scoring (Yuan et al., NSA 2024 — block-selection branch). Diagonal block\n   always retained; importance computed per query block at inference time.\n\nAll baselines are paper-faithful and operate correctly in parallel-forward\nmode (use_cache=False). H2O / SnapKV / Quest are deliberately excluded:\ntheir importance signal is keyed off a mutable KV cache during decode and\ndoes not transfer cleanly to single-shot prefill+generate without cache\nplumbing that this harness does not implement.\n\nA good submission should beat or match every baseline on at least two of\nthe three environments without overshooting the density budget.\n",
+ "metric": "niah_acc",
+ "lower_is_better": false,
+ "master_prompt": {
+  "system": "You are a world-class AI researcher. You are given a machine-learning task with a specific editable code component. Reason step by step in your own distinctive style toward ONE genuinely novel, non-obvious idea to improve that component. Make the creative core unmistakably clear and explain how you arrived at it. Focus on ideas and mechanisms, not full implementation code.",
+  "user": "# Long-Context Inference-Time Sparse Attention\n\n## Research Question\nDesign a **sparse attention module** that drops into a pretrained 1.4B-param\ncausal LLM at inference time and preserves long-context task quality under a\nfixed sparsity budget — no retraining, no fine-tuning, no architectural\nsurgery beyond replacing the attention forward.\n\n## Background\nInference-time sparse attention has been studied along two axes:\n**static patterns** (sliding-window, sink + window, BigBird block-sparse,\ndilated) and **content-adaptive patterns** (Reformer LSH, NSA-style block-\ntop-K, Quest). KV-cache compression methods (H2O, SnapKV, StreamingLLM)\nare designed for autoregressive decode with a mutable KV cache and are not\nevaluated here — this benchmark uses a parallel-forward setup where every\nforward processes the full prefix in one shot and the same `SparseAttention`\nmodule replays at every generation step. Methods whose importance signal\nshifts with the observation window (H2O, SnapKV) drift during generation\nunder this setting; we therefore restrict the baseline set to methods that\noperate correctly under parallel forward.\n\nNIAH retrieval and LongBench QA evaluations need instruction-following\nability, so this task uses an instruction-tuned backbone rather than a\nbase model.\n\nThe agent's `SparseAttention` instance (one per attention layer) is\nmonkey-patched into `Qwen/Qwen2.5-1.5B-Instruct` (12 query heads, 2 KV\nheads — the harness handles GQA replication so this module sees 12 heads\non both Q and K/V). Three downstream tasks exercise different long-context\ncapabilities:\n\n| Env                       | Metric        | Notes                                                  |\n|---------------------------|---------------|--------------------------------------------------------|\n| niah_8k                   | retrieval acc | Synthetic Needle-In-A-Haystack at 8K context           |\n| longbench_qasper          | QA F1         | LongBench Qasper single-doc scientific paper QA        |\n| longbench_multifieldqa_en | QA F1         | LongBench MultiFieldQA-EN long-document multi-field QA |\n\n## Task\nEdit the `SparseAttention` class in\n`sparse-attn-eval/custom_sparse_attn.py` (lines 31-103). The rest of the\nfile, plus `harness.py` and `run_llm.py`, are read-only — they handle model\nloading, attention monkey-patching, density tracking, and metric computation.\n\n## Interface\n```python\nclass SparseAttention(nn.Module):\n    def __init__(self, head_dim, num_heads, block_size=64, density_budget=0.25): ...\n    def forward(self, q, k, v, is_causal=False, scale=None) -> torch.Tensor: ..\n\nThe editable component is `sparse-attn-eval/custom_sparse_attn.py` (evaluation setting: niah_8k). Propose ONE concrete, novel idea to improve it. Conclude with two lines: 'Core idea:' and 'Non-trivial crux:'."
+ },
+ "baselines": {
+  "methods": [
+   {
+    "name": "bigbird",
+    "metrics": {
+     "niah_acc": "0.2",
+     "niah_density": "0.2601",
+     "niah_time": "1659.3",
+     "elapsed_niah_8k": "1669",
+     "qasper_f1": "0.0871",
+     "qasper_density": "0.2421",
+     "qasper_time": "1331.4",
+     "elapsed_longbench_qasper": "1347",
+     "multifieldqa_f1": "0.2298",
+     "multifieldqa_density": "0.2693",
+     "multifieldqa_time": "5273.2",
+     "elapsed_longbench_multifieldqa_en": "5283"
+    }
+   },
+   {
+    "name": "block_topk",
+    "metrics": {
+     "niah_acc": "0.26",
+     "niah_density": "0.242",
+     "niah_time": "1379.3",
+     "elapsed_niah_8k": "1396",
+     "qasper_f1": "0.1082",
+     "qasper_density": "0.2291",
+     "qasper_time": "1346.0",
+     "elapsed_longbench_qasper": "1354",
+     "multifieldqa_f1": "0.2074",
+     "multifieldqa_density": "0.2331",
+     "multifieldqa_time": "5816.7",
+     "elapsed_longbench_multifieldqa_en": "5830"
+    }
+   },
+   {
+    "name": "dense",
+    "metrics": {
+     "niah_acc": "1.0",
+     "niah_density": "1.0",
+     "niah_time": "76.9",
+     "elapsed_niah_8k": "89",
+     "qasper_f1": "0.1406",
+     "qasper_density": "1.0",
+     "qasper_time": "102.2",
+     "elapsed_longbench_qasper": "114",
+     "multifieldqa_f1": "0.3447",
+     "multifieldqa_density": "1.0",
+     "multifieldqa_time": "291.3",
+     "elapsed_longbench_multifieldqa_en": "304"
+    }
+   },
+   {
+    "name": "flexprefill",
+    "metrics": {
+     "niah_acc": "0.14",
+     "niah_density": "0.1975",
+     "niah_time": "583.6",
+     "elapsed_niah_8k": "595",
+     "qasper_f1": "0.0668",
+     "qasper_density": "0.2408",
+     "qasper_time": "842.8",
+     "elapsed_longbench_qasper": "854",
+     "multifieldqa_f1": "0.0933",
+     "multifieldqa_density": "0.2322",
+     "multifieldqa_time": "2731.1",
+     "elapsed_longbench_multifieldqa_en": "2744"
+    }
+   },
+   {
+    "name": "h2o",
+    "metrics": {
+     "niah_acc": "0.02",
+     "niah_density": "0.2184",
+     "niah_time": "2005.0",
+     "elapsed_niah_8k": "2013",
+     "qasper_f1": "0.0181",
+     "qasper_density": "0.2143",
+     "qasper_time": "2137.9",
+     "elapsed_longbench_qasper": "2152"
+    }
+   },
+   {
+    "name": "snapkv",
+    "metrics": {
+     "niah_acc": "0.0",
+     "niah_density": "0.2266",
+     "niah_time": "1961.6",
+     "elapsed_niah_8k": "1970",
+     "qasper_f1": "0.0134",
+     "qasper_density": "0.2526",
+     "qasper_time": "2221.5",
+     "elapsed_longbench_qasper": "2234",
+     "multifieldqa_f1": "0.0132",
+     "multifieldqa_density": "0.256",
+     "multifieldqa_time": "6087.8",
+     "elapsed_longbench_multifieldqa_en": "6102"
+    }
+   },
+   {
+    "name": "streaming_llm",
+    "metrics": {
+     "niah_acc": "0.2",
+     "niah_density": "0.2344",
+     "niah_time": "1742.5",
+     "elapsed_niah_8k": "1751",
+     "qasper_f1": "0.1103",
+     "qasper_density": "0.2344",
+     "qasper_time": "1669.4",
+     "elapsed_longbench_qasper": "1678",
+     "multifieldqa_f1": "0.213",
+     "multifieldqa_density": "0.2344",
+     "multifieldqa_time": "4567.9",
+     "elapsed_longbench_multifieldqa_en": "4578"
+    }
+   }
+  ],
+  "note": "rescaled cells: 50 = strong baseline, 100 = theoretical upper bound. Baseline methods below are the reference implementations the proposals compete against."
+ }
+}

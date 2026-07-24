@@ -1,0 +1,119 @@
+{
+ "task": "llm-dllm-demask-strategy",
+ "arm": "sft32b",
+ "arm_label": "Qwen3-32B SFT",
+ "status": "ok",
+ "score": 0.0,
+ "master_output": {
+  "idea": null,
+  "proposal": "<think>\n\n</think>\n\n**Core idea:** Introduce a *dynamic block-length adaptation* that tunes `block_length` per step to trade off semi-autoregressive accuracy and fully-parallel speed, driven by the token prediction confidence: in early (low-confidence) steps, use short `block_length` to refine tokens locally; in later (high-confidence) steps, expand `block_length` to decode fully in parallel.\n\n**Non-trivial crux:** The schedule must smoothly interpolate between the two regimes while obeying the `block_length <= gen_length` constraint and ensuring that early short blocks never write into later positions, which requires carefully aligning the token selection logic with the block progression and keeping a single forward pass per step.",
+  "valid": null,
+  "n_attempts": null
+ },
+ "per_run_scores": [
+  {
+   "seed": "42",
+   "timestamp": "2026-07-18T12:08:30.542617+00:00",
+   "has_metric": true,
+   "metrics": {
+    "accuracy_llada-math": "0.328",
+    "avg_steps_llada-math": "124.7",
+    "elapsed_llada-math": "2200.8",
+    "accuracy_llada-humaneval": "0.3902",
+    "avg_steps_llada-humaneval": "85.76",
+    "elapsed_llada-humaneval": "1002.7",
+    "elapsed_dream-text": "120.2"
+   }
+  },
+  {
+   "seed": "42",
+   "timestamp": "2026-07-18T12:26:31.246564+00:00",
+   "has_metric": true,
+   "metrics": {
+    "accuracy_llada-math": "0.318",
+    "avg_steps_llada-math": "124.13",
+    "elapsed_llada-math": "2181.9",
+    "accuracy_llada-humaneval": "0.3963",
+    "avg_steps_llada-humaneval": "87.44",
+    "elapsed_llada-humaneval": "998.4",
+    "elapsed_dream-text": "26.3"
+   }
+  },
+  {
+   "seed": "42",
+   "timestamp": "2026-07-18T12:27:13.805845+00:00",
+   "has_metric": true,
+   "metrics": {
+    "accuracy_llada-math": "0.334",
+    "avg_steps_llada-math": "124.21",
+    "elapsed_llada-math": "2318.6",
+    "accuracy_llada-humaneval": "0.4024",
+    "avg_steps_llada-humaneval": "86.76",
+    "elapsed_llada-humaneval": "1045.3",
+    "elapsed_dream-text": "16.5"
+   }
+  }
+ ],
+ "workers": [
+  {
+   "log_dir": "logs/llm-dllm-demask-strategy/claude-fable-5__sft32b__sft32b_llm-dllm-demask-strategy_s1",
+   "user_prompt": null,
+   "steps": [],
+   "final_code": {},
+   "summary": {
+    "steps": 6,
+    "tests": 3,
+    "done": true,
+    "max_steps": 20,
+    "tokens": {
+     "prompt_tokens": 14,
+     "completion_tokens": 36574,
+     "total_tokens": 36588,
+     "cached_tokens": 151699,
+     "cache_creation_tokens": 125480,
+     "calls": 7
+    }
+   }
+  },
+  {
+   "log_dir": "logs/llm-dllm-demask-strategy/claude-fable-5__sft32b__sft32b_llm-dllm-demask-strategy_s2",
+   "user_prompt": null,
+   "steps": [],
+   "final_code": {},
+   "summary": {
+    "steps": 6,
+    "tests": 3,
+    "done": true,
+    "max_steps": 20,
+    "tokens": {
+     "prompt_tokens": 14,
+     "completion_tokens": 33380,
+     "total_tokens": 33394,
+     "cached_tokens": 147119,
+     "cache_creation_tokens": 123907,
+     "calls": 7
+    }
+   }
+  },
+  {
+   "log_dir": "logs/llm-dllm-demask-strategy/claude-fable-5__sft32b__sft32b_llm-dllm-demask-strategy_s3",
+   "user_prompt": null,
+   "steps": [],
+   "final_code": {},
+   "summary": {
+    "steps": 8,
+    "tests": 3,
+    "done": true,
+    "max_steps": 20,
+    "tokens": {
+     "prompt_tokens": 18,
+     "completion_tokens": 25443,
+     "total_tokens": 25461,
+     "cached_tokens": 237639,
+     "cache_creation_tokens": 83949,
+     "calls": 9
+    }
+   }
+  }
+ ]
+}

@@ -1,0 +1,85 @@
+{
+ "slug": "jepa-planning",
+ "domain": "Robotics",
+ "name": "Latent World-Model Planner",
+ "description": "# JEPA World Model Planning: Algorithm Design\n\n## Objective\nDesign a novel planning algorithm that leverages a learned JEPA (Joint Embedding Predictive Architecture) world model for goal-conditioned navigation. The task evaluates planning performance on the Two Rooms environment, where an agent must navigate around walls and through doors to reach a target location.\n\n## Research Question\nCan you design a planning algorithm that outperforms standard derivative-free methods (CEM, MPPI) by better exploiting the structure of a learned JEPA world model?\n\n## What You Can Modify\nYou must implement the `CustomPlanner` class in `custom_planner.py` within the editable region on lines 323-367. The class extends the `Planner` abstract base class and must implement the `plan()` method. The JEPA world model checkpoint is fixed and provided by the evaluation environment; the task is to improve planning, not to retrain the model.\n\n## Interface\n\n### CustomPlanner Constructor\n```python\ndef __init__(self, unroll, action_dim=2, plan_length=15,\n             num_samples=200, n_iters=20, **kwargs):\n```\n- `unroll`: Function to forward-simulate through the world model\n- `action_dim`: Dimensionality of action space (2 for x/y movement)\n- `plan_length`: Maximum planning horizon\n- `num_samples`: Number of action samples (adjustable)\n- `n_iters`: Number of optimization iterations (adjustable)\n\n### plan() Method\n```python\ndef plan(self, obs_init, steps_left=None, eval_mode=True,\n         t0=False, plan_vis_path=None) -> PlanningResult:\n```\n- `obs_init`: Initial observation encoding `[1, C, 1, H, W]`\n- `steps_left`: Remaining steps in the episode\n- Returns: `PlanningResult(actions=Tensor[T, A], ...)`\n\n### Available Methods (Inherited)\n- `self.unroll(obs_init, actions)`: Forward-simulate actions through the world model.\n  - `obs_init`: `[1, C, 1, H, W]` initial observation encoding\n  - `actions`: `[B, A, T]` batch of action sequences\n  - Returns: `[B, D, T+1, H, W]` predicted state encodings\n- `self.objective(encodings)`: Compute cost for predicted state encodings.\n  - `encodings`: `[B, D, T, H, W]`\n  - Returns: `[B]` cost per sample (lower is better)\n- `self.cost_function(actions, obs_init)`: Convenience method that calls `unroll` then `objective`.\n  - Returns: `[B]` cost per sample\n\n## Evaluation\n- Environment: Two Rooms (65x65 grid with wall and door)\n- Episodes: 20 with random start and goal positions controlled by the MLS-Bench SEED\n- Max steps per episode: 200\n- Success threshold: Euclidean distance < 4.5 from goal\n- Benchmarks: Three planning horizons (30, 60, 90 steps) test the algorithm across short, medium, and long-range planning\n- Metric: `success_rate` (fraction of successful episodes) per horizon\n",
+ "metric": "success_rate_horizon-30",
+ "lower_is_better": false,
+ "master_prompt": {
+  "system": "You are a world-class AI researcher. You are given a machine-learning task with a specific editable code component. Reason step by step in your own distinctive style toward ONE genuinely novel, non-obvious idea to improve that component. Make the creative core unmistakably clear and explain how you arrived at it. Focus on ideas and mechanisms, not full implementation code.",
+  "user": "# JEPA World Model Planning: Algorithm Design\n\n## Objective\nDesign a novel planning algorithm that leverages a learned JEPA (Joint Embedding Predictive Architecture) world model for goal-conditioned navigation. The task evaluates planning performance on the Two Rooms environment, where an agent must navigate around walls and through doors to reach a target location.\n\n## Research Question\nCan you design a planning algorithm that outperforms standard derivative-free methods (CEM, MPPI) by better exploiting the structure of a learned JEPA world model?\n\n## What You Can Modify\nYou must implement the `CustomPlanner` class in `custom_planner.py` within the editable region on lines 323-367. The class extends the `Planner` abstract base class and must implement the `plan()` method. The JEPA world model checkpoint is fixed and provided by the evaluation environment; the task is to improve planning, not to retrain the model.\n\n## Interface\n\n### CustomPlanner Constructor\n```python\ndef __init__(self, unroll, action_dim=2, plan_length=15,\n             num_samples=200, n_iters=20, **kwargs):\n```\n- `unroll`: Function to forward-simulate through the world model\n- `action_dim`: Dimensionality of action space (2 for x/y movement)\n- `plan_length`: Maximum planning horizon\n- `num_samples`: Number of action samples (adjustable)\n- `n_iters`: Number of optimization iterations (adjustable)\n\n### plan() Method\n```python\ndef plan(self, obs_init, steps_left=None, eval_mode=True,\n         t0=False, plan_vis_path=None) -> PlanningResult:\n```\n- `obs_init`: Initial observation encoding `[1, C, 1, H, W]`\n- `steps_left`: Remaining steps in the episode\n- Returns: `PlanningResult(actions=Tensor[T, A], ...)`\n\n### Available Methods (Inherited)\n- `self.unroll(obs_init, actions)`: Forward-simulate actions through the world model.\n  - `obs_init`: `[1, C, 1, H, W]` initial observation encoding\n  - `actions`: `[B, A, T]` batch of action sequences\n  - Returns: `[B, D, T+1, H, W]` predicted state encodings\n- `self.objective(encodings)`: Compute cost for predicted state encodings.\n  - `encodings`: `[B, D, T, H, W]`\n  - Returns: `[B]` cost per sample (lower is better)\n- `self.cost_function(actions, obs_init)`: Convenience method that calls `unroll` then `objective`.\n  - Returns: `[B]` cost per sample\n\n## Evaluation\n- Environment: Two Rooms (65x65 grid with wall and door)\n- Episodes: 20 with random start and goal positions controlled by the MLS-Bench SEED\n- Max steps per episode: 200\n- Success threshold: Euclidean distance < 4.5 from goal\n- Benchmarks: Three planning horizons (30, 60, 90 steps) test the\n\nThe editable component is `eb_jepa/custom_planner.py` (evaluation setting: horizon-30). Propose ONE concrete, novel idea to improve it. Conclude with two lines: 'Core idea:' and 'Non-trivial crux:'."
+ },
+ "baselines": {
+  "methods": [
+   {
+    "name": "cem",
+    "metrics": {
+     "success_rate_horizon-30": "0.7",
+     "mean_dist_horizon-30": "9.2846",
+     "mean_steps_to_success_horizon-30": "23.43",
+     "success_rate_horizon-60": "0.85",
+     "mean_dist_horizon-60": "5.6082",
+     "mean_steps_to_success_horizon-60": "22.82",
+     "success_rate_horizon-90": "0.95",
+     "mean_dist_horizon-90": "3.3767",
+     "mean_steps_to_success_horizon-90": "43.68",
+     "elapsed_horizon-30": "331",
+     "elapsed_horizon-60": "457",
+     "elapsed_horizon-90": "740"
+    }
+   },
+   {
+    "name": "icem",
+    "metrics": {
+     "success_rate_horizon-30": "0.8",
+     "mean_dist_horizon-30": "5.7089",
+     "mean_steps_to_success_horizon-30": "24.75",
+     "success_rate_horizon-60": "0.9",
+     "mean_dist_horizon-60": "4.1002",
+     "mean_steps_to_success_horizon-60": "25.22",
+     "success_rate_horizon-90": "0.85",
+     "mean_dist_horizon-90": "4.8471",
+     "mean_steps_to_success_horizon-90": "38.53",
+     "elapsed_horizon-30": "392",
+     "elapsed_horizon-60": "508",
+     "elapsed_horizon-90": "842"
+    }
+   },
+   {
+    "name": "mppi",
+    "metrics": {
+     "success_rate_horizon-30": "0.75",
+     "mean_dist_horizon-30": "8.9152",
+     "mean_steps_to_success_horizon-30": "18.4",
+     "success_rate_horizon-60": "0.95",
+     "mean_dist_horizon-60": "3.137",
+     "mean_steps_to_success_horizon-60": "21.95",
+     "success_rate_horizon-90": "0.9",
+     "mean_dist_horizon-90": "5.0031",
+     "mean_steps_to_success_horizon-90": "44.5",
+     "elapsed_horizon-30": "284",
+     "elapsed_horizon-60": "366",
+     "elapsed_horizon-90": "693"
+    }
+   },
+   {
+    "name": "random",
+    "metrics": {
+     "success_rate_horizon-30": "0.55",
+     "mean_dist_horizon-30": "13.2475",
+     "mean_steps_to_success_horizon-30": "75.09",
+     "success_rate_horizon-60": "0.65",
+     "mean_dist_horizon-60": "8.7909",
+     "mean_steps_to_success_horizon-60": "97.54",
+     "success_rate_horizon-90": "0.55",
+     "mean_dist_horizon-90": "11.4725",
+     "mean_steps_to_success_horizon-90": "126.36",
+     "elapsed_horizon-30": "75",
+     "elapsed_horizon-60": "87",
+     "elapsed_horizon-90": "78"
+    }
+   }
+  ],
+  "note": "rescaled cells: 50 = strong baseline, 100 = theoretical upper bound. Baseline methods below are the reference implementations the proposals compete against."
+ }
+}

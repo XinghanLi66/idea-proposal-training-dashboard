@@ -1,0 +1,97 @@
+{
+ "slug": "security-membership-inference-defense",
+ "domain": "Trustworthy Learning",
+ "name": "Training Regularization for Membership Privacy",
+ "description": "# Membership Inference Defense via Training Regularization\n\n## Research Question\nHow can we design a stronger training-time regularizer that reduces membership inference leakage while preserving standard predictive accuracy?\n\n## Background\nMembership inference attacks exploit the gap between train and non-train examples, often through confidence or loss statistics. Many defenses regularize predictions to reduce overconfidence and shrink the train-test generalization gap, but stronger privacy often hurts utility.\n\n## Task\nImplement a better privacy-preserving training objective in `bench/membership/custom_membership_defense.py`. The fixed harness will train a model on a 50/50 train/non-train split of the full dataset, then run a confidence-based membership inference attack on train versus held-out examples.\n\nYour method should improve the privacy-utility tradeoff: lower membership attack AUC while retaining high test accuracy.\n\n## Editable Interface\nYou must implement:\n\n```python\nclass MembershipDefense:\n    def compute_loss(self, logits, labels, epoch):\n        ...\n```\n\n- `logits`: model outputs for the current minibatch\n- `labels`: ground-truth labels\n- `epoch`: current training epoch (0-indexed)\n- Return value: scalar loss tensor used by the fixed training loop\n\nThe optimizer (SGD + CosineAnnealing), architecture, data pipeline, and attack implementation are fixed.\n\n## Evaluation\nBenchmarks:\n\n- `resnet20-cifar10`: ResNet-20 on CIFAR-10\n- `vgg16bn-cifar100`: VGG-16-BN on CIFAR-100\n- `mobilenetv2-fmnist`: MobileNetV2 on FashionMNIST\n\nReported metrics:\n\n- `test_acc`\n- `mia_auc`\n- `privacy_gap`\n- `privacy_score`\n\nPrimary metric: `privacy_score` (higher is better), defined as `test_acc - max(mia_auc - 0.5, 0)`.\n\n## Baselines\n- `erm`: standard cross-entropy training\n- `label_smoothing`: smoothed targets to reduce overconfidence\n- `confidence_penalty`: cross-entropy plus predictive entropy penalty\n- `relaxloss`: margin-aware loss relaxation as a stronger privacy baseline\n",
+ "metric": "test_acc_resnet20_cifar10",
+ "lower_is_better": false,
+ "master_prompt": {
+  "system": "You are a world-class AI researcher. You are given a machine-learning task with a specific editable code component. Reason step by step in your own distinctive style toward ONE genuinely novel, non-obvious idea to improve that component. Make the creative core unmistakably clear and explain how you arrived at it. Focus on ideas and mechanisms, not full implementation code.",
+  "user": "# Membership Inference Defense via Training Regularization\n\n## Research Question\nHow can we design a stronger training-time regularizer that reduces membership inference leakage while preserving standard predictive accuracy?\n\n## Background\nMembership inference attacks exploit the gap between train and non-train examples, often through confidence or loss statistics. Many defenses regularize predictions to reduce overconfidence and shrink the train-test generalization gap, but stronger privacy often hurts utility.\n\n## Task\nImplement a better privacy-preserving training objective in `bench/membership/custom_membership_defense.py`. The fixed harness will train a model on a 50/50 train/non-train split of the full dataset, then run a confidence-based membership inference attack on train versus held-out examples.\n\nYour method should improve the privacy-utility tradeoff: lower membership attack AUC while retaining high test accuracy.\n\n## Editable Interface\nYou must implement:\n\n```python\nclass MembershipDefense:\n    def compute_loss(self, logits, labels, epoch):\n        ...\n```\n\n- `logits`: model outputs for the current minibatch\n- `labels`: ground-truth labels\n- `epoch`: current training epoch (0-indexed)\n- Return value: scalar loss tensor used by the fixed training loop\n\nThe optimizer (SGD + CosineAnnealing), architecture, data pipeline, and attack implementation are fixed.\n\n## Evaluation\nBenchmarks:\n\n- `resnet20-cifar10`: ResNet-20 on CIFAR-10\n- `vgg16bn-cifar100`: VGG-16-BN on CIFAR-100\n- `mobilenetv2-fmnist`: MobileNetV2 on FashionMNIST\n\nReported metrics:\n\n- `test_acc`\n- `mia_auc`\n- `privacy_gap`\n- `privacy_score`\n\nPrimary metric: `privacy_score` (higher is better), defined as `test_acc - max(mia_auc - 0.5, 0)`.\n\n## Baselines\n- `erm`: standard cross-entropy training\n- `label_smoothing`: smoothed targets to reduce overconfidence\n- `confidence_penalty`: cross-entropy plus predictive entropy penalty\n- `relaxloss`: margin-aware loss relaxation as a stronger privacy baseline\n\n\nThe editable component is `pytorch-vision/custom_membership_defense.py` (evaluation setting: resnet20-cifar10). Propose ONE concrete, novel idea to improve it. Conclude with two lines: 'Core idea:' and 'Non-trivial crux:'."
+ },
+ "baselines": {
+  "methods": [
+   {
+    "name": "confidence_penalty",
+    "metrics": {
+     "test_acc_resnet20_cifar10": "0.7974",
+     "mia_auc_resnet20_cifar10": "0.713",
+     "privacy_gap_resnet20_cifar10": "0.1012",
+     "privacy_score_resnet20_cifar10": "0.5844",
+     "elapsed_resnet20-cifar10": "703",
+     "test_acc_vgg16bn_cifar100": "0.01",
+     "mia_auc_vgg16bn_cifar100": "0.0026",
+     "privacy_gap_vgg16bn_cifar100": "0.0",
+     "privacy_score_vgg16bn_cifar100": "0.01",
+     "elapsed_vgg16bn-cifar100": "464",
+     "test_acc_mobilenetv2_fmnist": "0.9273",
+     "mia_auc_mobilenetv2_fmnist": "0.5602",
+     "privacy_gap_mobilenetv2_fmnist": "0.0258",
+     "privacy_score_mobilenetv2_fmnist": "0.8671",
+     "elapsed_mobilenetv2-fmnist": "1327"
+    }
+   },
+   {
+    "name": "erm",
+    "metrics": {
+     "test_acc_resnet20_cifar10": "0.7972",
+     "mia_auc_resnet20_cifar10": "0.7275",
+     "privacy_gap_resnet20_cifar10": "0.0924",
+     "privacy_score_resnet20_cifar10": "0.5697",
+     "elapsed_resnet20-cifar10": "568",
+     "test_acc_vgg16bn_cifar100": "0.5045",
+     "mia_auc_vgg16bn_cifar100": "0.8677",
+     "privacy_gap_vgg16bn_cifar100": "0.1479",
+     "privacy_score_vgg16bn_cifar100": "0.1368",
+     "elapsed_vgg16bn-cifar100": "607",
+     "test_acc_mobilenetv2_fmnist": "0.926",
+     "mia_auc_mobilenetv2_fmnist": "0.5575",
+     "privacy_gap_mobilenetv2_fmnist": "0.0211",
+     "privacy_score_mobilenetv2_fmnist": "0.8685",
+     "elapsed_mobilenetv2-fmnist": "1242"
+    }
+   },
+   {
+    "name": "label_smoothing",
+    "metrics": {
+     "test_acc_resnet20_cifar10": "0.7878",
+     "mia_auc_resnet20_cifar10": "0.7678",
+     "privacy_gap_resnet20_cifar10": "0.1377",
+     "privacy_score_resnet20_cifar10": "0.52",
+     "elapsed_resnet20-cifar10": "594",
+     "test_acc_vgg16bn_cifar100": "0.5258",
+     "mia_auc_vgg16bn_cifar100": "0.8686",
+     "privacy_gap_vgg16bn_cifar100": "0.2866",
+     "privacy_score_vgg16bn_cifar100": "0.1572",
+     "elapsed_vgg16bn-cifar100": "606",
+     "test_acc_mobilenetv2_fmnist": "0.927",
+     "mia_auc_mobilenetv2_fmnist": "0.581",
+     "privacy_gap_mobilenetv2_fmnist": "0.0216",
+     "privacy_score_mobilenetv2_fmnist": "0.846",
+     "elapsed_mobilenetv2-fmnist": "1435"
+    }
+   },
+   {
+    "name": "relaxloss",
+    "metrics": {
+     "test_acc_resnet20_cifar10": "0.7949",
+     "mia_auc_resnet20_cifar10": "0.5092",
+     "privacy_gap_resnet20_cifar10": "0.0075",
+     "privacy_score_resnet20_cifar10": "0.7857",
+     "elapsed_resnet20-cifar10": "161",
+     "test_acc_vgg16bn_cifar100": "0.6226",
+     "mia_auc_vgg16bn_cifar100": "0.649",
+     "privacy_gap_vgg16bn_cifar100": "0.166",
+     "privacy_score_vgg16bn_cifar100": "0.4736",
+     "elapsed_vgg16bn-cifar100": "152",
+     "test_acc_mobilenetv2_fmnist": "0.7904",
+     "mia_auc_mobilenetv2_fmnist": "0.4987",
+     "privacy_gap_mobilenetv2_fmnist": "-0.0012",
+     "privacy_score_mobilenetv2_fmnist": "0.7904",
+     "elapsed_mobilenetv2-fmnist": "394"
+    }
+   }
+  ],
+  "note": "rescaled cells: 50 = strong baseline, 100 = theoretical upper bound. Baseline methods below are the reference implementations the proposals compete against."
+ }
+}

@@ -1,0 +1,157 @@
+{
+ "slug": "llm-qat-algorithm",
+ "domain": "ML Systems & Efficient ML",
+ "name": "Quantization-Aware Language-Model Training",
+ "description": "# LLM Quantization-Aware Training (QAT) Algorithm\n\n## Research Question\nDesign a quantization-aware training (QAT) algorithm that minimizes the\nperplexity gap between a full-precision Pythia-1.4B and the same model\nquantized to very low bit-widths (INT4 / INT3 / INT2) at inference time.\nThe algorithm must be a *training-side* contribution: how the fake-quant\nforward, the gradient flow, the learnable parameters, and the optimizer\nschedule are designed.  It must work uniformly across 4-, 3- and 2-bit\nsettings, not just one.\n\n## Background\nPost-training quantization (PTQ) collapses at very low bit-widths\nbecause every weight is rounded to one of `2^B` levels with no chance to\nrepair the resulting error.  Quantization-Aware Training (QAT) attacks\nthis by inserting *fake quantization* into the forward pass during a\nshort fine-tune.  The key knobs are:\n\n- **Gradient estimator**: round-then-clamp is non-differentiable.  The\n  Straight-Through Estimator (STE) [Bengio et al., 2013] simply pretends\n  the operation is identity in backward.  Learning the step size jointly\n  with the weights (LSQ [Esser et al., ICLR 2020]) gives a measurably\n  tighter quantization grid and dominates STE at INT2.\n- **Stability**: low-bit QAT diverges easily; warming up the\n  quantization noise and EMA-smoothing the scales (StableQAT-style)\n  buys back several PPL points at INT2.\n\nA note on the baselines: alongside the two QAT methods (STE, LSQ) and\nthe no-finetune PTQ reference (`no_qat`), there is a\ncontrol baseline `finetune_then_ptq` that runs\na *full-precision* finetune on WikiText-2 train with the same\nschedule as the QAT methods (lr=2e-5, 500 steps, batch=2, grad-accum\n4) and then applies the same RTN quantize-dequantize as `no_qat`.\nThis isolates the finetune signal from the QAT signal: a useful QAT\nmethod must beat `finetune_then_ptq`, otherwise its apparent gains\nover `no_qat` are just the finetune talking.  At INT2 in particular,\nRTN PTQ on a finetuned FP model is still expected to collapse, while\na real QAT method should remain usable.\n\nGroup quantization (per-row, per-group of `group_size=128` columns,\nsymmetric, signed) is the standard low-bit format and is fixed for this\ntask.  Linear layers in every transformer block are quantized;\nembeddings, LayerNorm and the LM head stay full precision.\n\n## What You Can Modify\nThe single file `llm-qat-runtime/custom_qat.py` is created at task\nsetup; you may only edit lines **33-176** (the EDITABLE region marked\nwith `# EDITABLE REGION START / END`).  It contains:\n\n- `CONFIG_OVERRIDES` dict: per-method training hyperparameters\n  (`learning_rate`, `num_steps`, `batch_size`,\n  `gradient_accumulation_steps`, `max_grad_norm`, `warmup_steps`,\n  `weight_decay`).\n- `fake_quantize_weight(weight, num_bits, group_size)`: differentiable\n  fake-quant for the QAT forward pass.  Must allow gradient flow back\n  to the original weight.\n- `fake_quantize_activation(x, num_bits)`: optional (default identity\n  for weight-only QAT).\n- `quantize_dequantize_weight(weight, num_bits, group_size)`: REAL\n  (no-grad) per-group symmetric QDQ used after training to materialize\n  the integer model for evaluation.\n- `class QATWrapper(nn.Module)`: wraps an `nn.Linear`; applies fake\n  quant in `forward`; may hold extra learnable parameters (per-group\n  scales for LSQ, EMA buffers for StableQAT, etc.). May expose an\n  `aux_loss(step, total_steps)` method that the training loop adds to\n  the cross-entropy loss — useful for QAT methods that need a\n  regularizer (e.g. weight decay on a learnable clipping bound).\n- `prepare_qat_model(model, num_bits, group_size)`: replace every\n  `nn.Linear` (and HF GPT-2 `Conv1D`) in the model with `QATWrapper`,\n  initializing any extra learnable parameters.  The function must\n  restore the LM head (`embed_out` for Pythia / GPTNeoX, `lm_head` for\n  GPT-style models) to a plain Linear so the output projection stays\n  in full precision.\n\nThe fixed (non-editable) region implements: model load (Pythia-1.4B in\nFP32 with gradient checkpointing), WikiText-2 train data sampling\n(block-1024 random crops), the QAT training loop (`AdamW`, cosine LR\nwith warmup, gradient accumulation, grad-norm clipping), real-\nquantization roundtrip after training, and WikiText-2 test perplexity\nevaluation.\n\n## Architecture\n- **Backbone**: HuggingFace `EleutherAI/pythia-1.4b` (1.4B parameters,\n  GPTNeoX architecture, 24 layers × 16 heads × 2048 hidden, native\n  context length 2048).  Linear layers are wrapped via the recursive\n  traversal in `prepare_qat_model`.\n- **Optimizer**: AdamW, cosine schedule with linear warmup.  Default\n  500 steps × batch 2 × grad-accum 4 (≈4000 sequences seen, seqlen\n  1024) — the agent may shorten/lengthen via `CONFIG_OVERRIDES`.\n- **Calibration / training data**: WikiText-2 raw v1 train split.\n  Random 1024-token crops.\n- **Evaluation**: WikiText-2 raw v1 test split, sliding non-overlapping\n  blocks of 1024 tokens, exponentiated mean cross-entropy loss.\n\n## Interface\n```python\nCONFIG_OVERRIDES = {\n    \"learning_rate\": 2e-5,\n    \"num_steps\": 500,\n    \"batch_size\": 2,\n    \"gradient_accumulation_steps\": 4,\n    \"max_grad_norm\": 1.0,\n    \"warmup_steps\": 50,\n    \"weight_decay\": 0.0,\n}\n\ndef fake_quantize_weight(weight, num_bits, group_size): ...   # differentiable\ndef fake_quantize_activation(x, num_bits): ...                # optional, default id\ndef quantize_dequantize_weight(weight, num_bits, group_size): # no-grad QDQ\n\nclass QATWrapper(nn.Module):\n    def __init__(self, linear, num_bits, group_size): ...\n    @property\n    def weight(self) -> torch.Tensor: ...\n    @property\n    def bias(self): ...\n    def forward(self, x): ...\n\ndef prepare_qat_model(model, num_bits, group_size): ...\n```\n\n**Constraints**:\n- The forward path of every wrapped `nn.Linear` must use\n  `fake_quantize_weight` (or an equivalent inside `QATWrapper.forward`)\n  so the QAT signal actually trains the integer grid.\n- After training, `quantize_dequantize_weight` is applied to every\n  `linear.weight` of every `QATWrapper`, then perplexity is measured.\n  Your method must produce weights that, after this real QDQ\n  roundtrip, still give a low perplexity.\n- Keep the LM head at full precision (the template already excludes\n  `embed_out` / `lm_head`).\n- Available imports in the editable region: `torch`, `torch.nn` (as\n  `nn`), `torch.nn.functional` (as `F`), `numpy` (as `np`), `math`,\n  `os`, `time`, plus `transformers.pytorch_utils.Conv1D`.\n- All seeds and training hyperparameters must be deterministic given\n  `--seed`.\n\n## Evaluation\nThe algorithm is evaluated across three bit-widths:\n\n- **qat-1b-int4**: INT4, group size 128 — easy.\n- **qat-1b-int3**: INT3, group size 128 — medium (8 levels).\n- **qat-1b-int2**: INT2, group size 128 — extreme (4 levels).\n\n**Primary metric**: `wikitext2_ppl` — WikiText-2 perplexity after the\nreal QDQ roundtrip, lower is better.\n**Secondary metric**: `degradation` — `wikitext2_ppl - fp16_ppl`, where\n`fp16_ppl` is the FP baseline measured before any quantization.\n**Model**: Pythia-1.4B (24 layers, 16 heads, 2048 hidden, GPTNeoX).\n**Hardware**: single A100 80GB with gradient checkpointing, expected\nwall time about 900s per bit-width with the default 500-step, seqlen-1024 schedule.\n\n**Note on absolute PPL vs literature (OmniQuant / EfficientQAT tables)**:\nQAT here finetunes on WikiText-2 train and evaluates on WikiText-2 test\n(disjoint articles, but same domain). With 500 steps × bsz 2 × ga 4 =\n4000 sequences × 1024 tokens, the FP16 finetune alone can drop test PPL\nbelow the FP16 baseline (cf. `finetune_then_ptq` INT4 < `no_qat` FP16),\nbecause the QAT train domain matches the eval domain. Published OmniQuant\n/ EfficientQAT tables on LLaMA-{7B,13B} use C4 calibration and a\nheld-out WikiText eval, so their absolute W2g128 / W3g128 / W4g128\nnumbers are *not* directly comparable to ours. The intended internal\ncomparison is QAT-method vs `finetune_then_ptq`: a method that beats\n`finetune_then_ptq` is showing real QAT signal, beyond the in-domain\nfinetune effect.\n",
+ "metric": "wikitext2_ppl_qat-1b-int4",
+ "lower_is_better": true,
+ "master_prompt": {
+  "system": "You are a world-class AI researcher. You are given a machine-learning task with a specific editable code component. Reason step by step in your own distinctive style toward ONE genuinely novel, non-obvious idea to improve that component. Make the creative core unmistakably clear and explain how you arrived at it. Focus on ideas and mechanisms, not full implementation code.",
+  "user": "# LLM Quantization-Aware Training (QAT) Algorithm\n\n## Research Question\nDesign a quantization-aware training (QAT) algorithm that minimizes the\nperplexity gap between a full-precision Pythia-1.4B and the same model\nquantized to very low bit-widths (INT4 / INT3 / INT2) at inference time.\nThe algorithm must be a *training-side* contribution: how the fake-quant\nforward, the gradient flow, the learnable parameters, and the optimizer\nschedule are designed.  It must work uniformly across 4-, 3- and 2-bit\nsettings, not just one.\n\n## Background\nPost-training quantization (PTQ) collapses at very low bit-widths\nbecause every weight is rounded to one of `2^B` levels with no chance to\nrepair the resulting error.  Quantization-Aware Training (QAT) attacks\nthis by inserting *fake quantization* into the forward pass during a\nshort fine-tune.  The key knobs are:\n\n- **Gradient estimator**: round-then-clamp is non-differentiable.  The\n  Straight-Through Estimator (STE) [Bengio et al., 2013] simply pretends\n  the operation is identity in backward.  Learning the step size jointly\n  with the weights (LSQ [Esser et al., ICLR 2020]) gives a measurably\n  tighter quantization grid and dominates STE at INT2.\n- **Stability**: low-bit QAT diverges easily; warming up the\n  quantization noise and EMA-smoothing the scales (StableQAT-style)\n  buys back several PPL points at INT2.\n\nA note on the baselines: alongside the two QAT methods (STE, LSQ) and\nthe no-finetune PTQ reference (`no_qat`), there is a\ncontrol baseline `finetune_then_ptq` that runs\na *full-precision* finetune on WikiText-2 train with the same\nschedule as the QAT methods (lr=2e-5, 500 steps, batch=2, grad-accum\n4) and then applies the same RTN quantize-dequantize as `no_qat`.\nThis isolates the finetune signal from the QAT signal: a useful QAT\nmethod must beat `finetune_then_ptq`, otherwise its apparent gains\nover `no_qat` are just the finetune talking.  At INT2 in particular,\nRTN PTQ on a finetuned FP model is still expected to collapse, while\na real QAT method should remain usable.\n\nGroup quantization (per-row, per-group of `group_size=128` columns,\nsymmetric, signed) is the standard low-bit format and is fixed for this\ntask.  Linear layers in every transformer block are quantized;\nembeddings, LayerNorm and the LM head stay full precision.\n\n## What You Can Modify\nThe single file `llm-qat-runtime/custom_qat.py` is created at task\nsetup; you may only edit lines **33-176** (the EDITABLE region marked\nwith `# EDITABLE REGION START / END`).  It contains:\n\n- `CONFIG_OVERRIDES` dict: per-method training hyperparameters\n  (`lea\n\nThe editable component is `llm-qat-runtime/custom_qat.py` (evaluation setting: qat-1b-int4). Propose ONE concrete, novel idea to improve it. Conclude with two lines: 'Core idea:' and 'Non-trivial crux:'."
+ },
+ "baselines": {
+  "methods": [
+   {
+    "name": "finetune_then_ptq",
+    "metrics": {
+     "wikitext2_ppl_qat-1b-int4": "12.6094",
+     "fp16_ppl_qat-1b-int4": "13.2033",
+     "degradation_qat-1b-int4": "-0.5939",
+     "qat_time_qat-1b-int4": "2699.1",
+     "elapsed_qat-1b-int4": "2821",
+     "wikitext2_ppl_qat-1b-int3": "31.4101",
+     "fp16_ppl_qat-1b-int3": "13.2033",
+     "degradation_qat-1b-int3": "18.2068",
+     "qat_time_qat-1b-int3": "2698.3",
+     "elapsed_qat-1b-int3": "2821",
+     "wikitext2_ppl_qat-1b-int2": "94034.5078",
+     "fp16_ppl_qat-1b-int2": "13.2033",
+     "degradation_qat-1b-int2": "94021.3045",
+     "qat_time_qat-1b-int2": "2751.1",
+     "elapsed_qat-1b-int2": "2875"
+    }
+   },
+   {
+    "name": "lsq",
+    "metrics": {
+     "wikitext2_ppl_qat-1b-int4": "12.167",
+     "fp16_ppl_qat-1b-int4": "13.2033",
+     "degradation_qat-1b-int4": "-1.0363",
+     "qat_time_qat-1b-int4": "3006.0",
+     "elapsed_qat-1b-int4": "3134",
+     "wikitext2_ppl_qat-1b-int3": "13.4947",
+     "fp16_ppl_qat-1b-int3": "13.2033",
+     "degradation_qat-1b-int3": "0.2915",
+     "qat_time_qat-1b-int3": "3003.2",
+     "elapsed_qat-1b-int3": "3132",
+     "wikitext2_ppl_qat-1b-int2": "19.4969",
+     "fp16_ppl_qat-1b-int2": "13.2033",
+     "degradation_qat-1b-int2": "6.2936",
+     "qat_time_qat-1b-int2": "3018.8",
+     "elapsed_qat-1b-int2": "3148"
+    }
+   },
+   {
+    "name": "no_qat",
+    "metrics": {
+     "wikitext2_ppl_qat-1b-int4": "15.0101",
+     "fp16_ppl_qat-1b-int4": "13.2033",
+     "degradation_qat-1b-int4": "1.8068",
+     "qat_time_qat-1b-int4": "0.0",
+     "elapsed_qat-1b-int4": "122",
+     "wikitext2_ppl_qat-1b-int3": "42.54",
+     "fp16_ppl_qat-1b-int3": "13.2033",
+     "degradation_qat-1b-int3": "29.3367",
+     "qat_time_qat-1b-int3": "0.0",
+     "elapsed_qat-1b-int3": "121",
+     "wikitext2_ppl_qat-1b-int2": "104422.6562",
+     "fp16_ppl_qat-1b-int2": "13.2033",
+     "degradation_qat-1b-int2": "104409.453",
+     "qat_time_qat-1b-int2": "0.0",
+     "elapsed_qat-1b-int2": "121"
+    }
+   },
+   {
+    "name": "ste",
+    "metrics": {
+     "wikitext2_ppl_qat-1b-int4": "11.7044",
+     "fp16_ppl_qat-1b-int4": "13.2033",
+     "degradation_qat-1b-int4": "-1.4989",
+     "qat_time_qat-1b-int4": "2949.7",
+     "elapsed_qat-1b-int4": "3090",
+     "wikitext2_ppl_qat-1b-int3": "13.7471",
+     "fp16_ppl_qat-1b-int3": "13.2033",
+     "degradation_qat-1b-int3": "0.5438",
+     "qat_time_qat-1b-int3": "2914.1",
+     "elapsed_qat-1b-int3": "3052",
+     "wikitext2_ppl_qat-1b-int2": "72.5517",
+     "fp16_ppl_qat-1b-int2": "13.2033",
+     "degradation_qat-1b-int2": "59.3484",
+     "qat_time_qat-1b-int2": "2911.0",
+     "elapsed_qat-1b-int2": "3051"
+    }
+   },
+   {
+    "name": "pact",
+    "metrics": {
+     "wikitext2_ppl_qat-1b-int4": "15.2506",
+     "fp16_ppl_qat-1b-int4": "13.2033",
+     "degradation_qat-1b-int4": "2.0473",
+     "qat_time_qat-1b-int4": "1230.2",
+     "elapsed_qat-1b-int4": "1293"
+    }
+   },
+   {
+    "name": "stableqat",
+    "metrics": {
+     "wikitext2_ppl_qat-1b-int4": "11.7229",
+     "fp16_ppl_qat-1b-int4": "13.2033",
+     "degradation_qat-1b-int4": "-1.4803",
+     "qat_time_qat-1b-int4": "3031.5",
+     "elapsed_qat-1b-int4": "3162",
+     "wikitext2_ppl_qat-1b-int3": "13.7579",
+     "fp16_ppl_qat-1b-int3": "13.2033",
+     "degradation_qat-1b-int3": "0.5546",
+     "qat_time_qat-1b-int3": "3031.2",
+     "elapsed_qat-1b-int3": "3161",
+     "wikitext2_ppl_qat-1b-int2": "47.764",
+     "fp16_ppl_qat-1b-int2": "13.2033",
+     "degradation_qat-1b-int2": "34.5608",
+     "qat_time_qat-1b-int2": "3029.2",
+     "elapsed_qat-1b-int2": "3160"
+    }
+   },
+   {
+    "name": "adaround",
+    "metrics": {
+     "wikitext2_ppl_qat-1b-int4": "12.6356",
+     "fp16_ppl_qat-1b-int4": "13.2033",
+     "degradation_qat-1b-int4": "-0.5677",
+     "qat_time_qat-1b-int4": "1419.9",
+     "elapsed_qat-1b-int4": "1488"
+    }
+   },
+   {
+    "name": "lr_qat",
+    "metrics": {
+     "wikitext2_ppl_qat-1b-int4": "21.4995",
+     "fp16_ppl_qat-1b-int4": "13.2033",
+     "degradation_qat-1b-int4": "8.2963",
+     "qat_time_qat-1b-int4": "900.9",
+     "elapsed_qat-1b-int4": "958",
+     "wikitext2_ppl_qat-1b-int3": "38.7873",
+     "fp16_ppl_qat-1b-int3": "13.2033",
+     "degradation_qat-1b-int3": "25.584",
+     "qat_time_qat-1b-int3": "900.2",
+     "elapsed_qat-1b-int3": "957",
+     "wikitext2_ppl_qat-1b-int2": "379.882",
+     "fp16_ppl_qat-1b-int2": "13.2033",
+     "degradation_qat-1b-int2": "366.6788",
+     "qat_time_qat-1b-int2": "899.7",
+     "elapsed_qat-1b-int2": "957"
+    }
+   }
+  ],
+  "note": "rescaled cells: 50 = strong baseline, 100 = theoretical upper bound. Baseline methods below are the reference implementations the proposals compete against."
+ }
+}

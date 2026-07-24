@@ -1,0 +1,50 @@
+{
+ "slug": "robo-diffusion-policy",
+ "domain": "Robotics",
+ "name": "Diffusion Policy Learning for Robot Control",
+ "description": "# Robo-Diffusion: Policy Algorithm Design\n\n## Objective\nDesign a single model-free offline RL policy algorithm that uses a diffusion\nactor for action generation and improves D4RL MuJoCo control performance.\n\nThis task is intentionally separate from trajectory-diffusion planning. The\nagent should modify the policy-level actor/critic learning rule, Q/value\nestimation, or inference-time action selection for a Markov policy. It should\nnot turn the solution into a trajectory planner, classifier-guided planner, or\nenvironment-specific evaluation shortcut.\n\n## What You Can Modify\n- Policy algorithm core logic\n- Q-function design (if used)\n- Action generation strategy\n- Training objective\n- Actor-critic architecture\n\n## What Is Fixed\n- D4RL dataset construction, environment names, hidden split, and evaluation loop\n- Random seeds, episode count, vectorized environment count, and checkpoint names\n- The overall offline RL setup: train from fixed D4RL buffers, then evaluate a\n  policy that maps current observation to one action\n\n## Evaluation\nEvaluated on three D4RL MuJoCo environments:\n1. **hopper-medium-v2**\n2. **walker2d-medium-v2**\n3. **halfcheetah-medium-v2**\n\nMetrics: normalized_score, episode_reward, training_time\n\n`halfcheetah-medium-v2` is hidden during intermediate agent tests. Final scores\nuse a geometric mean over the three environment-specific normalized-score terms.\n\n## Baselines\n\n### default\nDiffusion Q-Learning (DQL) — the unmodified template ports cleandiffuser's\n`dql_d4rl_mujoco.py` line-for-line (diffusion actor + twin Q critic, BC + Q\nloss). This serves as the paper-level DQL reference\n(Wang et al., 2022, https://arxiv.org/abs/2208.06193).\n\n### idql\nImplicit Diffusion Q-Learning - decoupled actor/critic with τ-expectile IQL\ncritic and softmax(adv * β) action reweighting at inference\n(Hansen-Estruch et al., 2023, https://arxiv.org/abs/2304.10573).\n\n### diffusion_policy\nDiffusion Policy — pure behavior cloning with a diffusion actor (no critic,\nsingle-action sampling at inference, Chi et al., 2023,\nhttps://arxiv.org/abs/2303.04137).\n\n## Evaluation Protocol\n\nTo keep the protocol fixed across all baselines/agents:\n\n- `gradient_steps = 1,000,000` for every method. CleanDiffuser's package configs\n  (`configs/{dql,idql}/mujoco/mujoco.yaml`) and the DQL paper both use 2M, but at\n  1M our DQL default already reproduces CleanDiffuser's published numbers\n  (hopper 0.997 vs ~1.00, walker2d 0.904 vs ~0.87, halfcheetah 0.513 vs ~0.51),\n  so 1M is the better walltime/quality tradeoff for this benchmark. The model\n  may shorten training inside its own edits but cannot lengthen it.\n- `num_candidates = 50` at inference for every method that uses Q-reranking\n  (DQL, IDQL). This matches CleanDiffuser's DQL reference repro and the\n  \"DQL+selection\" variant; CleanDiffuser's IDQL package config defaults to 256\n  but is reduced to 50 here so all reranking baselines see the same compute.\n  `diffusion_policy` ignores `num_candidates` (sample-1 inference, no critic).\n- `num_envs = 50`, `num_episodes = 3`, `use_ema = True` at inference.\n\nSeed=42 is the primary seed; multi-seed (123, 456) is run for the `default`\nbaseline to confirm hopper-medium-v2 is not cherry-picked.\n",
+ "metric": "hopper_normalized_score",
+ "lower_is_better": false,
+ "master_prompt": {
+  "system": "You are a world-class AI researcher. You are given a machine-learning task with a specific editable code component. Reason step by step in your own distinctive style toward ONE genuinely novel, non-obvious idea to improve that component. Make the creative core unmistakably clear and explain how you arrived at it. Focus on ideas and mechanisms, not full implementation code.",
+  "user": "# Robo-Diffusion: Policy Algorithm Design\n\n## Objective\nDesign a single model-free offline RL policy algorithm that uses a diffusion\nactor for action generation and improves D4RL MuJoCo control performance.\n\nThis task is intentionally separate from trajectory-diffusion planning. The\nagent should modify the policy-level actor/critic learning rule, Q/value\nestimation, or inference-time action selection for a Markov policy. It should\nnot turn the solution into a trajectory planner, classifier-guided planner, or\nenvironment-specific evaluation shortcut.\n\n## What You Can Modify\n- Policy algorithm core logic\n- Q-function design (if used)\n- Action generation strategy\n- Training objective\n- Actor-critic architecture\n\n## What Is Fixed\n- D4RL dataset construction, environment names, hidden split, and evaluation loop\n- Random seeds, episode count, vectorized environment count, and checkpoint names\n- The overall offline RL setup: train from fixed D4RL buffers, then evaluate a\n  policy that maps current observation to one action\n\n## Evaluation\nEvaluated on three D4RL MuJoCo environments:\n1. **hopper-medium-v2**\n2. **walker2d-medium-v2**\n3. **halfcheetah-medium-v2**\n\nMetrics: normalized_score, episode_reward, training_time\n\n`halfcheetah-medium-v2` is hidden during intermediate agent tests. Final scores\nuse a geometric mean over the three environment-specific normalized-score terms.\n\n## Baselines\n\n### default\nDiffusion Q-Learning (DQL) — the unmodified template ports cleandiffuser's\n`dql_d4rl_mujoco.py` line-for-line (diffusion actor + twin Q critic, BC + Q\nloss). This serves as the paper-level DQL reference\n(Wang et al., 2022, https://arxiv.org/abs/2208.06193).\n\n### idql\nImplicit Diffusion Q-Learning - decoupled actor/critic with τ-expectile IQL\ncritic and softmax(adv * β) action reweighting at inference\n(Hansen-Estruch et al., 2023, https://arxiv.org/abs/2304.10573).\n\n### diffusion_policy\nDiffusion Policy — pure behavior cloning with a diffusion actor (no critic,\nsingle-action sampling at inference, Chi et al., 2023,\nhttps://arxiv.org/abs/2303.04137).\n\n## Evaluation Protocol\n\nTo keep the protocol fixed across all baselines/agents:\n\n- `gradient_steps = 1,000,000` for every method. CleanDiffuser's package configs\n  (`configs/{dql,idql}/mujoco/mujoco.yaml`) and the DQL paper both use 2M, but at\n  1M our DQL default already reproduces CleanDiffuser's published numbers\n  (hopper 0.997 vs ~1.00, walker2d 0.904 vs ~0.87, halfcheetah 0.513 vs ~0.51),\n  so 1M is the better walltime/quality tradeoff for this benchmark. The model\n  may shorten training inside its own edits but \n\nThe editable component is `CleanDiffuser/pipelines/custom_policy.py` (evaluation setting: train_hopper). Propose ONE concrete, novel idea to improve it. Conclude with two lines: 'Core idea:' and 'Non-trivial crux:'."
+ },
+ "baselines": {
+  "methods": [
+   {
+    "name": "default",
+    "metrics": {
+     "hopper_normalized_score": "0.9966",
+     "elapsed_train_hopper": "16776",
+     "elapsed_train_walker2d": "16673",
+     "elapsed_train_halfcheetah": "16696",
+     "walker2d_normalized_score": "0.9042",
+     "halfcheetah_normalized_score": "0.5132"
+    }
+   },
+   {
+    "name": "diffusion_policy",
+    "metrics": {
+     "hopper_normalized_score": "0.4817",
+     "elapsed_train_hopper": "2622",
+     "elapsed_train_walker2d": "2661",
+     "elapsed_train_halfcheetah": "2654",
+     "walker2d_normalized_score": "0.6669",
+     "halfcheetah_normalized_score": "0.42"
+    }
+   },
+   {
+    "name": "idql",
+    "metrics": {
+     "hopper_normalized_score": "0.6301",
+     "elapsed_train_hopper": "5792",
+     "elapsed_train_walker2d": "5828",
+     "elapsed_train_halfcheetah": "5820",
+     "walker2d_normalized_score": "0.8256",
+     "halfcheetah_normalized_score": "0.4747"
+    }
+   }
+  ],
+  "note": "rescaled cells: 50 = strong baseline, 100 = theoretical upper bound. Baseline methods below are the reference implementations the proposals compete against."
+ }
+}

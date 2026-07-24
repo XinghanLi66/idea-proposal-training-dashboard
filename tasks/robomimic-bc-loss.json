@@ -1,0 +1,50 @@
+{
+ "slug": "robomimic-bc-loss",
+ "domain": "Robotics",
+ "name": "Behavioral Cloning Loss for Manipulation",
+ "description": "# Behavioral Cloning: Loss Function Design for Robot Imitation Learning\n\n## Research Question\nDesign an improved loss function for GMM-based behavioral cloning (BC) in robot manipulation. The policy outputs a Gaussian Mixture Model (GMM) distribution over actions, and the loss function receives this distribution along with expert demonstration actions. Your goal is to design a loss that maximizes imitation learning quality as measured by rollout success rate.\n\n## What You Can Modify\nThe `CustomBCLoss` class in `custom_bc_loss.py`. This class receives a GMM distribution and target action tensors and must return a scalar loss.\n\nInterface:\n- **Input**: `dist` (a `torch.distributions.MixtureSameFamily` GMM distribution with 5 modes) and `target_actions: [B, 7]` -- 7-dim robot actions (6D end-effector delta + 1D gripper)\n- **Output**: scalar loss tensor\n- The default implementation is negative log-likelihood (NLL): `-dist.log_prob(target_actions).mean()`\n\nYou may add parameters to `__init__`, define helper methods, and use any PyTorch operations. The `dist` object supports `.log_prob()`, `.sample()`, `.component_distribution`, and `.mixture_distribution`.\n\n## Evaluation\n- **Metric**: `success_rate` -- rollout success rate on the task (higher is better)\n- **Tasks**: Lift (pick up cube), Can (pick-and-place can), Square (nut assembly)\n- **Dataset**: 200 proficient human demonstrations, low-dimensional observations\n- **Policy**: GMM with 5 modes, 2-layer MLP backbone (1024, 1024) with ReLU, tanh-squashed means\n- **Training**: 2000 epochs, Adam optimizer (lr=1e-4), batch size 100\n- **Rollout evaluation**: 50 episodes per task, horizon 400 steps, every 50 epochs\n",
+ "metric": "success_rate_tool_hang_ph",
+ "lower_is_better": false,
+ "master_prompt": {
+  "system": "You are a world-class AI researcher. You are given a machine-learning task with a specific editable code component. Reason step by step in your own distinctive style toward ONE genuinely novel, non-obvious idea to improve that component. Make the creative core unmistakably clear and explain how you arrived at it. Focus on ideas and mechanisms, not full implementation code.",
+  "user": "# Behavioral Cloning: Loss Function Design for Robot Imitation Learning\n\n## Research Question\nDesign an improved loss function for GMM-based behavioral cloning (BC) in robot manipulation. The policy outputs a Gaussian Mixture Model (GMM) distribution over actions, and the loss function receives this distribution along with expert demonstration actions. Your goal is to design a loss that maximizes imitation learning quality as measured by rollout success rate.\n\n## What You Can Modify\nThe `CustomBCLoss` class in `custom_bc_loss.py`. This class receives a GMM distribution and target action tensors and must return a scalar loss.\n\nInterface:\n- **Input**: `dist` (a `torch.distributions.MixtureSameFamily` GMM distribution with 5 modes) and `target_actions: [B, 7]` -- 7-dim robot actions (6D end-effector delta + 1D gripper)\n- **Output**: scalar loss tensor\n- The default implementation is negative log-likelihood (NLL): `-dist.log_prob(target_actions).mean()`\n\nYou may add parameters to `__init__`, define helper methods, and use any PyTorch operations. The `dist` object supports `.log_prob()`, `.sample()`, `.component_distribution`, and `.mixture_distribution`.\n\n## Evaluation\n- **Metric**: `success_rate` -- rollout success rate on the task (higher is better)\n- **Tasks**: Lift (pick up cube), Can (pick-and-place can), Square (nut assembly)\n- **Dataset**: 200 proficient human demonstrations, low-dimensional observations\n- **Policy**: GMM with 5 modes, 2-layer MLP backbone (1024, 1024) with ReLU, tanh-squashed means\n- **Training**: 2000 epochs, Adam optimizer (lr=1e-4), batch size 100\n- **Rollout evaluation**: 50 episodes per task, horizon 400 steps, every 50 epochs\n\n\nThe editable component is `robomimic/custom_bc_loss.py` (evaluation setting: tool_hang_ph). Propose ONE concrete, novel idea to improve it. Conclude with two lines: 'Core idea:' and 'Non-trivial crux:'."
+ },
+ "baselines": {
+  "methods": [
+   {
+    "name": "default",
+    "metrics": {
+     "success_rate_tool_hang_ph": "0.1",
+     "success_rate_can_ph": "0.86",
+     "success_rate_square_ph": "0.76",
+     "elapsed_tool_hang_ph": "21791",
+     "elapsed_can_ph": "8108",
+     "elapsed_square_ph": "10189"
+    }
+   },
+   {
+    "name": "nll_entropy",
+    "metrics": {
+     "success_rate_tool_hang_ph": "0.1",
+     "success_rate_can_ph": "0.86",
+     "success_rate_square_ph": "0.8",
+     "elapsed_tool_hang_ph": "22568",
+     "elapsed_can_ph": "9131",
+     "elapsed_square_ph": "11032"
+    }
+   },
+   {
+    "name": "weighted_nll",
+    "metrics": {
+     "success_rate_tool_hang_ph": "0.04",
+     "success_rate_can_ph": "0.42",
+     "success_rate_square_ph": "0.56",
+     "elapsed_tool_hang_ph": "21695",
+     "elapsed_can_ph": "10602",
+     "elapsed_square_ph": "11980"
+    }
+   }
+  ],
+  "note": "rescaled cells: 50 = strong baseline, 100 = theoretical upper bound. Baseline methods below are the reference implementations the proposals compete against."
+ }
+}

@@ -1,0 +1,181 @@
+{
+ "task": "robomimic-bc-loss",
+ "arm": "sft14b",
+ "arm_label": "Qwen3-14B SFT",
+ "status": "failed",
+ "score": null,
+ "master_output": {
+  "idea": null,
+  "proposal": "<think>\n\n</think>\n\n**Mocking:** World-class AI researcher\n\nLet me start from the mechanism I actually want to change, not from a list of tricks. I'm trying to learn a policy that imitates human demonstrations. My loss must be a good proxy for the quality of that imitation, not just a good fit to the data. So I should reason about what a good imitation *is*, and then choose a loss that directly encodes that definition.\n\nWhat makes an imitated action good? Two things I can write down, and they're both missing from NLL. First, a good imitation should produce an action that is *close to the expert's action* in the task's metric space. That's a task-dependent geometry I should preserve. Second, a good imitation should not be *surprising* to the expert, i.e., it should lie in the high-density regions of the expert distribution. NLL already captures this to some extent, but it's a one-sided measure: it only penalizes the action against the distribution it was trained on. I want to penalize actions that fall into *both* low-density and high-density regions, because both represent a failure to match the expert's intent. That's the insight I want to formalize.\n\nSo I'll build the loss around a geometric distance. My first candidate is the distance between the imitated action and the expert action, in the task's coordinate frame, normalized by the expert's covariance. I'll call this the *expert-normalized geometric distance* and denote it $ d = \\frac{1}{2} \\log \\left( \\frac{|\\Sigma|}{2\\pi} \\right) + \\frac{1}{2}(a - a^{\\text{expert}})^\\top \\Sigma^{-1} (a - a^{\\text{expert}}) $, where $ \\Sigma $ is the expert covariance. This is the Mahalanobis distance plus the KL divergence term that makes it invariant to the scale of the expert's uncertainty. Why this over squared error? Because the task space is not isotropic — the gripper motion is small and precise, the end-effector translation is large and coarse, and the gripper opening is near-binary. Squared error would treat these dimensions equally, which is wrong.\n\nNow, to make the loss robust and differentiable, I'll wrap this distance in a smooth, bounded function. A hard threshold is not differentiable and can be unstable; instead I'll use a *softplus* of the negative distance: $ \\text{softplus}(-d) $. This is always positive, zero when the action is exactly at the expert mean, and grows smoothly as the action moves away. The softplus also gives me a natural scale for the penalty — it's bounded below by zero, so the loss won't be dominated by a single outlier. And I'll normalize it by the number of modes, since a 5-mode GMM has a wider, flatter distribution than a single Gaussian.\n\nWhy does this cut against the default? Because the default loss is a pure likelihood — it's purely about fitting a distribution to a point, with no notion of geometry or task intent. My candidate loss is explicitly a geometry-and-intent-based reconstruction penalty.\n\nBut here's the part I actually have to watch for — the softplus can be *numerically unstable* if the distance is very large, because it's an exponential under the hood. So I need to cap the distance at a safe value (e.g. 3.0) before applying the softplus, or the gradient will blow up. That's the non-trivial crux: the smooth penalty gives me a differentiable, bounded, intent-aware loss, but I must add a distance clipping to keep it stable.\n\nI should also think about how to combine this with NLL — the geometric loss is a reconstruction term, and the log-likelihood is a likelihood term. I want the geometry to drive the fit, so I'll let the geometric loss be the dominant term and scale NLL by a small coefficient (e.g. 0.01), so the reconstruction is the main driver and the likelihood is a secondary regularizer.\n\n**Core idea:** Replace NLL with an intent-aware geometric loss that penalizes an imitated action's distance from the expert's mean (in the task's metric space, normalized by the expert's covariance), wrapped in a softplus to make it smooth and bounded, normalized by the number of modes, and combine it with a small NLL term.\n\n**Non-trivial crux:** The softplus of the negative geometric distance must be capped at a safe finite value before evaluation, or large distances will cause numerical instability (exponential blowup in the gradient).",
+  "valid": null,
+  "n_attempts": null
+ },
+ "per_run_scores": [
+  {
+   "seed": "1",
+   "timestamp": "2026-07-20T11:49:17.529627+00:00",
+   "has_metric": false,
+   "metrics": {}
+  },
+  {
+   "seed": "2",
+   "timestamp": "2026-07-20T11:49:17.584302+00:00",
+   "has_metric": false,
+   "metrics": {}
+  },
+  {
+   "seed": "3",
+   "timestamp": "2026-07-20T11:49:17.632278+00:00",
+   "has_metric": false,
+   "metrics": {}
+  },
+  {
+   "seed": "1",
+   "timestamp": "2026-07-20T14:17:22.585300+00:00",
+   "has_metric": false,
+   "metrics": {}
+  },
+  {
+   "seed": "2",
+   "timestamp": "2026-07-20T14:17:22.631875+00:00",
+   "has_metric": false,
+   "metrics": {}
+  },
+  {
+   "seed": "3",
+   "timestamp": "2026-07-20T14:17:22.682516+00:00",
+   "has_metric": false,
+   "metrics": {}
+  },
+  {
+   "seed": "1",
+   "timestamp": "2026-07-22T08:45:17.324722+00:00",
+   "has_metric": false,
+   "metrics": {}
+  },
+  {
+   "seed": "2",
+   "timestamp": "2026-07-22T08:45:17.376750+00:00",
+   "has_metric": false,
+   "metrics": {}
+  },
+  {
+   "seed": "3",
+   "timestamp": "2026-07-22T08:45:17.642421+00:00",
+   "has_metric": false,
+   "metrics": {}
+  },
+  {
+   "seed": "1",
+   "timestamp": "2026-07-23T07:15:13.115832+00:00",
+   "has_metric": false,
+   "metrics": {}
+  },
+  {
+   "seed": "2",
+   "timestamp": "2026-07-23T07:15:13.165972+00:00",
+   "has_metric": false,
+   "metrics": {}
+  },
+  {
+   "seed": "3",
+   "timestamp": "2026-07-23T07:15:13.227969+00:00",
+   "has_metric": false,
+   "metrics": {}
+  },
+  {
+   "seed": "1",
+   "timestamp": "2026-07-23T08:41:45.311867+00:00",
+   "has_metric": false,
+   "metrics": {}
+  },
+  {
+   "seed": "2",
+   "timestamp": "2026-07-23T08:41:45.344728+00:00",
+   "has_metric": false,
+   "metrics": {}
+  },
+  {
+   "seed": "3",
+   "timestamp": "2026-07-23T08:41:45.372867+00:00",
+   "has_metric": false,
+   "metrics": {}
+  },
+  {
+   "seed": "1",
+   "timestamp": "2026-07-23T09:44:17.253114+00:00",
+   "has_metric": false,
+   "metrics": {}
+  },
+  {
+   "seed": "2",
+   "timestamp": "2026-07-23T09:44:17.284581+00:00",
+   "has_metric": false,
+   "metrics": {}
+  },
+  {
+   "seed": "3",
+   "timestamp": "2026-07-23T09:44:17.315297+00:00",
+   "has_metric": false,
+   "metrics": {}
+  }
+ ],
+ "workers": [
+  {
+   "log_dir": "logs/robomimic-bc-loss/claude-fable-5__sft14b__sft14b_robomimic-bc-loss_s1",
+   "user_prompt": "# Research proposal — implement THIS idea (provided by the caller)\n\n**Mocking:** World-class AI researcher\n\nLet me start from the mechanism I actually want to change, not from a list of tricks. I'm trying to learn a policy that imitates human demonstrations. My loss must be a good proxy for the quality of that imitation, not just a good fit to the data. So I should reason about what a good imitation *is*, and then choose a loss that directly encodes that definition.\n\nWhat makes an imitated action good? Two things I can write down, and they're both missing from NLL. First, a good imitation should produce an action that is *close to the expert's action* in the task's metric space. That's a task-dependent geometry I should preserve. Second, a good imitation should not be *surprising* to the expert, i.e., it should lie in the high-density regions of the expert distribution. NLL already captures this to some extent, but it's a one-sided measure: it only penalizes the action against the distribution it was trained on. I want to penalize actions that fall into *both* low-density and high-density regions, because both represent a failure to match the expert's intent. That's the insight I want to formalize.\n\nSo I'll build the loss around a geometric distance. My first candidate is the distance between the imitated action and the expert action, in the task's coordinate frame, normalized by the expert's covariance. I'll call this the *expert-normalized geometric distance* and denote it $ d = \\frac{1}{2} \\log \\left( \\frac{|\\Sigma|}{2\\pi} \\right) + \\frac{1}{2}(a - a^{\\text{expert}})^\\top \\Sigma^{-1} (a - a^{\\text{expert}}) $, where $ \\Sigma $ is the expert covariance. This is the Mahalanobis distance plus the KL divergence term that makes it invariant to the scale of the expert's uncertainty. Why this over squared error? Because the task space is not isotropic — the gripper motion is small and precise, the end-effector translation is large and coarse, and the gripper opening is near-binary. Squared error would treat these dimensions equally, which is wrong.\n\nNow, to make the loss robust and differentiable, I'll wrap this distance in a smooth, bounded function. A hard threshold is not differentiable and can be unstable; instead I'll use a *softplus* of the negative distance: $ \\text{softplus}(-d) $. This is always positive, zero when the action is exactly at the expert mean, and grows smoothly as the action moves away. The softplus also gives me a natural scale for the penalty — it's bounded below by zero, so the loss won't be dominated by a single outlier. And I'll normalize it by the number of modes, since a 5-mode GMM has a wider, flatter distribution than a single Gaussian.\n\nWhy does this cut against the default? Because the default loss is a pure likelihood — it's purely about fitting a distribution to a point, with no notion of geometry or task intent. My candidate loss is explicitly a geometry-and-intent-based reconstruction penalty.\n\nBut here's the part I actually have to watch for — the softplus can be *numerically unstable* if the distance is very large, because it's an exponential under the hood. So I need to cap the distance at a safe value (e.g. 3.0) before applying the softplus, or the gradient will blow up. That's the non-trivial crux: the smooth penalty gives me a differentiable, bounded, intent-aware loss, but I must add a distance clipping to keep it stable.\n\nI should also think about how to combine this with NLL — the geometric loss is a reconstruction term, and the log-likelihood is a likelihood term. I want the geometry to drive the fit, so I'll let the geometric loss be the dominant term and scale NLL by a small coefficient (e.g. 0.01), so the reconstruction is the main driver and the likelihood is a secondary regularizer.\n\n**Core idea:** Replace NLL with an intent-aware geometric loss that penalizes an imitated action's distance from the expert's mean (in the task's metric space, normalized by the expert's covariance), wrapped in a softplus to make it smooth and bounded, normalized by the number of modes, and combine it with a small NLL term.\n\n**Non-trivial crux:** The softplus of the negative geometric distance must be capped at a safe finite value before evaluation, or large distances will cause numerical instability (exponential blowup in the gradient).\n\n[Constraint] Implement ONLY the proposed idea in the task's editable region. Do NOT change training hyperparameters (learning rate, batch size, epochs) or the eval/split/reporting.\n\n# Task: robomimic-bc-loss\n\n# Behavioral Cloning: Loss Function Design for Robot Imitation Learning\n\n## Research Question\nDesign an improved loss function for GMM-based behavioral cloning (BC) in robot manipulation. The policy outputs a Gaussian Mixture Model (GMM) distribution over actions, and the loss function receives this distribution along with expert demonstration actions. Your goal is to design a loss that maximizes imitation learning quality as measured by rollout success rate.\n\n## What You Can Modify\nThe `CustomBCLoss` class in `custom_bc_loss.py`. This class receives a GMM distribution and target action tensors and must return a scalar loss.\n\nInterface:\n- **Input**: `dist` (a `torch.distributions.MixtureSameFamily` GMM distribution with 5 modes) and `target_actions: [B, 7]` -- 7-dim robot actions (6D end-effector delta + 1D gripper)\n- **Output**: scalar loss tensor\n- The default implementation is negative log-likelihood (NLL): `-dist.log_prob(target_actions).mean()`\n\nYou may add parameters to `__init__`, define helper methods, and use any PyTorch operations. The `dist` object supports `.log_prob()`, `.sample()`, `.component_distribution`, and `.mixture_distribution`.\n\n## Evaluation\n- **Metric**: `success_rate` -- rollout success rate on the task (higher is better)\n- **Tasks**: Lift (pick up cube), Can (pick-and-place can), Square (nut assembly)\n- **Dataset**: 200 proficient human demonstrations, low-dimensional observations\n- **Policy**: GMM with 5 modes, 2-layer MLP backbone (1024, 1024) with ReLU, tanh-squashed means\n- **Training**: 2000 epochs, Adam optimizer (lr=1e-4), batch size 100\n- **Rollout evaluation**: 50 episodes per task, horizon 400 steps, every 50 epochs\n\n\n## robomimic/custom_bc_loss.py  [EDITABLE — lines 20–41 only]\n```python\n     1: \"\"\"\n     2: Custom BC Loss Function for GMM-based Behavioral Cloning.\n     3: \n     4: This module defines the loss function used by BC-GMM training in robomimic.\n     5: The loss receives the GMM distribution produced by the policy network and\n     6: the expert demonstration actions, and returns a scalar loss.\n     7: \n     8: The custom loss is imported and used by the patched BC_GMM._compute_losses\n     9: method during training.\n    10: \"\"\"\n    11: \n    12: import torch\n    13: import torch.nn as nn\n    14: import torch.nn.functional as F\n    15: import torch.distributions as D\n    16: \n    17: \n    18: # ── Custom BC Loss Function ────────────────────────────────────────────────\n    19: # EDITABLE REGION START\n    20: class CustomBCLoss(nn.Module):\n    21:     \"\"\"Custom loss for GMM-based behavioral cloning.\n    22: \n    23:     Called during BC-GMM training. Receives the full GMM distribution and\n    24:     expert actions, returns a scalar loss to minimize.\n    25: \n    26:     Args:\n    27:         dist: MixtureSameFamily GMM distribution (5 modes, 7-dim actions)\n    28:             Supports: .log_prob(), .sample(), .component_distribution,\n    29:                       .mixture_distribution\n    30:         target_actions: [B, 7] expert actions\n    31: \n    32:     Returns:\n    33:         scalar loss tensor\n    34:     \"\"\"\n    35: \n    36:     def __init__(self, action_dim=7):\n    37:         super().__init__()\n    38:         self.action_dim = action_dim\n    39: \n    40:     def forward(self, dist, target_actions):\n    41:         return -dist.log_prob(target_actions).mean()\n    42: # EDITABLE REGION END\n```\n\n## nll_entropy baseline — editable region  [READ-ONLY — reference implementation]\n```python\nLines 20–39:\n    17: \n    18: # ── Custom BC Loss Function ────────────────────────────────────────────────\n    19: # EDITABLE REGION START\n    20: class CustomBCLoss(nn.Module):\n    21:     \"\"\"NLL + entropy bonus for GMM-based behavioral cloning.\n    22: \n    23:     Adds an entropy regularization term to the standard NLL loss.\n    24:     The entropy bonus encourages broader mixture components,\n    25:     preventing premature mode collapse.\n    26:     \"\"\"\n    27: \n    28:     def __init__(self, action_dim=7, alpha=0.01):\n    29:         super().__init__()\n    30:         self.action_dim = action_dim\n    31:         self.alpha = alpha\n    32: \n    33:     def forward(self, dist, target_actions):\n    34:         nll = -dist.log_prob(target_actions).mean()\n    35:         # MixtureSameFamily has no closed-form entropy; approximate via sampling\n    36:         with torch.no_grad():\n    37:             samples = dist.sample()\n    38:         entropy = -dist.log_prob(samples).mean()\n    39:         return nll - self.alpha * entropy\n    40: # EDITABLE REGION END\n```\n\n## weighted_nll baseline — editable region  [READ-ONLY — reference implementation]\n```python\nLines 20–39:\n    17: \n    18: # ── Custom BC Loss Function ────────────────────────────────────────────────\n    19: # EDITABLE REGION START\n    20: class CustomBCLoss(nn.Module):\n    21:     \"\"\"Dimension-weighted NLL for GMM-based behavioral cloning.\n    22: \n    23:     Weights positional action dimensions more heavily than the gripper\n    24:     dimension to prioritize accurate end-effector movement prediction.\n    25:     \"\"\"\n    26: \n    27:     def __init__(self, action_dim=7, pos_weight=2.0, grip_weight=1.0):\n    28:         super().__init__()\n    29:         self.action_dim = action_dim\n    30:         weights = torch.ones(action_dim)\n    31:         weights[:6] = pos_weight\n    32:         weights[6:] = grip_weight\n    33:         self.register_buffer('weights', weights)\n    34: \n    35:     def forward(self, dist, target_actions):\n    36:         # Weight targets for importance scaling\n    37:         weighted_targets = target_actions * self.weights.unsqueeze(0)\n    38:         nll = -dist.log_prob(weighted_targets)\n    39:         return nll.mean()\n    40: # EDITABLE REGION END\n```\n\n## Evaluation Commands\nYour algorithm is evaluated by running:\n  - `scripts/train.sh` → label: `tool_hang_ph`\n  - `scripts/train.sh` → label: `can_ph`\n  - `scripts/train.sh` → label: `square_ph`\n\n## Compute Budget\nAll evaluation runs on **NVIDIA H100 80GB** GPU(s). Your algorithm must complete within the time limits below. If a command exceeds its time limit, the run is killed and the result is **invalid** (it will not count as a valid test result). Design your model to be efficient enough to train and evaluate within these constraints.\n\n| Command | GPUs | Time Limit |\n| --- | --- | --- |\n| `tool_hang_ph` | 1/3 GPU | 8:00:00 |\n| `can_ph` | 1/3 GPU | 8:00:00 |\n| `square_ph` | 1/3 GPU | 8:00:00 |\n\n## Baseline Results\nBeat these with your algorithm:\n\n| baseline | tool_hang_ph | can_ph | square_ph |\n| --- | --- | --- | --- |\n| default | 0.15 | 0.85 | 0.73 |\n| nll_entropy | 0.07 | 0.85 | 0.74 |\n| weighted_nll | 0.03 | 0.41 | 0.48 |\n\n## Your Budget\n- **Action budget**: 20 total tool calls (every edit / test / undo / web_search / web_extract counts; submit does not)\n- **Test invocations**: at most 3 (each test() call also consumes one action from the budget above)\n- You **must** iterate at least once (edit → test → review → edit → test) before submitting.",
+   "steps": [
+    {
+     "step": 1,
+     "tool": "edit",
+     "file": "robomimic/custom_bc_loss.py",
+     "preview": "class CustomBCLoss(nn.Module):\n    \"\"\"Intent-aware geometric loss for GMM-based behavioral cloning.\n\n    Replaces plain NLL with an expert-normalized geometric distance:\n        d_k = 0.5 * log(|Sigma_k| / 2*pi) + 0.5 * (a - mu_k)^T Sigma_k^{-1} (a - mu_k)\n    per mixture component, wrapped in a softplus to make the penalty smooth\n    and bounded below, normalized by the number of modes, and combi"
+    },
+    {
+     "step": 2,
+     "tool": "test",
+     "file": null
+    },
+    {
+     "step": 3,
+     "tool": "edit",
+     "file": "robomimic/custom_bc_loss.py",
+     "preview": "    def __init__(self, action_dim=7, num_modes=5, nll_coef=0.05,\n                 d_cap=10.0, sigma_min=1e-4):\n        super().__init__()\n        self.action_dim = action_dim\n        self.num_modes = num_modes\n        self.nll_coef = nll_coef\n        self.d_cap = d_cap\n        self.sigma_min = sigma_min\n        # 0.5 * log(2 * pi)\n        self.half_log_2pi = 0.9189385332046727\n\n    def forward(sel"
+    },
+    {
+     "step": 4,
+     "tool": "test",
+     "file": null
+    },
+    {
+     "step": 5,
+     "tool": "edit",
+     "file": "robomimic/custom_bc_loss.py",
+     "preview": "class CustomBCLoss(nn.Module):\n    \"\"\"Intent-aware geometric loss for GMM-based behavioral cloning.\n\n    Replaces plain NLL with an expert-normalized geometric distance:\n        d_k = 0.5 * log(|Sigma_k| / 2*pi) + 0.5 * (a - mu_k)^T Sigma_k^{-1} (a - mu_k)\n    per mixture component, wrapped in a softplus to make the penalty smooth\n    and bounded below, normalized by the number of modes, and combi"
+    },
+    {
+     "step": 6,
+     "tool": "test",
+     "file": null
+    }
+   ],
+   "final_code": {
+    "robomimic_custom_bc_loss.py (step 5)": "\"\"\"\nCustom BC Loss Function for GMM-based Behavioral Cloning.\n\nThis module defines the loss function used by BC-GMM training in robomimic.\nThe loss receives the GMM distribution produced by the policy network and\nthe expert demonstration actions, and returns a scalar loss.\n\nThe custom loss is imported and used by the patched BC_GMM._compute_losses\nmethod during training.\n\"\"\"\n\nimport torch\nimport torch.nn as nn\nimport torch.nn.functional as F\nimport torch.distributions as D\n\n\n# ── Custom BC Loss Function ────────────────────────────────────────────────\n# EDITABLE REGION START\nclass CustomBCLoss(nn.Module):\n    \"\"\"Intent-aware geometric loss for GMM-based behavioral cloning.\n\n    Replaces plain NLL with an expert-normalized geometric distance:\n        d_k = 0.5 * log(|Sigma_k| / 2*pi) + 0.5 * (a - mu_k)^T Sigma_k^{-1} (a - mu_k)\n    per mixture component, wrapped in a softplus to make the penalty smooth\n    and bounded below, normalized by the number of modes, and combined with\n    a small NLL term as a secondary likelihood regularizer.\n\n    Crux: the distance is capped at a safe finite value before the softplus\n    to avoid exponential blowup / unstable gradients for far-away actions.\n    \"\"\"\n\n    def __init__(self, action_dim=7, num_modes=5, nll_coef=0.05,\n                 d_cap=10.0, sigma_min=1e-4):\n        super().__init__()\n        self.action_dim = action_dim\n        self.num_modes = num_modes\n        self.nll_coef = nll_coef\n        self.d_cap = d_cap\n        self.sigma_min = sigma_min\n        # 0.5 * log(2 * pi)\n        self.half_log_2pi = 0.9189385332046727\n\n    def forward(self, dist, target_actions):\n        comp = dist.component_distribution\n        mu = comp.mean                                   # [B, K, D]\n        sigma = comp.stddev.clamp(min=self.sigma_min)    # [B, K, D]\n\n        a = target_actions.unsqueeze(-2)                 # [B, 1, D]\n        # Mahalanobis distance under the (diagonal) expert covariance\n        maha = (((a - mu) / sigma) ** 2).sum(-1)         # [B, K]\n        log_det = 2.0 * torch.log(sigma).sum(-1)         # [B, K]\n\n        # expert-normalized geometric distance per mode\n        d = 0.5 * log_det - self.half_log_2pi + 0.5 * maha\n\n        # cap the distance before the softplus (numerical stability crux)\n        d = torch.clamp(d, max=self.d_cap)\n        pen = F.softplus(d)                              # smooth, bounded-below\n\n        # weight modes by (detached) mixture probabilities so the geometric\n        # penalty does not trigger premature winner-take-all weight collapse;\n        # mixture weights are learned through the likelihood term instead\n        w = dist.mixture_distribution.probs.detach()     # [B, K]\n        geo = (w * pen).sum(-1).mean() / self.num_modes\n\n        # small likelihood regularizer\n        nll = -dist.log_prob(target_actions).mean()\n        return geo + self.nll_coef * nll\n# EDITABLE REGION END\n# EDITABLE REGION END\n"
+   },
+   "summary": {
+    "steps": 7,
+    "tests": 3,
+    "done": true,
+    "max_steps": 20,
+    "tokens": {
+     "prompt_tokens": 16,
+     "completion_tokens": 44364,
+     "total_tokens": 44380,
+     "cached_tokens": 271090,
+     "cache_creation_tokens": 85627,
+     "calls": 8
+    }
+   }
+  }
+ ]
+}

@@ -1,0 +1,50 @@
+{
+ "slug": "rl-value-discrete",
+ "domain": "Reinforcement Learning",
+ "name": "Value-Based Discrete Control",
+ "description": "# Online RL: Value-Based Methods for Discrete Control\n\n\n## Objective\nDesign and implement a value-based RL algorithm for discrete action spaces. Your code goes in `custom_value_discrete.py`. Three reference implementations (DQN, DoubleDQN, C51) are provided as read-only.\n\n## Background\nValue-based methods estimate Q-values Q(s,a) for each state-action pair and derive a policy by selecting actions with the highest Q-value. Key challenges include overestimation bias, sample efficiency, and representing uncertainty. Different approaches address these through double Q-learning, distributional value functions, or prioritized replay.\n\n## Constraints\n- Network architecture dimensions are FIXED and cannot be modified\n- Total parameter count is enforced at runtime\n- Focus on algorithmic innovation: new loss functions, update rules, exploration strategies, etc.\n- Do NOT simply copy a reference implementation with minor changes\n\n## Evaluation\nTrained and evaluated on CartPole-v1, LunarLander-v2, Acrobot-v1. Additional held-out environments (not shown during intermediate testing) are used to assess generalization. Metric: mean episodic return over 10 evaluation episodes (higher is better).\n",
+ "metric": "eval_return_cartpole_v1",
+ "lower_is_better": false,
+ "master_prompt": {
+  "system": "You are a world-class AI researcher. You are given a machine-learning task with a specific editable code component. Reason step by step in your own distinctive style toward ONE genuinely novel, non-obvious idea to improve that component. Make the creative core unmistakably clear and explain how you arrived at it. Focus on ideas and mechanisms, not full implementation code.",
+  "user": "# Online RL: Value-Based Methods for Discrete Control\n\n\n## Objective\nDesign and implement a value-based RL algorithm for discrete action spaces. Your code goes in `custom_value_discrete.py`. Three reference implementations (DQN, DoubleDQN, C51) are provided as read-only.\n\n## Background\nValue-based methods estimate Q-values Q(s,a) for each state-action pair and derive a policy by selecting actions with the highest Q-value. Key challenges include overestimation bias, sample efficiency, and representing uncertainty. Different approaches address these through double Q-learning, distributional value functions, or prioritized replay.\n\n## Constraints\n- Network architecture dimensions are FIXED and cannot be modified\n- Total parameter count is enforced at runtime\n- Focus on algorithmic innovation: new loss functions, update rules, exploration strategies, etc.\n- Do NOT simply copy a reference implementation with minor changes\n\n## Evaluation\nTrained and evaluated on CartPole-v1, LunarLander-v2, Acrobot-v1. Additional held-out environments (not shown during intermediate testing) are used to assess generalization. Metric: mean episodic return over 10 evaluation episodes (higher is better).\n\n\nThe editable component is `cleanrl/cleanrl/custom_value_discrete.py` (evaluation setting: cartpole-v1). Propose ONE concrete, novel idea to improve it. Conclude with two lines: 'Core idea:' and 'Non-trivial crux:'."
+ },
+ "baselines": {
+  "methods": [
+   {
+    "name": "dueling_dqn",
+    "metrics": {
+     "eval_return_cartpole_v1": "466.2",
+     "elapsed_cartpole-v1": "2219.7",
+     "eval_return_lunarlander_v2": "271.48",
+     "elapsed_lunarlander-v2": "2892.2",
+     "eval_return_acrobot_v1": "-81.6",
+     "elapsed_acrobot-v1": "1897.0"
+    }
+   },
+   {
+    "name": "qr_dqn",
+    "metrics": {
+     "eval_return_cartpole_v1": "500.0",
+     "elapsed_cartpole-v1": "2356.1",
+     "eval_return_lunarlander_v2": "154.47",
+     "elapsed_lunarlander-v2": "2990.7",
+     "eval_return_acrobot_v1": "-80.1",
+     "elapsed_acrobot-v1": "2073.9"
+    }
+   },
+   {
+    "name": "c51",
+    "metrics": {
+     "eval_return_cartpole_v1": "500.0",
+     "elapsed_cartpole-v1": "2699.9",
+     "eval_return_lunarlander_v2": "100.25",
+     "elapsed_lunarlander-v2": "3162.1",
+     "eval_return_acrobot_v1": "-69.2",
+     "elapsed_acrobot-v1": "2508.2"
+    }
+   }
+  ],
+  "note": "rescaled cells: 50 = strong baseline, 100 = theoretical upper bound. Baseline methods below are the reference implementations the proposals compete against."
+ }
+}

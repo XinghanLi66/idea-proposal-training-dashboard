@@ -1,0 +1,117 @@
+{
+ "slug": "graph-generation",
+ "domain": "Structured & Causal Reasoning",
+ "name": "Unconditional Graph Generator Architecture",
+ "description": "# Graph Generation Model Design\n\n## Research Question\nDesign a novel generative model architecture for unconditional graph generation that produces realistic graph structures matching the statistical properties of a training distribution.\n\n## Background\nGraph generation is a fundamental problem in machine learning with applications in drug discovery, social network modeling, and materials science. The goal is to learn the distribution of a set of graphs and generate new graphs that are statistically indistinguishable from the training data.\n\nExisting approaches span several paradigms:\n- **Autoregressive**: GraphRNN (You et al., 2018) generates graphs node-by-node with RNNs, GRAN (Liao et al., 2019) uses graph attention for one-shot block generation\n- **VAE-based**: GraphVAE (Simonovsky & Komodakis, 2018) encodes graphs into latent space and decodes adjacency matrices\n- **Flow-based**: MoFlow (Zang & Wang, 2020) uses normalizing flows for invertible graph generation\n- **Diffusion/Score-based**: GDSS (Jo et al., 2022) applies score-based SDEs to graph generation, DiGress (Vignac et al., 2023) uses discrete denoising diffusion\n\nEvaluation uses Maximum Mean Discrepancy (MMD) between graph statistics (degree distribution, clustering coefficients, orbit counts) of generated and reference graphs. Lower MMD indicates the generated graphs better match the training distribution.\n\n## What You Can Modify\nThe `GraphGenerator` class (lines 446-590) in `custom_graphgen.py`. This class must implement:\n\n1. `__init__(self, max_nodes, **kwargs)`: Initialize model parameters and optimizer\n2. `train_step(self, adj, node_counts) -> dict`: Perform one training step on a batch of adjacency matrices. Must return a dict containing at least `'loss'` (float).\n3. `sample(self, n_samples, device) -> (adj, node_counts)`: Generate graphs. Returns:\n   - `adj`: Tensor [n_samples, max_nodes, max_nodes] — binary symmetric adjacency matrices (no self-loops)\n   - `node_counts`: Tensor [n_samples] — number of nodes per graph (minimum 2)\n\nThe input adjacency matrices are binary, symmetric, zero-diagonal, and padded to `max_nodes`.\n\nYou may define helper classes/functions within the editable region. The model's optimizer should be created inside `__init__` and updated inside `train_step`.\n\nAvailable imports (in the FIXED section): `torch`, `torch.nn`, `torch.nn.functional`, `torch.optim`, `numpy`, `math`.\n\n## Evaluation\n- **Metrics** (all lower is better):\n  - `mmd_degree`: MMD of degree distributions\n  - `mmd_clustering`: MMD of clustering coefficient distributions\n  - `mmd_orbit`: MMD of 4-orbit count distributions\n  - `mmd_avg`: Average of the three MMD metrics\n- **Datasets**:\n  - `community_small`: 100 synthetic 2-community graphs (12-20 nodes)\n  - `ego_small`: 200 ego graphs from Citeseer (4-18 nodes)\n  - `enzymes`: 587 protein structure graphs from BRENDA (10-125 nodes)\n- **Training**: 500 epochs, batch size 32, single GPU (note: reduced from the 3000 epochs used in some published setups to fit the per-task compute budget; all baselines are trained with the same schedule for a fair comparison)\n- **Seeds**: Multiple seeds for statistical reliability\n\n",
+ "metric": "mmd_avg_community_small",
+ "lower_is_better": true,
+ "master_prompt": {
+  "system": "You are a world-class AI researcher. You are given a machine-learning task with a specific editable code component. Reason step by step in your own distinctive style toward ONE genuinely novel, non-obvious idea to improve that component. Make the creative core unmistakably clear and explain how you arrived at it. Focus on ideas and mechanisms, not full implementation code.",
+  "user": "# Graph Generation Model Design\n\n## Research Question\nDesign a novel generative model architecture for unconditional graph generation that produces realistic graph structures matching the statistical properties of a training distribution.\n\n## Background\nGraph generation is a fundamental problem in machine learning with applications in drug discovery, social network modeling, and materials science. The goal is to learn the distribution of a set of graphs and generate new graphs that are statistically indistinguishable from the training data.\n\nExisting approaches span several paradigms:\n- **Autoregressive**: GraphRNN (You et al., 2018) generates graphs node-by-node with RNNs, GRAN (Liao et al., 2019) uses graph attention for one-shot block generation\n- **VAE-based**: GraphVAE (Simonovsky & Komodakis, 2018) encodes graphs into latent space and decodes adjacency matrices\n- **Flow-based**: MoFlow (Zang & Wang, 2020) uses normalizing flows for invertible graph generation\n- **Diffusion/Score-based**: GDSS (Jo et al., 2022) applies score-based SDEs to graph generation, DiGress (Vignac et al., 2023) uses discrete denoising diffusion\n\nEvaluation uses Maximum Mean Discrepancy (MMD) between graph statistics (degree distribution, clustering coefficients, orbit counts) of generated and reference graphs. Lower MMD indicates the generated graphs better match the training distribution.\n\n## What You Can Modify\nThe `GraphGenerator` class (lines 446-590) in `custom_graphgen.py`. This class must implement:\n\n1. `__init__(self, max_nodes, **kwargs)`: Initialize model parameters and optimizer\n2. `train_step(self, adj, node_counts) -> dict`: Perform one training step on a batch of adjacency matrices. Must return a dict containing at least `'loss'` (float).\n3. `sample(self, n_samples, device) -> (adj, node_counts)`: Generate graphs. Returns:\n   - `adj`: Tensor [n_samples, max_nodes, max_nodes] — binary symmetric adjacency matrices (no self-loops)\n   - `node_counts`: Tensor [n_samples] — number of nodes per graph (minimum 2)\n\nThe input adjacency matrices are binary, symmetric, zero-diagonal, and padded to `max_nodes`.\n\nYou may define helper classes/functions within the editable region. The model's optimizer should be created inside `__init__` and updated inside `train_step`.\n\nAvailable imports (in the FIXED section): `torch`, `torch.nn`, `torch.nn.functional`, `torch.optim`, `numpy`, `math`.\n\n## Evaluation\n- **Metrics** (all lower is better):\n  - `mmd_degree`: MMD of degree distributions\n  - `mmd_clustering`: MMD of clustering coefficient distributions\n  - `mmd_orbit`: MMD of 4-or\n\nThe editable component is `pytorch-geometric/custom_graphgen.py` (evaluation setting: community_small). Propose ONE concrete, novel idea to improve it. Conclude with two lines: 'Core idea:' and 'Non-trivial crux:'."
+ },
+ "baselines": {
+  "methods": [
+   {
+    "name": "digress",
+    "metrics": {
+     "mmd_avg_community_small": "0.218921",
+     "mmd_avg_ego_small": "0.082194",
+     "mmd_avg_enzymes": "0.786477",
+     "mmd_clustering_community_small": "0.1",
+     "mmd_clustering_ego_small": "0.105",
+     "mmd_clustering_enzymes": "0.700365",
+     "mmd_degree_community_small": "0.101257",
+     "mmd_degree_ego_small": "0.133545",
+     "mmd_degree_enzymes": "1.374443",
+     "mmd_orbit_community_small": "0.455506",
+     "mmd_orbit_ego_small": "0.008038",
+     "mmd_orbit_enzymes": "0.284623",
+     "elapsed_community_small": "24",
+     "elapsed_ego_small": "35",
+     "elapsed_enzymes": "102"
+    }
+   },
+   {
+    "name": "gran",
+    "metrics": {
+     "mmd_avg_community_small": "0.219016",
+     "mmd_avg_ego_small": "0.81882",
+     "mmd_avg_enzymes": "0.814274",
+     "mmd_clustering_community_small": "0.1",
+     "mmd_clustering_ego_small": "0.11625",
+     "mmd_clustering_enzymes": "0.037487",
+     "mmd_degree_community_small": "0.162538",
+     "mmd_degree_ego_small": "1.215348",
+     "mmd_degree_enzymes": "1.435592",
+     "mmd_orbit_community_small": "0.394509",
+     "mmd_orbit_ego_small": "1.124861",
+     "mmd_orbit_enzymes": "0.969744",
+     "elapsed_community_small": "18",
+     "elapsed_ego_small": "27",
+     "elapsed_enzymes": "263"
+    }
+   },
+   {
+    "name": "graphvae",
+    "metrics": {
+     "mmd_avg_community_small": "0.230851",
+     "mmd_avg_ego_small": "0.169336",
+     "mmd_avg_enzymes": "0.6467",
+     "mmd_clustering_community_small": "0.1",
+     "mmd_clustering_ego_small": "0.09125",
+     "mmd_clustering_enzymes": "0.354306",
+     "mmd_degree_community_small": "0.188233",
+     "mmd_degree_ego_small": "0.314982",
+     "mmd_degree_enzymes": "1.36785",
+     "mmd_orbit_community_small": "0.40432",
+     "mmd_orbit_ego_small": "0.101778",
+     "mmd_orbit_enzymes": "0.217945",
+     "elapsed_community_small": "11",
+     "elapsed_ego_small": "16",
+     "elapsed_enzymes": "36"
+    }
+   },
+   {
+    "name": "moflow",
+    "metrics": {
+     "mmd_avg_community_small": "0.785386",
+     "mmd_avg_ego_small": "1.099876",
+     "mmd_avg_enzymes": "0.791946",
+     "mmd_clustering_community_small": "0.1",
+     "mmd_clustering_ego_small": "0.11625",
+     "mmd_clustering_enzymes": "0.06964",
+     "mmd_degree_community_small": "1.19608",
+     "mmd_degree_ego_small": "1.325781",
+     "mmd_degree_enzymes": "1.352234",
+     "mmd_orbit_community_small": "1.060077",
+     "mmd_orbit_ego_small": "1.857598",
+     "mmd_orbit_enzymes": "0.953964",
+     "elapsed_community_small": "22",
+     "elapsed_ego_small": "32",
+     "elapsed_enzymes": "327"
+    }
+   },
+   {
+    "name": "gdss",
+    "metrics": {
+     "mmd_avg_community_small": "0.949955",
+     "mmd_avg_ego_small": "1.133836",
+     "mmd_avg_enzymes": "0.819764",
+     "mmd_clustering_community_small": "0.1",
+     "mmd_clustering_ego_small": "0.11625",
+     "mmd_clustering_enzymes": "0.096428",
+     "mmd_degree_community_small": "1.244405",
+     "mmd_degree_ego_small": "1.393725",
+     "mmd_degree_enzymes": "1.407973",
+     "mmd_orbit_community_small": "1.505461",
+     "mmd_orbit_ego_small": "1.891534",
+     "mmd_orbit_enzymes": "0.954892",
+     "elapsed_community_small": "12",
+     "elapsed_ego_small": "17",
+     "elapsed_enzymes": "412"
+    }
+   }
+  ],
+  "note": "rescaled cells: 50 = strong baseline, 100 = theoretical upper bound. Baseline methods below are the reference implementations the proposals compete against."
+ }
+}

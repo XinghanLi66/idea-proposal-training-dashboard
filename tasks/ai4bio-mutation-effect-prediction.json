@@ -1,0 +1,50 @@
+{
+ "slug": "ai4bio-mutation-effect-prediction",
+ "domain": "AI for Science",
+ "name": "Mutation Fitness Predictor",
+ "description": "# Task: Protein Mutation Effect Prediction\n\n## Research Question\nDesign a supervised prediction architecture that maps pre-computed protein language model (PLM) embeddings to protein fitness scores, improving over simple linear or shallow models for mutation effect prediction.\n\n## Background\nPredicting the functional effect of amino acid mutations is a central problem in protein engineering and clinical genetics. Deep mutational scanning (DMS) experiments measure the fitness effect of thousands of mutations in a protein, but are expensive and time-consuming. Computational prediction of these effects can accelerate protein design.\n\nThe task uses frozen protein language model representations and asks for a supervised prediction head over those embeddings.\n\nKey considerations:\n- **Embedding structure**: ESM-2 embeddings encode rich structural and evolutionary information in 1280 dimensions. How to best exploit this high-dimensional representation?\n- **Delta features**: The difference between mutant and wild-type embeddings directly encodes what changed due to the mutation.\n- **Generalization across folds**: The model must generalize across different CV splits, not just memorize training examples.\n\n## What to Implement\nImplement the `MutationPredictor` class in `custom_mutation_pred.py`. You must implement:\n1. `__init__(self, embed_dim)`: Set up your model architecture. `embed_dim` is 1280 (ESM-2 650M).\n2. `forward(self, embedding, delta_embedding) -> Tensor`: Return predictions of shape `[B]`.\n\n## Input Format\nThe model receives two inputs per mutant:\n- `embedding`: `[B, 1280]` — Mean-pooled ESM-2 (650M) representation of the mutant sequence\n- `delta_embedding`: `[B, 1280]` — Difference from wild-type embedding (`mutant_emb - wt_emb`)\n\n## Output Format\n- Return a tensor of shape `[B]` with predicted fitness scores (real-valued).\n\n## Evaluation\nThe model is evaluated on 3 DMS assays from the ProteinGym benchmark, covering different protein families and functional categories:\n\n- **BLAT_ECOLX** (Beta-lactamase, OrganismalFitness, 4783 single mutants): Antibiotic resistance enzyme from E. coli\n- **ESTA_BACSU** (Esterase, Stability, 2172 single mutants): Thermostability of a B. subtilis esterase\n- **RASH_HUMAN** (K-Ras GTPase, Activity, 3134 single mutants): Oncogene activity in human cells\n\n**Metric**: Spearman rank correlation between predicted and true fitness scores, averaged over 5-fold cross-validation (using ProteinGym's pre-defined **random** folds). Higher is better.\n\n> ⚠️ **Evaluation protocol note.** ProteinGym's supervised leaderboard averages\n> Spearman over three fold strategies — `random`, `modulo` (every 5th residue),\n> and `contiguous` (held-out sequence blocks). This task uses **only the\n> `random` fold strategy**, which is the easiest of the three and tends to\n> give higher Spearman than the published ProteinGym SOTA averages. Numbers\n> reported here are therefore not directly comparable to the ProteinGym\n> supervised leaderboard; treat them as within-benchmark-relative scores.\n\n## Editable Region\nLines 108-137 of `custom_mutation_pred.py` (the `MutationPredictor` class\nbetween `EDITABLE SECTION START` and `EDITABLE SECTION END` markers). You\nmay define helper classes, layers, or functions within this region. The\nregion must contain a `MutationPredictor` class that is an `nn.Module`\nwith the specified interface.\n\nYou may additionally set training-loop hyperparameters by writing into the\nsmall `CONFIG_OVERRIDES = {}` dict in `main()` (a 3-line editable region\nnear the bottom of the file). Allowed keys: `learning_rate`, `weight_decay`.\n",
+ "metric": "spearman_BLAT_ECOLX",
+ "lower_is_better": false,
+ "master_prompt": {
+  "system": "You are a world-class AI researcher. You are given a machine-learning task with a specific editable code component. Reason step by step in your own distinctive style toward ONE genuinely novel, non-obvious idea to improve that component. Make the creative core unmistakably clear and explain how you arrived at it. Focus on ideas and mechanisms, not full implementation code.",
+  "user": "# Task: Protein Mutation Effect Prediction\n\n## Research Question\nDesign a supervised prediction architecture that maps pre-computed protein language model (PLM) embeddings to protein fitness scores, improving over simple linear or shallow models for mutation effect prediction.\n\n## Background\nPredicting the functional effect of amino acid mutations is a central problem in protein engineering and clinical genetics. Deep mutational scanning (DMS) experiments measure the fitness effect of thousands of mutations in a protein, but are expensive and time-consuming. Computational prediction of these effects can accelerate protein design.\n\nThe task uses frozen protein language model representations and asks for a supervised prediction head over those embeddings.\n\nKey considerations:\n- **Embedding structure**: ESM-2 embeddings encode rich structural and evolutionary information in 1280 dimensions. How to best exploit this high-dimensional representation?\n- **Delta features**: The difference between mutant and wild-type embeddings directly encodes what changed due to the mutation.\n- **Generalization across folds**: The model must generalize across different CV splits, not just memorize training examples.\n\n## What to Implement\nImplement the `MutationPredictor` class in `custom_mutation_pred.py`. You must implement:\n1. `__init__(self, embed_dim)`: Set up your model architecture. `embed_dim` is 1280 (ESM-2 650M).\n2. `forward(self, embedding, delta_embedding) -> Tensor`: Return predictions of shape `[B]`.\n\n## Input Format\nThe model receives two inputs per mutant:\n- `embedding`: `[B, 1280]` — Mean-pooled ESM-2 (650M) representation of the mutant sequence\n- `delta_embedding`: `[B, 1280]` — Difference from wild-type embedding (`mutant_emb - wt_emb`)\n\n## Output Format\n- Return a tensor of shape `[B]` with predicted fitness scores (real-valued).\n\n## Evaluation\nThe model is evaluated on 3 DMS assays from the ProteinGym benchmark, covering different protein families and functional categories:\n\n- **BLAT_ECOLX** (Beta-lactamase, OrganismalFitness, 4783 single mutants): Antibiotic resistance enzyme from E. coli\n- **ESTA_BACSU** (Esterase, Stability, 2172 single mutants): Thermostability of a B. subtilis esterase\n- **RASH_HUMAN** (K-Ras GTPase, Activity, 3134 single mutants): Oncogene activity in human cells\n\n**Metric**: Spearman rank correlation between predicted and true fitness scores, averaged over 5-fold cross-validation (using ProteinGym's pre-defined **random** folds). Higher is better.\n\n> ⚠️ **Evaluation protocol note.** ProteinGym's supervised leaderboard averages\n> Spea\n\nThe editable component is `ProteinGym/custom_mutation_pred.py` (evaluation setting: BLAT_ECOLX). Propose ONE concrete, novel idea to improve it. Conclude with two lines: 'Core idea:' and 'Non-trivial crux:'."
+ },
+ "baselines": {
+  "methods": [
+   {
+    "name": "mlp",
+    "metrics": {
+     "elapsed_BLAT_ECOLX": "77",
+     "elapsed_ESTA_BACSU": "77",
+     "elapsed_RASH_HUMAN": "77",
+     "spearman_BLAT_ECOLX": "0.88254",
+     "spearman_ESTA_BACSU": "0.64249",
+     "spearman_RASH_HUMAN": "0.808986"
+    }
+   },
+   {
+    "name": "reshape_cnn",
+    "metrics": {
+     "elapsed_BLAT_ECOLX": "128",
+     "elapsed_ESTA_BACSU": "128",
+     "elapsed_RASH_HUMAN": "128",
+     "spearman_BLAT_ECOLX": "0.860462",
+     "spearman_ESTA_BACSU": "0.64077",
+     "spearman_RASH_HUMAN": "0.798003"
+    }
+   },
+   {
+    "name": "ridge",
+    "metrics": {
+     "elapsed_BLAT_ECOLX": "94",
+     "elapsed_ESTA_BACSU": "94",
+     "elapsed_RASH_HUMAN": "94",
+     "spearman_BLAT_ECOLX": "0.736985",
+     "spearman_ESTA_BACSU": "-0.107204",
+     "spearman_RASH_HUMAN": "0.681465"
+    }
+   }
+  ],
+  "note": "rescaled cells: 50 = strong baseline, 100 = theoretical upper bound. Baseline methods below are the reference implementations the proposals compete against."
+ }
+}

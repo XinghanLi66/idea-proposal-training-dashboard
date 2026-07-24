@@ -1,0 +1,45 @@
+{
+ "slug": "cv-pooling-aggregation",
+ "domain": "Deep Learning",
+ "name": "Spatial Feature Aggregation",
+ "description": "# CV Global Pooling / Feature Aggregation Design\n\n## Research Question\nDesign a novel global pooling or feature aggregation strategy for image classification that improves test accuracy across different CNN architectures and datasets.\n\n## Background\nGlobal pooling is the final spatial aggregation step in modern CNNs, reducing feature maps from [B, C, H, W] to [B, C] before the classifier head. The standard approach is Global Average Pooling (GAP), which computes the spatial mean per channel. While simple and effective, GAP discards spatial structure and treats all positions equally. Alternative strategies include:\n\n- **Global Max Pooling (GMP)**: Selects the strongest activation per channel, capturing the most salient features but ignoring distribution information.\n- **Generalized Mean (GeM) Pooling** (Radenovic et al., 2018): Learnable power-mean that interpolates between average and max pooling.\n- **Average + Max**: Element-wise combination of GAP and GMP, capturing both mean-field and peak statistics.\n\nThere is room to design pooling strategies that better capture the spatial statistics of feature maps, adapt to different architectures, or learn task-specific aggregation patterns.\n\n## What You Can Modify\nThe `CustomPool` class (lines 31-48) in `custom_pool.py`. This class receives a 4D tensor [B, C, H, W] and must return a 2D tensor [B, C].\n\nYou can modify:\n- The aggregation function (mean, max, learned weights, attention, higher-order statistics)\n- Whether to use learnable parameters\n- How spatial information is summarized (single-point, multi-scale, distribution-based)\n- Channel-wise or spatial-wise weighting mechanisms\n- Any combination of the above\n\nConstraints:\n- Input: [B, C, H, W] tensor (C varies by architecture: 64 for ResNet-56, 512 for VGG-16-BN, 1280 for MobileNetV2)\n- Output: [B, C] tensor (must match input channel dimension exactly)\n- Must work with variable spatial sizes (8×8 for ResNet on CIFAR, 1×1 for VGG after max-pools, 1×1 for MobileNetV2)\n- No access to training data or labels within the pooling layer\n\n## Evaluation\n- **Metric**: Best test accuracy (%, higher is better)\n- **Architectures & datasets**:\n  - ResNet-56 on CIFAR-100 (deep residual, 100 classes; final feature map 8×8, C=64)\n  - VGG-16-BN on CIFAR-100 (deep non-residual with BatchNorm, 100 classes; final feature map 1×1 after max-pools, C=512)\n  - MobileNetV2 on FashionMNIST (lightweight inverted-residual, 10 classes) — *hidden, evaluated on final submission only*\n- **Training**: SGD (lr=0.1, momentum=0.9, wd=5e-4), cosine annealing, 200 epochs\n- **Data augmentation**: RandomCrop(32, pad=4) + RandomHorizontalFlip\n\n",
+ "metric": "test_acc_resnet56-cifar100",
+ "lower_is_better": false,
+ "master_prompt": {
+  "system": "You are a world-class AI researcher. You are given a machine-learning task with a specific editable code component. Reason step by step in your own distinctive style toward ONE genuinely novel, non-obvious idea to improve that component. Make the creative core unmistakably clear and explain how you arrived at it. Focus on ideas and mechanisms, not full implementation code.",
+  "user": "# CV Global Pooling / Feature Aggregation Design\n\n## Research Question\nDesign a novel global pooling or feature aggregation strategy for image classification that improves test accuracy across different CNN architectures and datasets.\n\n## Background\nGlobal pooling is the final spatial aggregation step in modern CNNs, reducing feature maps from [B, C, H, W] to [B, C] before the classifier head. The standard approach is Global Average Pooling (GAP), which computes the spatial mean per channel. While simple and effective, GAP discards spatial structure and treats all positions equally. Alternative strategies include:\n\n- **Global Max Pooling (GMP)**: Selects the strongest activation per channel, capturing the most salient features but ignoring distribution information.\n- **Generalized Mean (GeM) Pooling** (Radenovic et al., 2018): Learnable power-mean that interpolates between average and max pooling.\n- **Average + Max**: Element-wise combination of GAP and GMP, capturing both mean-field and peak statistics.\n\nThere is room to design pooling strategies that better capture the spatial statistics of feature maps, adapt to different architectures, or learn task-specific aggregation patterns.\n\n## What You Can Modify\nThe `CustomPool` class (lines 31-48) in `custom_pool.py`. This class receives a 4D tensor [B, C, H, W] and must return a 2D tensor [B, C].\n\nYou can modify:\n- The aggregation function (mean, max, learned weights, attention, higher-order statistics)\n- Whether to use learnable parameters\n- How spatial information is summarized (single-point, multi-scale, distribution-based)\n- Channel-wise or spatial-wise weighting mechanisms\n- Any combination of the above\n\nConstraints:\n- Input: [B, C, H, W] tensor (C varies by architecture: 64 for ResNet-56, 512 for VGG-16-BN, 1280 for MobileNetV2)\n- Output: [B, C] tensor (must match input channel dimension exactly)\n- Must work with variable spatial sizes (8×8 for ResNet on CIFAR, 1×1 for VGG after max-pools, 1×1 for MobileNetV2)\n- No access to training data or labels within the pooling layer\n\n## Evaluation\n- **Metric**: Best test accuracy (%, higher is better)\n- **Architectures & datasets**:\n  - ResNet-56 on CIFAR-100 (deep residual, 100 classes; final feature map 8×8, C=64)\n  - VGG-16-BN on CIFAR-100 (deep non-residual with BatchNorm, 100 classes; final feature map 1×1 after max-pools, C=512)\n  - MobileNetV2 on FashionMNIST (lightweight inverted-residual, 10 classes) — *hidden, evaluated on final submission only*\n- **Training**: SGD (lr=0.1, momentum=0.9, wd=5e-4), cosine annealing, 200 epochs\n- **Data augmentation**: \n\nThe editable component is `pytorch-vision/custom_pool.py` (evaluation setting: resnet56-cifar100). Propose ONE concrete, novel idea to improve it. Conclude with two lines: 'Core idea:' and 'Non-trivial crux:'."
+ },
+ "baselines": {
+  "methods": [
+   {
+    "name": "avg_max",
+    "metrics": {
+     "test_acc_resnet56-cifar100": "71.06",
+     "test_acc_vgg16bn-cifar100": "72.55",
+     "test_acc_mobilenetv2-fmnist": "94.52",
+     "elapsed_mobilenetv2-fmnist": "7289"
+    }
+   },
+   {
+    "name": "gem",
+    "metrics": {
+     "test_acc_resnet56-cifar100": "72.39",
+     "test_acc_vgg16bn-cifar100": "74.02",
+     "test_acc_mobilenetv2-fmnist": "94.81",
+     "elapsed_resnet56-cifar100": "0",
+     "elapsed_vgg16bn-cifar100": "0",
+     "elapsed_mobilenetv2-fmnist": "0"
+    }
+   },
+   {
+    "name": "global_max",
+    "metrics": {
+     "test_acc_resnet56-cifar100": "69.96",
+     "test_acc_vgg16bn-cifar100": "74.43",
+     "test_acc_mobilenetv2-fmnist": "94.27"
+    }
+   }
+  ],
+  "note": "rescaled cells: 50 = strong baseline, 100 = theoretical upper bound. Baseline methods below are the reference implementations the proposals compete against."
+ }
+}

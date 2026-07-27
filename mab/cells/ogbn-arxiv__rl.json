@@ -1,0 +1,35 @@
+{
+ "task": "ogbn-arxiv",
+ "arm": "rl",
+ "arm_label": "Qwen2.5-32B RL",
+ "metric": "test_acc",
+ "baseline": 0.31559,
+ "lower_is_better": false,
+ "metric_mean": 0.494963,
+ "delta_pct": 56.837,
+ "ci_pct": 4.561,
+ "success": true,
+ "per_seed": [
+  {
+   "seed": "3",
+   "metric": 0.488879287286793,
+   "delta_pct": 54.91
+  },
+  {
+   "seed": "2",
+   "metric": 0.48334464950723205,
+   "delta_pct": 53.156
+  },
+  {
+   "seed": "1",
+   "metric": 0.5126638273357612,
+   "delta_pct": 62.446
+  }
+ ],
+ "master_output": {
+  "idea": "**Mocking:** LeCun\n\nLet me start from the failure mode I want to avoid, because that's where the real design lives. The current `train.py` is a vanilla supervised loop. It trains an image classifier on a fixed dataset, and I suspect its bottleneck isn't the architecture—it's the data. I'll run a diagnostic first: I'll plot the per-class accuracy on a validation set. If I see a long tail of rare classes with much lower accuracy than common ones, that's exactly the symptom of a data imbalance problem masquerading as a model problem. My instinct here is that the default equal-weight cross-entropy loss is hurting me on the long tail, and a simple fix to the loss could buy more gain than any architecture tweak.\n\nNow the honest caveat I must keep front-of-mind. A class-balanced loss is a double-edged sword: it raises the floor but can lower the ceiling for common classes. So I won't just slap it on; I'll make it tunable and validate it carefully. Let me name the mechanism I'm borrowing: reweighting the loss so that each class contributes equally to the total gradient. This is a standard trick from the literature, but the non-trivial part is how I parameterize it. I want a single knob, call it `loss_alpha`, that interpolates between pure cross-entropy (alpha=0) and a fully class-balanced loss (alpha=1), with intermediate values trading off between the two extremes. This keeps the search space tractable—one scalar instead of per-class weights—and lets me trade off rare-class performance against common-class performance explicitly rather than guessing which is the limiting factor.\n\nWhy this cuts against the consensus: the reflex move is to reach for a bigger model or fancier regularization. Here I'm arguing that a simpler, cheaper change—just the loss function—could be decisive. And I have to be careful not to overfit the tuning to the validation set; I'd hold out a small slice of the training data as a true validation set for the alpha search, then pick the alpha that generalizes best across both rare and common classes, not the one that maximizes some single metric.\n\nOne further refinement, though I'll only implement it if the above clearly helps: if I find myself needing to push the tail even harder, I might add a separate auxiliary loss on just the misclassified rare examples, but that's a second-order effect I'd verify before adding complexity.\n\nCore idea: Introduce a tunable class-balanced loss (`loss_alpha`) that interpolates between plain cross-entropy and a fully class-balanced loss, and select the optimal alpha via validation on a held-out subset of the training data.\n\nNon-trivial crux: The key is that `loss_alpha` trades off rare-class vs. common-class performance along a single axis, making the search cheap and interpretable—but it must be validated against a true held-out set, since class-balancing can harm common-class accuracy.",
+  "proposal": "**Mocking:** LeCun\n\nLet me start from the failure mode I want to avoid, because that's where the real design lives. The current `train.py` is a vanilla supervised loop. It trains an image classifier on a fixed dataset, and I suspect its bottleneck isn't the architecture—it's the data. I'll run a diagnostic first: I'll plot the per-class accuracy on a validation set. If I see a long tail of rare classes with much lower accuracy than common ones, that's exactly the symptom of a data imbalance problem masquerading as a model problem. My instinct here is that the default equal-weight cross-entropy loss is hurting me on the long tail, and a simple fix to the loss could buy more gain than any architecture tweak.\n\nNow the honest caveat I must keep front-of-mind. A class-balanced loss is a double-edged sword: it raises the floor but can lower the ceiling for common classes. So I won't just slap it on; I'll make it tunable and validate it carefully. Let me name the mechanism I'm borrowing: reweighting the loss so that each class contributes equally to the total gradient. This is a standard trick from the literature, but the non-trivial part is how I parameterize it. I want a single knob, call it `loss_alpha`, that interpolates between pure cross-entropy (alpha=0) and a fully class-balanced loss (alpha=1), with intermediate values trading off between the two extremes. This keeps the search space tractable—one scalar instead of per-class weights—and lets me trade off rare-class performance against common-class performance explicitly rather than guessing which is the limiting factor.\n\nWhy this cuts against the consensus: the reflex move is to reach for a bigger model or fancier regularization. Here I'm arguing that a simpler, cheaper change—just the loss function—could be decisive. And I have to be careful not to overfit the tuning to the validation set; I'd hold out a small slice of the training data as a true validation set for the alpha search, then pick the alpha that generalizes best across both rare and common classes, not the one that maximizes some single metric.\n\nOne further refinement, though I'll only implement it if the above clearly helps: if I find myself needing to push the tail even harder, I might add a separate auxiliary loss on just the misclassified rare examples, but that's a second-order effect I'd verify before adding complexity.\n\nCore idea: Introduce a tunable class-balanced loss (`loss_alpha`) that interpolates between plain cross-entropy and a fully class-balanced loss, and select the optimal alpha via validation on a held-out subset of the training data.\n\nNon-trivial crux: The key is that `loss_alpha` trades off rare-class vs. common-class performance along a single axis, making the search cheap and interpretable—but it must be validated against a true held-out set, since class-balancing can harm common-class accuracy.",
+  "valid": true,
+  "n_attempts": 1
+ }
+}

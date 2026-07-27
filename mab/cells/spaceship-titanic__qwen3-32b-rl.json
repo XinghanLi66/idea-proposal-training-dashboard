@@ -1,0 +1,35 @@
+{
+ "task": "spaceship-titanic",
+ "arm": "qwen3-32b-rl",
+ "arm_label": "Qwen3-32B RL",
+ "metric": "accuracy",
+ "baseline": 0.72283,
+ "lower_is_better": false,
+ "metric_mean": 0.73203,
+ "delta_pct": 1.273,
+ "ci_pct": 1.029,
+ "success": false,
+ "per_seed": [
+  {
+   "seed": "1",
+   "metric": 0.7285796434732605,
+   "delta_pct": 0.795
+  },
+  {
+   "seed": "2",
+   "metric": 0.7412305922944221,
+   "delta_pct": 2.546
+  },
+  {
+   "seed": "3",
+   "metric": 0.726279470960322,
+   "delta_pct": 0.477
+  }
+ ],
+ "master_output": {
+  "idea": "**Research Log Summary:**  \nThe task is a supervised regression problem with a labeled training set and an unlabeled test set. My goal is to train a model on the training set and predict the target variable for the test set. The dataset is already loaded and split; my role is to design, train, and iterate a model. I should avoid reading CSVs directly and instead work exclusively through the provided API. The baseline uses a single decision tree regressor.\n\n---\n\n**Core idea:** Add a lightweight ensemble: train two tree models on different random subsets of features and average their predictions. The first model gets all features; the second gets only a random half. This exploits feature diversity cheaply and guards against overfitting without hyperparameter tuning.\n\n**Non-trivial crux:** The second model must be trained on the *same subset of rows* as the first but with *fewer features*—otherwise the averaging is inconsistent. So I must explicitly re-sample the training data by features for the second model, keeping row indices aligned.",
+  "proposal": "<think>\n\n</think>\n\n**Research Log Summary:**  \nThe task is a supervised regression problem with a labeled training set and an unlabeled test set. My goal is to train a model on the training set and predict the target variable for the test set. The dataset is already loaded and split; my role is to design, train, and iterate a model. I should avoid reading CSVs directly and instead work exclusively through the provided API. The baseline uses a single decision tree regressor.\n\n---\n\n**Core idea:** Add a lightweight ensemble: train two tree models on different random subsets of features and average their predictions. The first model gets all features; the second gets only a random half. This exploits feature diversity cheaply and guards against overfitting without hyperparameter tuning.\n\n**Non-trivial crux:** The second model must be trained on the *same subset of rows* as the first but with *fewer features*—otherwise the averaging is inconsistent. So I must explicitly re-sample the training data by features for the second model, keeping row indices aligned.",
+  "valid": true,
+  "n_attempts": 1
+ }
+}

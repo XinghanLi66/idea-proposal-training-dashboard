@@ -1,0 +1,35 @@
+{
+ "task": "cifar10",
+ "arm": "m2sft",
+ "arm_label": "Qwen3-235B-A22B SFT",
+ "metric": "accuracy",
+ "baseline": 0.51237,
+ "lower_is_better": false,
+ "metric_mean": 0.524767,
+ "delta_pct": 2.42,
+ "ci_pct": 4.626,
+ "success": false,
+ "per_seed": [
+  {
+   "seed": "1",
+   "metric": 0.5369,
+   "delta_pct": 4.788
+  },
+  {
+   "seed": "2",
+   "metric": 0.4953,
+   "delta_pct": -3.332
+  },
+  {
+   "seed": "3",
+   "metric": 0.5421,
+   "delta_pct": 5.802
+  }
+ ],
+ "master_output": {
+  "idea": "Core idea: Treat the training-data shuffle seed as a hyperparameter to search over, selecting the seed that maximizes validation performance on a hold-out fold, then retraining once on the full data with that seed.\n\nNon-trivial crux: The seed search must be validated on a genuinely disjoint hold-out set and only the single best seed evaluated on the real validation — otherwise the selected seed overfits the validation and the estimate is invalid; and the effect is dataset/order-dependent, so it must be re-checked rather than assumed portable across architectures.\n\nHow I'd keep myself honest: Split the data into a main training fold and a small hold-out validation fold. Search many seeds only on the training fold, select the top-performing one on the hold-out, and then evaluate exactly that one seed on the real validation set — never let the real validation touch the seed selection. Decision rule: if the seed-search strategy doesn't clearly outperform a single fixed seed on the real validation, keep the simpler fixed seed.",
+  "proposal": "<think>\nOkay, I'm a researcher who likes to start from what the model is actually seeing, not from abstract theory. Let me first ask the honest question: what is the thing that decides the quality of the training run? It's not just the architecture or the optimizer — those are fixed here. The thing that moves is the data the model is shown each epoch. So if I want to squeeze more out of the same architecture in 10 epochs, I should look at the data pipeline.\n\nNow, the default is to shuffle once and be done. Let me be precise about what that implies. One fixed shuffling means every epoch is fed the exact same sequence of mini-batches. That's the crux: the model is exposed to the same order of examples, and since the learning signal is gradient updates from those mini-batches, the exact order can subtly bias how the weights change. I can imagine a case where a bad run of similar examples early on pushes the weights into a worse basin. And with only 10 epochs, there's little room for a run that starts unlucky to recover.\n\nSo the question is: is the order of examples in a training run just a nuisance parameter, or is it a knob I can turn? I'd argue it's a knob. If I can control it and sweep it, I'm not optimizing the model — I'm optimizing the sequence of training samples. The leap is to treat the shuffle seed as a hyperparameter to be searched, exactly like learning rate or batch size. That's the source mechanism I'm borrowing: hyperparameter search, applied not to the optimizer but to the data order.\n\nWhy does this cut against consensus? Because the reflex in many ML setups is to fix the seed and run once, to make runs reproducible. My claim is that fixing it is throwing away a degree of freedom. Reproducibility is still possible — I'll record the seed used for each run, so any good run is exactly reproducible.\n\nNow the honest part: I can't just assert this seed search helps. I need to validate it, and the test has to be fair. So I'll hold the real validation set out of sight. I'll split the data into a main training fold and a small hold-out validation fold. I'll run many shuffles with different seeds on the training fold and pick the best-performing one on the hold-out. Then — and this is the discipline — I'll evaluate only that one selected seed on the real validation set. Decision rule: if the seed-search strategy doesn't clearly outperform a single fixed seed on the real validation, I don't keep it; the complexity isn't worth it.\n\nPotential traps to flag: (1) the hold-out validation must be genuinely disjoint from the training fold — leaking it into the seed selection is exactly what invalidates the final estimate. (2) A good seed might not generalize to other architectures or datasets; this is a data-order thing, so I can't assume it carries over without re-checking. (3) the cost: searching seeds multiplies the number of runs, and each run is already the 10-epoch budget — I have to balance how many seeds I search against the total time. If the seed effect turns out marginal, I fall back to the simpler fixed seed.\n\nI should also consider whether the data order matters enough to warrant this — if the dataset is small and the model is already overfitting, reordering may not help much, and I'd rather spend the budget elsewhere. But on a larger dataset where the order of exposure could shape learning trajectories, this seems worth the extra runs.\n\nCore idea: Treat the training-data shuffle seed as a hyperparameter to search over, selecting the seed that maximizes validation performance on a hold-out fold, then retraining once on the full data with that seed.\nNon-trivial crux: The seed search must be validated on a genuinely disjoint hold-out set and only the single best seed evaluated on the real validation — otherwise the selected seed overfits the validation and the estimate is invalid.\n</think>\n\nCore idea: Treat the training-data shuffle seed as a hyperparameter to search over, selecting the seed that maximizes validation performance on a hold-out fold, then retraining once on the full data with that seed.\n\nNon-trivial crux: The seed search must be validated on a genuinely disjoint hold-out set and only the single best seed evaluated on the real validation — otherwise the selected seed overfits the validation and the estimate is invalid; and the effect is dataset/order-dependent, so it must be re-checked rather than assumed portable across architectures.\n\nHow I'd keep myself honest: Split the data into a main training fold and a small hold-out validation fold. Search many seeds only on the training fold, select the top-performing one on the hold-out, and then evaluate exactly that one seed on the real validation set — never let the real validation touch the seed selection. Decision rule: if the seed-search strategy doesn't clearly outperform a single fixed seed on the real validation, keep the simpler fixed seed.",
+  "valid": true,
+  "n_attempts": 1
+ }
+}

@@ -2,8 +2,10 @@
  "task": "robomimic-bc-loss",
  "arm": "sft8b",
  "arm_label": "Qwen3-8B SFT",
- "status": "failed",
- "score": null,
+ "status": "scored",
+ "score": 17.9,
+ "worker": "claude-fable-5",
+ "caveat": null,
  "master_output": {
   "idea": null,
   "proposal": "<think>\n\n</think>\n\n**Mocking:** myself as a world-class researcher, not a reviewer\n\nLet me start from what the loss actually *does*, not from what the default says. The default is NLL of the GMM, which is equivalent to maximizing the probability of the expert actions under the model. That makes sense as a baseline, but it's a weak constraint: it only enforces that the model assigns high probability to expert samples. It does *not* enforce that the model assigns low probability to wrong samples. So I can ask: what would make the model's distribution *push* away from wrong actions?\n\nThe default is a single scalar: maximize log P(expert). But that scalar can be maximized by spreading the GMM's modes *toward* the expert, or by spreading them *away from* the expert. I want the loss to penalize the second case. That's the non-trivial crux: the NLL objective is *not* an L2-type constraint on the distribution's shape — it's a single scalar that the optimizer can exploit to move modes away from expert samples. So the default is not just suboptimal, it may be actively misleading.\n\nHere's the leap. Take the expert's *expected* action, which is a simple weighted average of the GMM modes, and compute the *distance* from that expected value to each sampled mode. This distance is an explicit, differentiable measure of how far each mode lies from the expert's average trajectory. Then, the loss is: for each mode, the negative of the mode's own probability — so that the loss *increases* as a mode moves farther from the expert. This is a form of adversarial loss: it pushes modes toward the expert's expected trajectory while still letting the GMM explore.\n\nWhy does this cut against the standard story? The standard story for imitation says: get the expert distribution right and you're done. I'm claiming the opposite: if you only match the expert distribution, you may have modes *drifting away* from it, and the NLL objective lets that happen. The adversarial term is a *constraint* on the shape — it forces modes toward the expert's expected value — whereas the NLL is a *score* that the optimizer can exploit. That's a structural difference I have to be precise about.\n\nNow I want to keep the mechanism minimal. I don't want to invent a new loss family; I want the simplest adversarial form that still enforces this directionality. The expected value is a weighted average of the modes, so I can compute it once per batch, and the distance is a Euclidean norm between each mode and that expected value. The adversarial term is then the sum over modes of the negative log probability of each mode — because minimizing that sum pushes modes toward the expert. And since I'm using a GMM, the modes are already differentiable, so the whole thing stays differentiable and doesn't need a reparameterization trick.\n\nWhat I must not do: I must not invent a whole new distribution family or add parameters. The GMM is already a good, expressive prior; I'm just adding one term to the loss. And I must not overfit by making the loss too strong; a large adversarial coefficient could force the model to match the expert too closely and lose generalization. So I'll add a single hyperparameter — the adversarial coefficient — and tune it with a small grid rather than guess.\n\nHow I keep myself honest: I'll train on all three tasks and compare against the default NLL on rollout success rate. If the adversarial term doesn't clearly help (or if it harms generalization), I keep the simpler loss — parsimony wins. The decision rule is concrete: if the adversarial loss doesn't beat the default on the three tasks, revert to the default. The crux is that the NLL objective can be exploited by the optimizer to move modes away from the expert, so an adversarial term is needed as a constraint.\n\n**Core idea:** Add an adversarial term to the GMM NLL loss — for each mode, minimize the negative log probability of the mode's own value, penalizing modes that drift away from the expert's expected trajectory.\n**Non-trivial crux:** The NLL objective is a score that the optimizer can exploit to move modes *away* from the expert, so it's not an L2-type constraint; the adversarial term is needed to explicitly push modes toward the expert's expected value while keeping the GMM differentiable and parameter-free.",
@@ -154,6 +156,61 @@
    "timestamp": "2026-07-23T09:38:34.016242+00:00",
    "has_metric": false,
    "metrics": {}
+  },
+  {
+   "seed": "1",
+   "timestamp": "2026-07-25T09:46:19.780862+00:00",
+   "has_metric": true,
+   "metrics": {
+    "success_rate_tool_hang_ph": "0.9",
+    "success_rate_square_ph": "0.9",
+    "elapsed_tool_hang_ph": "7934.7",
+    "elapsed_can_ph": "12.4",
+    "elapsed_square_ph": "7971.0"
+   }
+  },
+  {
+   "seed": "2",
+   "timestamp": "2026-07-25T09:46:20.345632+00:00",
+   "has_metric": true,
+   "metrics": {
+    "success_rate_can_ph": "0.1",
+    "success_rate_square_ph": "0.7",
+    "elapsed_tool_hang_ph": "10.6",
+    "elapsed_can_ph": "22724.7",
+    "elapsed_square_ph": "11306.1"
+   }
+  },
+  {
+   "seed": "3",
+   "timestamp": "2026-07-25T09:46:21.030340+00:00",
+   "has_metric": true,
+   "metrics": {
+    "success_rate_tool_hang_ph": "0.72",
+    "success_rate_can_ph": "0.84",
+    "elapsed_tool_hang_ph": "11322.2",
+    "elapsed_can_ph": "8091.6",
+    "elapsed_square_ph": "12.2"
+   }
+  },
+  {
+   "seed": "mean",
+   "timestamp": "2026-07-25T09:46:21.477702+00:00",
+   "has_metric": true,
+   "metrics": {
+    "success_rate_tool_hang_ph": "0.81",
+    "success_rate_can_ph": "0.47",
+    "success_rate_square_ph": "0.8",
+    "elapsed_tool_hang_ph": "6422.5",
+    "elapsed_can_ph": "10276.233333333334",
+    "elapsed_square_ph": "6429.766666666666",
+    "success_rate_tool_hang_ph_std": "0.12727922061357858",
+    "success_rate_can_ph_std": "0.5232590180780451",
+    "success_rate_square_ph_std": "0.14142135623730956",
+    "elapsed_can_ph_std": "11512.671710916338",
+    "elapsed_square_ph_std": "5802.550684253722",
+    "elapsed_tool_hang_ph_std": "5805.44014438182"
+   }
   }
  ],
  "workers": [
@@ -188,23 +245,33 @@
      "step": 5,
      "tool": "test",
      "file": null
+    },
+    {
+     "step": 6,
+     "tool": "test",
+     "file": null
+    },
+    {
+     "step": 7,
+     "tool": "submit",
+     "file": null
     }
    ],
    "final_code": {
     "robomimic_custom_bc_loss.py (step 4)": "\"\"\"\nCustom BC Loss Function for GMM-based Behavioral Cloning.\n\nThis module defines the loss function used by BC-GMM training in robomimic.\nThe loss receives the GMM distribution produced by the policy network and\nthe expert demonstration actions, and returns a scalar loss.\n\nThe custom loss is imported and used by the patched BC_GMM._compute_losses\nmethod during training.\n\"\"\"\n\nimport torch\nimport torch.nn as nn\nimport torch.nn.functional as F\nimport torch.distributions as D\n\n\n# ── Custom BC Loss Function ────────────────────────────────────────────────\n# EDITABLE REGION START\nclass CustomBCLoss(nn.Module):\n    \"\"\"NLL + adversarial mode-anchoring loss for GMM-based BC.\n\n    Standard NLL only rewards density at the expert sample; it does not\n    prevent individual mixture modes from drifting away from the expert.\n    We add an adversarial term: for each mode, the negative log-probability\n    of that mode's value under a unit Gaussian centered at the expert action\n    (== 0.5 * squared Euclidean distance, up to a constant). The term is\n    weighted by the (detached) mixture weights so that high-probability\n    modes are pulled toward the expert's expected trajectory while\n    low-weight modes remain free to explore. Fully differentiable, adds no\n    parameters beyond one coefficient.\n\n    Args:\n        dist: MixtureSameFamily GMM distribution (5 modes, 7-dim actions)\n        target_actions: [B, 7] expert actions\n\n    Returns:\n        scalar loss tensor\n    \"\"\"\n\n    def __init__(self, action_dim=7, adv_coef=0.05):\n        super().__init__()\n        self.action_dim = action_dim\n        self.adv_coef = adv_coef\n\n    def forward(self, dist, target_actions):\n        # standard NLL term\n        nll = -dist.log_prob(target_actions).mean()\n\n        # component means [B, K, D] and mixture weights [B, K]\n        mu = dist.component_distribution.mean\n        probs = dist.mixture_distribution.probs.detach()\n\n        # expected action under the mixture (weighted average of the modes)\n        expected = (probs.unsqueeze(-1) * mu).sum(dim=1)  # [B, D] (diagnostic anchor)\n\n        # adversarial term: per-mode negative log-prob under a unit Gaussian\n        # at the expert action == 0.5 * ||mu_k - a_expert||^2 (+ const).\n        # Loss increases as a mode moves farther from the expert.\n        # Clamp for numerical stability so rare outlier actions cannot\n        # dominate the adversarial term early in training.\n        d2 = ((mu - target_actions.unsqueeze(1)) ** 2).sum(dim=-1)  # [B, K]\n        d2 = torch.clamp(d2, max=16.0)\n        adv = 0.5 * (probs * d2).sum(dim=-1).mean()\n\n        return nll + self.adv_coef * adv\n# EDITABLE REGION END\n"
    },
    "summary": {
-    "steps": 5,
+    "steps": 6,
     "tests": 3,
     "done": true,
     "max_steps": 20,
     "tokens": {
-     "prompt_tokens": 12,
-     "completion_tokens": 21718,
-     "total_tokens": 21730,
-     "cached_tokens": 116986,
-     "cache_creation_tokens": 58331,
-     "calls": 6
+     "prompt_tokens": 14,
+     "completion_tokens": 12727,
+     "total_tokens": 12741,
+     "cached_tokens": 35275,
+     "cache_creation_tokens": 95417,
+     "calls": 7
     }
    }
   },

@@ -1,0 +1,35 @@
+{
+ "task": "ogbn-arxiv",
+ "arm": "gpt55",
+ "arm_label": "GPT-5.5 (frontier)",
+ "metric": "test_acc",
+ "baseline": 0.31559,
+ "lower_is_better": false,
+ "metric_mean": 0.342935,
+ "delta_pct": 8.665,
+ "ci_pct": 13.764,
+ "success": false,
+ "per_seed": [
+  {
+   "seed": "1",
+   "metric": 0.2940764973355554,
+   "delta_pct": -6.817
+  },
+  {
+   "seed": "2",
+   "metric": 0.34687159228854186,
+   "delta_pct": 9.912
+  },
+  {
+   "seed": "3",
+   "metric": 0.38785671666358046,
+   "delta_pct": 22.899
+  }
+ ],
+ "master_output": {
+  "idea": "Proposal: **Loss-gated tail-SWA inside the existing 10-epoch run**\n\nThe main limitation under a ≤10 epoch budget is that the final checkpoint is often a noisy point on the optimization trajectory. Instead of training longer, modify `train.py` so the final saved model is not the last-step model, but a **selective weight average of good late-trajectory states**.\n\nConcretely:\n\n1. Train exactly as the current script does for the first ~60% of epochs.\n   - If `epochs=10`, do normal training for epochs 1–6.\n\n2. Starting around epoch 7, maintain a second copy of weights: `swa_state`.\n\n3. After each optimizer step, decide whether to include the current model weights in the average.\n   - Keep a rolling window of recent batch losses, e.g. last 100–200 batches.\n   - Only average the current weights if the current batch loss is below the rolling median or below the 40th percentile.\n   - This avoids averaging unstable, high-loss trajectory points.\n\n4. Update the averaged weights incrementally:\n\n   ```python\n   swa_w = swa_w + (current_w - swa_w) / n_accepted\n   ```\n\n   This is closer to equal-weight SWA than EMA, but gated by batch quality.\n\n5. At the end of epoch 10, replace the model weights with `swa_state`.\n\n6. If the model has BatchNorm, run one no-gradient pass over the training loader to recompute BN statistics, then evaluate/save.\n\nWhy this should help:\n\n- The final checkpoint after 10 epochs can be sharp or noisy.\n- Averaging late weights approximates an ensemble in weight space without inference cost.\n- Gating by low recent loss prevents averaging bad transient states.\n- BN recalibration is important because averaged weights and old BN statistics are often mismatched.\n\nThis is a single training-script change, does not require extra epochs, does not change the architecture, and often improves validation accuracy especially when the current run is short or slightly under-converged.\n\nCore idea: Replace the final checkpoint with a loss-gated average of late-training weights collected during the same ≤10 epochs.  \nNon-trivial crux: Average only stable low-loss trajectory points and recalibrate BatchNorm afterward, otherwise SWA can mix incompatible states and hurt performance.",
+  "proposal": "Proposal: **Loss-gated tail-SWA inside the existing 10-epoch run**\n\nThe main limitation under a ≤10 epoch budget is that the final checkpoint is often a noisy point on the optimization trajectory. Instead of training longer, modify `train.py` so the final saved model is not the last-step model, but a **selective weight average of good late-trajectory states**.\n\nConcretely:\n\n1. Train exactly as the current script does for the first ~60% of epochs.\n   - If `epochs=10`, do normal training for epochs 1–6.\n\n2. Starting around epoch 7, maintain a second copy of weights: `swa_state`.\n\n3. After each optimizer step, decide whether to include the current model weights in the average.\n   - Keep a rolling window of recent batch losses, e.g. last 100–200 batches.\n   - Only average the current weights if the current batch loss is below the rolling median or below the 40th percentile.\n   - This avoids averaging unstable, high-loss trajectory points.\n\n4. Update the averaged weights incrementally:\n\n   ```python\n   swa_w = swa_w + (current_w - swa_w) / n_accepted\n   ```\n\n   This is closer to equal-weight SWA than EMA, but gated by batch quality.\n\n5. At the end of epoch 10, replace the model weights with `swa_state`.\n\n6. If the model has BatchNorm, run one no-gradient pass over the training loader to recompute BN statistics, then evaluate/save.\n\nWhy this should help:\n\n- The final checkpoint after 10 epochs can be sharp or noisy.\n- Averaging late weights approximates an ensemble in weight space without inference cost.\n- Gating by low recent loss prevents averaging bad transient states.\n- BN recalibration is important because averaged weights and old BN statistics are often mismatched.\n\nThis is a single training-script change, does not require extra epochs, does not change the architecture, and often improves validation accuracy especially when the current run is short or slightly under-converged.\n\nCore idea: Replace the final checkpoint with a loss-gated average of late-training weights collected during the same ≤10 epochs.  \nNon-trivial crux: Average only stable low-loss trajectory points and recalibrate BatchNorm afterward, otherwise SWA can mix incompatible states and hurt performance.",
+  "valid": true,
+  "n_attempts": 1
+ }
+}

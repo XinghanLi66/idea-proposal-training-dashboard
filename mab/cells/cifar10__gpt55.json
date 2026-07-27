@@ -1,0 +1,35 @@
+{
+ "task": "cifar10",
+ "arm": "gpt55",
+ "arm_label": "GPT-5.5 (frontier)",
+ "metric": "accuracy",
+ "baseline": 0.51237,
+ "lower_is_better": false,
+ "metric_mean": 0.533433,
+ "delta_pct": 4.111,
+ "ci_pct": 1.959,
+ "success": false,
+ "per_seed": [
+  {
+   "seed": "2",
+   "metric": 0.5402,
+   "delta_pct": 5.432
+  },
+  {
+   "seed": "1",
+   "metric": 0.5209,
+   "delta_pct": 1.665
+  },
+  {
+   "seed": "3",
+   "metric": 0.5392,
+   "delta_pct": 5.236
+  }
+ ],
+ "master_output": {
+  "idea": "Propose adding a **post-hoc Prototype-Residual Probability Head** to `train.py`.\n\nThe idea is not to train a larger model or run more epochs, but to exploit the geometry of the model’s penultimate feature space after the normal ≤10 epoch training. In short training regimes, the backbone often learns useful class clusters before the final linear classifier is perfectly calibrated. The final softmax head can be noisy or overconfident, especially for minority or visually similar classes. So after training, freeze the model and build a lightweight class-manifold correction layer.\n\nMechanism:\n\n1. Train the current model as usual for at most 10 epochs.\n\n2. After training, run the labeled training set through the model in `eval()` mode and collect the penultimate embeddings, e.g. the tensor just before the classifier layer.\n\n3. L2-normalize those embeddings.\n\n4. For each class `c`, compute a prototype:\n\n   \\[\n   \\mu_c = \\text{mean normalized embedding of class } c\n   \\]\n\n   Also compute a shrinkage class spread:\n\n   \\[\n   s_c = \\lambda_s \\cdot \\text{class spread}_c + (1-\\lambda_s)\\cdot \\text{global spread}\n   \\]\n\n   This prevents tiny classes from getting unstable prototype scores.\n\n5. For each validation/test example, compute the normal model logits:\n\n   \\[\n   L_c\n   \\]\n\n   and a prototype logit:\n\n   \\[\n   P_c = \\frac{\\cos(z, \\mu_c)}{s_c+\\epsilon} + \\log \\pi_c\n   \\]\n\n   where `z` is the example embedding and `π_c` is the empirical class prior.\n\n6. Combine them as a residual correction:\n\n   \\[\n   F_c = L_c / T + \\alpha P_c\n   \\]\n\n   Then save:\n\n   \\[\n   \\text{softmax}(F)\n   \\]\n\n   to `submission.csv`.\n\n7. Tune only `alpha` and optionally temperature `T` on a held-out validation split or the existing validation split in `train.py`. This is cheap: no extra epochs, just a small grid search over saved logits/features.\n\nWhy this should help: the trained classifier head gives a discriminative global boundary, while the prototype head gives a local manifold-based estimate of “which class cloud is this test point nearest to?” The final prediction is therefore not just “what did the linear head learn?” but “what did the linear head learn, corrected by where the sample lies in representation space?” This often improves probability quality, especially when the model is trained briefly.\n\nThe implementation change is contained inside `train.py`: expose or hook the penultimate features, compute class prototypes after training, blend prototype logits with model logits, and write the blended per-class probabilities to `submission.csv`.\n\nCore idea: add a frozen post-training prototype-based residual head in embedding space and blend its logits with the model’s logits before writing test probabilities.  \nNon-trivial crux: the prototype scores must be shrinkage-normalized and validation-calibrated as a residual correction, not used as a hard nearest-centroid replacement.",
+  "proposal": "Propose adding a **post-hoc Prototype-Residual Probability Head** to `train.py`.\n\nThe idea is not to train a larger model or run more epochs, but to exploit the geometry of the model’s penultimate feature space after the normal ≤10 epoch training. In short training regimes, the backbone often learns useful class clusters before the final linear classifier is perfectly calibrated. The final softmax head can be noisy or overconfident, especially for minority or visually similar classes. So after training, freeze the model and build a lightweight class-manifold correction layer.\n\nMechanism:\n\n1. Train the current model as usual for at most 10 epochs.\n\n2. After training, run the labeled training set through the model in `eval()` mode and collect the penultimate embeddings, e.g. the tensor just before the classifier layer.\n\n3. L2-normalize those embeddings.\n\n4. For each class `c`, compute a prototype:\n\n   \\[\n   \\mu_c = \\text{mean normalized embedding of class } c\n   \\]\n\n   Also compute a shrinkage class spread:\n\n   \\[\n   s_c = \\lambda_s \\cdot \\text{class spread}_c + (1-\\lambda_s)\\cdot \\text{global spread}\n   \\]\n\n   This prevents tiny classes from getting unstable prototype scores.\n\n5. For each validation/test example, compute the normal model logits:\n\n   \\[\n   L_c\n   \\]\n\n   and a prototype logit:\n\n   \\[\n   P_c = \\frac{\\cos(z, \\mu_c)}{s_c+\\epsilon} + \\log \\pi_c\n   \\]\n\n   where `z` is the example embedding and `π_c` is the empirical class prior.\n\n6. Combine them as a residual correction:\n\n   \\[\n   F_c = L_c / T + \\alpha P_c\n   \\]\n\n   Then save:\n\n   \\[\n   \\text{softmax}(F)\n   \\]\n\n   to `submission.csv`.\n\n7. Tune only `alpha` and optionally temperature `T` on a held-out validation split or the existing validation split in `train.py`. This is cheap: no extra epochs, just a small grid search over saved logits/features.\n\nWhy this should help: the trained classifier head gives a discriminative global boundary, while the prototype head gives a local manifold-based estimate of “which class cloud is this test point nearest to?” The final prediction is therefore not just “what did the linear head learn?” but “what did the linear head learn, corrected by where the sample lies in representation space?” This often improves probability quality, especially when the model is trained briefly.\n\nThe implementation change is contained inside `train.py`: expose or hook the penultimate features, compute class prototypes after training, blend prototype logits with model logits, and write the blended per-class probabilities to `submission.csv`.\n\nCore idea: add a frozen post-training prototype-based residual head in embedding space and blend its logits with the model’s logits before writing test probabilities.  \nNon-trivial crux: the prototype scores must be shrinkage-normalized and validation-calibrated as a residual correction, not used as a hard nearest-centroid replacement.",
+  "valid": true,
+  "n_attempts": 1
+ }
+}

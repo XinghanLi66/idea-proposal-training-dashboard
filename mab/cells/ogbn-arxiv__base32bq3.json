@@ -1,0 +1,50 @@
+{
+ "task": "ogbn-arxiv",
+ "arm": "base32bq3",
+ "arm_label": "Qwen3-32B (base)",
+ "metric": "test_acc",
+ "baseline": 0.31559,
+ "lower_is_better": false,
+ "metric_mean": 0.058618,
+ "delta_pct": -81.426,
+ "ci_pct": 0.0,
+ "success": false,
+ "per_seed": [
+  {
+   "seed": "2",
+   "metric": 0.05861778079542415,
+   "delta_pct": -81.426
+  },
+  {
+   "seed": "3",
+   "metric": 0.05861778079542415,
+   "delta_pct": -81.426
+  },
+  {
+   "seed": "1",
+   "metric": 0.05861778079542415,
+   "delta_pct": -81.426
+  },
+  {
+   "seed": "2",
+   "metric": 0.05861778079542415,
+   "delta_pct": -81.426
+  },
+  {
+   "seed": "1",
+   "metric": 0.05861778079542415,
+   "delta_pct": -81.426
+  },
+  {
+   "seed": "3",
+   "metric": 0.05861778079542415,
+   "delta_pct": -81.426
+  }
+ ],
+ "master_output": {
+  "idea": "Core idea: Introduce **dynamic label smoothing** where the smoothing factor decays exponentially during training, starting from 0.3 and reducing to 0.05 by epoch 10. This balances early-stage robustness and late-stage precision, preventing overconfidence while maintaining final sharpness.  \n\nNon-trivial crux: The exponential decay schedule requires careful calibration to avoid undermining the model’s ability to specialize, as overly aggressive smoothing in later epochs could hinder convergence.",
+  "proposal": "<think>\nOkay, let me try to figure out how to improve the model performance in the given train.py script without increasing the number of epochs beyond 10. The user wants a novel idea, so I need to think beyond the usual optimizations like adjusting learning rates or adding more layers.\n\nFirst, I'll consider what's happening during training. If the model isn't learning enough within 10 epochs, maybe the problem is with how the model is being updated. Standard training uses cross-entropy loss, but perhaps there's a way to modify the loss function to make the model learn better in fewer epochs. \n\nWait, I remember something about label smoothing. It's a technique where instead of using hard labels (0 or 1), you soften them to be less confident. This can prevent the model from being overconfident and might help with generalization. But how does that tie into the training time? If the model is less overconfident, maybe it converges faster or learns more robust features in fewer epochs.\n\nAnother thought: maybe the model is getting stuck in local minima. What if we could dynamically adjust the loss to push the model towards more diverse solutions? Oh, there's a method called mixup where you blend images and their labels. By training on mixed samples, the model learns smoother decision boundaries. But mixup might require more epochs to benefit, though. Wait, the user said 10 epochs. Maybe combining mixup with label smoothing could help here. \n\nWait, but the user wants one concrete idea. Let me focus. Label smoothing is a single change. If the current loss is cross-entropy, replacing it with label-smoothed cross-entropy could be a simple yet effective modification. It's a non-trivial crux because adjusting the loss function directly impacts how the model learns. The core idea would be to introduce label smoothing to regularize the training process, encouraging the model to avoid overfitting and improve generalization within the limited epochs. \n\nAlternatively, maybe curriculum learning? Start with easier examples and progress to harder ones. But implementing that might be more involved. The user wants a single editable component in train.py. Label smoothing is easier to implement. Also, the crux is the mechanism of modifying the loss to prevent overconfidence, leading to better performance. That seems solid. Let me check if this is a novel idea. Label smoothing is known, but applying it in this specific context with the epoch constraint might be the novel twist here. Yeah, that could work.\n</think>\n\nCore idea: Introduce **dynamic label smoothing** where the smoothing factor decays exponentially during training, starting from 0.3 and reducing to 0.05 by epoch 10. This balances early-stage robustness and late-stage precision, preventing overconfidence while maintaining final sharpness.  \n\nNon-trivial crux: The exponential decay schedule requires careful calibration to avoid undermining the model’s ability to specialize, as overly aggressive smoothing in later epochs could hinder convergence.",
+  "valid": true,
+  "n_attempts": 1
+ }
+}

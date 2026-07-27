@@ -1,0 +1,35 @@
+{
+ "task": "ogbn-arxiv",
+ "arm": "m2rl",
+ "arm_label": "Qwen3-235B-A22B RL",
+ "metric": "test_acc",
+ "baseline": 0.31559,
+ "lower_is_better": false,
+ "metric_mean": 0.310735,
+ "delta_pct": -1.538,
+ "ci_pct": 3.21,
+ "success": false,
+ "per_seed": [
+  {
+   "seed": "2",
+   "metric": 0.30761475629076396,
+   "delta_pct": -2.527
+  },
+  {
+   "seed": "1",
+   "metric": 0.32292245334650127,
+   "delta_pct": 2.323
+  },
+  {
+   "seed": "3",
+   "metric": 0.3016686212785219,
+   "delta_pct": -4.411
+  }
+ ],
+ "master_output": {
+  "idea": "Core idea: Instrument the training loop to collect per-example loss, sort the training set by final loss after the model near-converges, and manually inspect the top few high-loss examples to identify and clean rare/hard or noisy cases — improving performance by measuring differently, not by optimizing harder.\n\nNon-trivial crux: The loss ranking is only trustworthy *after* the model has trained enough to form a reliable opinion (not on early epochs), and high loss must never be automatically deleted — it must be manually inspected (50–100 examples), since it may flag genuinely hard cases worth learning rather than just noise; the decision rule is to retrain from scratch and keep the cleaner version only if it clearly beats the uncleaned.",
+  "proposal": "<think>\nOkay, let me think about this. The task is to improve a training script within 10 epochs, so I can't afford to burn a lot of time on any single direction. The usual reflex is to tune hyperparameters or add a fancier model, but that's exactly the trap — those are high-variance, high-effort moves for a short run. I want something that's cheap to try and, if it works, gives a clean signal.\n\nSo where does the pain actually sit in the current setup? The default is that we're training on the full dataset, and the metric is the same one we'll report — some classification accuracy or a regression loss. But a metric is a *summary*, and a summary can lie about where the model is actually struggling. If I look at overall accuracy, it can't tell me whether the model is failing on rare edge cases or on a specific hard sub-population. That's the kind of blindness that makes you tune blindly.\n\nHere's the leap: instead of changing what I optimize, change what I *measure*. Let me instrument the training loop to produce a per-example loss at every step — not just the batch aggregate. That's a small code change in the training loop: keep track of the loss per sample, store it, and then at the end sort the training examples by their final loss. The loss is a natural proxy for the model's confidence on each instance — high loss means the model is confused there. So the loss-sorted list is a ranked candidate list of where the model is weakest.\n\nWhy does this cut against the default move? Most people treat the training set as a uniform whole and the metric as the only thing worth watching. I'm asserting the opposite: the *distribution of losses over individual examples* carries more actionable information than the single scalar accuracy. And it's free — no hyperparameters to tune, no architecture change, just a diagnostic that costs one extra log line and a sort.\n\nNow the crux, which is where the whole thing could fall apart if I'm not careful. Loss is only a trustworthy signal if the model has actually seen those examples *enough times to form a reliable opinion*. If I sort on the very first epoch, the loss is noise — the model hasn't learned yet, so the ranking is arbitrary. So the rule has to be: let the model train to near-convergence (a few epochs), then look at the *final* per-example loss. And even then I don't just delete the high-loss examples — that's the naive temptation and it's exactly wrong. High-loss can mean either 'this is a rare, genuinely hard case I should learn' or 'this is a noisy/incorrectly-labeled/corrupted example that's actively poisoning the fit'. I don't get to know which from the number alone. So the honest move is to *inspect* the top few by hand — 50–100 examples — and only then decide to remove, relabel, or reweight them. The decision is manual and small-sample, not automatic and bulk. If I skip the manual inspection, I risk deleting my hardest, most informative cases under the guise of 'cleaning.'\n\nHow do I keep myself honest? The decision rule: after cleaning, retrain from scratch and compare the same metric. If the cleaned version doesn't clearly beat the uncleaned, I keep the simpler uncleaned version on parsimony grounds rather than declare victory. And I'd keep a copy of the uncleaned run so the comparison is apples-to-apples.\n\nI'm a researcher here, so my contribution is the *method* — a cheap, interpretable diagnostic that turns a scalar metric into a targeted intervention — not a specific accuracy number, which will depend on the dataset.\n\nCore idea: Instrument the training loop to collect per-example loss, sort the training set by final loss after convergence, and manually inspect the top few high-loss examples to identify and clean rare/hard or noisy cases — improving performance by measuring differently, not by optimizing harder.\n</think>\n\nCore idea: Instrument the training loop to collect per-example loss, sort the training set by final loss after the model near-converges, and manually inspect the top few high-loss examples to identify and clean rare/hard or noisy cases — improving performance by measuring differently, not by optimizing harder.\n\nNon-trivial crux: The loss ranking is only trustworthy *after* the model has trained enough to form a reliable opinion (not on early epochs), and high loss must never be automatically deleted — it must be manually inspected (50–100 examples), since it may flag genuinely hard cases worth learning rather than just noise; the decision rule is to retrain from scratch and keep the cleaner version only if it clearly beats the uncleaned.",
+  "valid": true,
+  "n_attempts": 1
+ }
+}

@@ -2,8 +2,10 @@
  "task": "llm-qat-algorithm",
  "arm": "base32b",
  "arm_label": "Qwen2.5-32B-Inst (base)",
- "status": "ok",
+ "status": "scored",
  "score": 64.7,
+ "worker": "claude-fable-5",
+ "caveat": null,
  "master_output": {
   "idea": null,
   "proposal": "To address the challenge of minimizing the perplexity gap between a full-precision Pythia-1.4B model and its very low bit-width quantized versions (INT4/INT3/INT2), we need to focus on improving the stability and effectiveness of the quantization process during training. Given the existing techniques such as the Straight-Through Estimator (STE) and Learning Step Size Quantization (LSQ), a novel approach can be introduced to further enhance the learning dynamics under quantization constraints.\n\n### Core Idea:\nIntroduce a dynamic quantization range adaptation mechanism that adjusts the quantization range based on the distribution of the weights during training. This adaptive mechanism will help in maintaining the precision of the quantized weights, especially at very low bit-widths like INT2, where the loss of information due to rounding can be significant.\n\n### Non-trivial Crux:\nThe non-trivial aspect of this idea lies in designing an effective and efficient way to dynamically adjust the quantization range without significantly increasing computational overhead. The mechanism should monitor the evolving distribution of weights throughout training and adaptively update the quantization ranges to ensure that the quantization noise remains minimal and the model's performance is preserved. This involves careful design of the adaptation criteria and the integration of these criteria within the existing QAT framework.",

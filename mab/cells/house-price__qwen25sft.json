@@ -1,0 +1,35 @@
+{
+ "task": "house-price",
+ "arm": "qwen25sft",
+ "arm_label": "Qwen2.5-32B SFT",
+ "metric": "mae",
+ "baseline": 21676.12057,
+ "lower_is_better": true,
+ "metric_mean": 21077.030016,
+ "delta_pct": 2.764,
+ "ci_pct": 3.934,
+ "success": false,
+ "per_seed": [
+  {
+   "seed": "2",
+   "metric": 21341.642212709277,
+   "delta_pct": 1.543
+  },
+  {
+   "seed": "1",
+   "metric": 20050.5971347032,
+   "delta_pct": 7.499
+  },
+  {
+   "seed": "3",
+   "metric": 21838.850701674284,
+   "delta_pct": -0.751
+  }
+ ],
+ "master_output": {
+  "idea": "**Mocking:** I am Denny Britz, an AI researcher. I'll reason toward one improvement to train.py, keeping my focus on understanding the data and the model's learning dynamics.\n\nLet me start where I always start — with the data. The data_description.txt file is my map here. I scan it line by line, marking down each feature: what it is, its type (categorical, numerical), its distribution shape (skewed, normal), and whether it might be correlated with the target or other features. This is not just a list; it's a map of the problem's terrain. For instance, if I see a feature described as 'age' with values from 18 to 90, I note it's continuous and likely right-skewed, and I should consider binning it or using a log transform. If there's a feature like 'has_car', I note it's binary and might need to be one-hot encoded.\n\nNow the real move: I want to use this map to guide my modeling, not just as a reference. My instinct is to build a baseline model quickly — a simple linear regression or logistic regression — and then watch where it fails. But I want to fail more informatively. So instead of adding features one by one, I'll deliberately construct three kinds of models: one that uses only raw features, one that uses engineered features (binned, transformed, interaction terms), and one that uses raw + engineered. My hypothesis is that the engineered features will help most because they encode the domain knowledge I just mapped out.\n\nWhy this cuts against the default: the reflex in many teams is to throw every feature into a complex model and let regularization sort it out. That's lazy and expensive. By forcing myself to build these three models separately, I'm making the learning curve visible. If the raw-only model performs almost as well as raw+engineered, I've learned something valuable about the data: it's already clean and informative. If the engineered model beats the others, I've justified the effort. And I'll keep the raw-only model as a sanity check — if it suddenly drops, I know I've overengineered.\n\nHow I keep myself honest: after training each model, I don't just look at overall accuracy or AUC; I plot the residuals and compare them across the three models. If the residuals are smaller and more normally distributed in the engineered model, that's evidence it's capturing structure the raw model missed. I'll also run permutation importance on each model to see which features actually matter, and that's where I'll find the surprising ones — a feature I thought was unimportant turns out crucial, or vice versa. Decision rule: if the raw-only model is within 1-2% of the best, I ship the simpler one.\n\n**Core idea:** Build three models — raw-only, engineered-only, raw+engineered — and compare their learning curves and residuals to identify which features genuinely add value, guided by a thorough data-description map.\n\n**Non-trivial crux:** The decision rule is not accuracy but the learning curve and residual behavior; a simpler raw-only model that performs nearly as well as a complex one should be preferred, and permutation importance reveals features whose true impact differs from intuition.",
+  "proposal": "**Mocking:** I am Denny Britz, an AI researcher. I'll reason toward one improvement to train.py, keeping my focus on understanding the data and the model's learning dynamics.\n\nLet me start where I always start — with the data. The data_description.txt file is my map here. I scan it line by line, marking down each feature: what it is, its type (categorical, numerical), its distribution shape (skewed, normal), and whether it might be correlated with the target or other features. This is not just a list; it's a map of the problem's terrain. For instance, if I see a feature described as 'age' with values from 18 to 90, I note it's continuous and likely right-skewed, and I should consider binning it or using a log transform. If there's a feature like 'has_car', I note it's binary and might need to be one-hot encoded.\n\nNow the real move: I want to use this map to guide my modeling, not just as a reference. My instinct is to build a baseline model quickly — a simple linear regression or logistic regression — and then watch where it fails. But I want to fail more informatively. So instead of adding features one by one, I'll deliberately construct three kinds of models: one that uses only raw features, one that uses engineered features (binned, transformed, interaction terms), and one that uses raw + engineered. My hypothesis is that the engineered features will help most because they encode the domain knowledge I just mapped out.\n\nWhy this cuts against the default: the reflex in many teams is to throw every feature into a complex model and let regularization sort it out. That's lazy and expensive. By forcing myself to build these three models separately, I'm making the learning curve visible. If the raw-only model performs almost as well as raw+engineered, I've learned something valuable about the data: it's already clean and informative. If the engineered model beats the others, I've justified the effort. And I'll keep the raw-only model as a sanity check — if it suddenly drops, I know I've overengineered.\n\nHow I keep myself honest: after training each model, I don't just look at overall accuracy or AUC; I plot the residuals and compare them across the three models. If the residuals are smaller and more normally distributed in the engineered model, that's evidence it's capturing structure the raw model missed. I'll also run permutation importance on each model to see which features actually matter, and that's where I'll find the surprising ones — a feature I thought was unimportant turns out crucial, or vice versa. Decision rule: if the raw-only model is within 1-2% of the best, I ship the simpler one.\n\n**Core idea:** Build three models — raw-only, engineered-only, raw+engineered — and compare their learning curves and residuals to identify which features genuinely add value, guided by a thorough data-description map.\n\n**Non-trivial crux:** The decision rule is not accuracy but the learning curve and residual behavior; a simpler raw-only model that performs nearly as well as a complex one should be preferred, and permutation importance reveals features whose true impact differs from intuition.",
+  "valid": true,
+  "n_attempts": 1
+ }
+}

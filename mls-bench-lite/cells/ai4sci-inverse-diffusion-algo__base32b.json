@@ -2,8 +2,10 @@
  "task": "ai4sci-inverse-diffusion-algo",
  "arm": "base32b",
  "arm_label": "Qwen2.5-32B-Inst (base)",
- "status": "ok",
- "score": 0.0,
+ "status": "scored",
+ "score": 11.4,
+ "worker": "claude-fable-5",
+ "caveat": null,
  "master_output": {
   "idea": null,
   "proposal": "To tackle the inverse problem of reconstructing the original signal \\( x \\) from noisy observations \\( y \\) using a diffusion model prior, I propose a novel approach that combines elements of both score-based guidance and optimization-based methods. This approach aims to dynamically adjust the balance between the diffusion model's prior knowledge and the data fidelity term during the reconstruction process. \n\n### Core Idea:\nIntroduce a dynamic weighting mechanism that adaptively balances the influence of the diffusion score and the data fidelity gradient based on the current reconstruction error. Specifically, at each iteration, the weight of the diffusion score is adjusted inversely proportional to the reconstruction error, ensuring that the model relies more on the diffusion prior when the reconstruction is poor and shifts towards data fidelity as the reconstruction improves.\n\n### Non-trivial Crux:\nThe key challenge lies in designing a smooth and effective adaptive weighting function that can dynamically adjust the balance without oscillations or getting stuck in local minima. This requires careful tuning of the weighting parameters and potentially incorporating additional heuristics or constraints to ensure stability and convergence.",

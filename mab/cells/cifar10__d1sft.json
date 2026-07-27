@@ -1,0 +1,35 @@
+{
+ "task": "cifar10",
+ "arm": "d1sft",
+ "arm_label": "DeepSeek-R1-Qwen3-8B SFT",
+ "metric": "accuracy",
+ "baseline": 0.51237,
+ "lower_is_better": false,
+ "metric_mean": 0.519133,
+ "delta_pct": 1.32,
+ "ci_pct": 1.839,
+ "success": false,
+ "per_seed": [
+  {
+   "seed": "1",
+   "metric": 0.5224,
+   "delta_pct": 1.958
+  },
+  {
+   "seed": "3",
+   "metric": 0.5273,
+   "delta_pct": 2.914
+  },
+  {
+   "seed": "2",
+   "metric": 0.5077,
+   "delta_pct": -0.911
+  }
+ ],
+ "master_output": {
+  "idea": "**Mocking:** World-class AI researcher. Let me reason from ground zero about what matters, before I touch a line of code.\n\nStart with the objective: maximize test-set per-class probability for the given epochs. The bottleneck is that the current model is fitted with fixed probability weights (the loss weighting per class). If the data is imbalanced, we've been treating each class equally—weighting each example the same. That's not how you'd want to lean toward the rarer classes, and it's not how the data tells me to go. So the natural, nearly-universal step is to reweight the loss per class by class frequency, which is a well-known trick and one that usually improves imbalance. That's the move. But here's where the crux is, and it's a non-trivial one: reweighting the loss is a per-example weight, not a per-class weight. So I can't just multiply the loss by a scalar class weight and move on; I have to compute a scalar weight per example by multiplying the class weight by the class frequency. Then the gradient is computed once per class, and the optimizer sees each example with a weight that reflects its class—not a single weight everywhere. This is the 'weight each example by its class' trick, not 'weight the loss by a class constant'.\n\nThis is a change in how the loss is computed, so it's a matter of replacing one line in the loss function. But the weight itself is computed from the class counts, so I must compute those counts from the training set. That means I can't do it at training time—the ratio counts depend on the entire training set. So I move it to validation: compute class counts once on the training set, then use those fixed counts to set the weight for every example during training. This is the same as 'precompute per-class ratio, then weight each example by it.' The validation pass gives me the counts; training pass applies the weight. That's a common pattern.\n\nNow, how do I keep myself honest? The only metric I have to go by is the per-class probability on the test set. I'll run the same experiment for both the unweighted and the weighted loss and compare. Decision rule: if the weighted version does not clearly beat the unweighted version on per-class prob, I keep the simpler one—simplicity and trains faster are important. If weighted does better, I keep it. I won't over-engineer the weights; the counts from the training set are the natural choice.\n\n**Core idea:** Reweight the loss per example by class frequency, computed once from training-class counts and applied during training.\n\n**Non-trivial crux:** The class weight must be applied per-example (example_weight = class_weight * class_frequency), not per-class; so the weights are computed from the full training set and stored, then applied in each training step, requiring a validation pass to compute the class ratios.",
+  "proposal": "**Mocking:** World-class AI researcher. Let me reason from ground zero about what matters, before I touch a line of code.\n\nStart with the objective: maximize test-set per-class probability for the given epochs. The bottleneck is that the current model is fitted with fixed probability weights (the loss weighting per class). If the data is imbalanced, we've been treating each class equally—weighting each example the same. That's not how you'd want to lean toward the rarer classes, and it's not how the data tells me to go. So the natural, nearly-universal step is to reweight the loss per class by class frequency, which is a well-known trick and one that usually improves imbalance. That's the move. But here's where the crux is, and it's a non-trivial one: reweighting the loss is a per-example weight, not a per-class weight. So I can't just multiply the loss by a scalar class weight and move on; I have to compute a scalar weight per example by multiplying the class weight by the class frequency. Then the gradient is computed once per class, and the optimizer sees each example with a weight that reflects its class—not a single weight everywhere. This is the 'weight each example by its class' trick, not 'weight the loss by a class constant'.\n\nThis is a change in how the loss is computed, so it's a matter of replacing one line in the loss function. But the weight itself is computed from the class counts, so I must compute those counts from the training set. That means I can't do it at training time—the ratio counts depend on the entire training set. So I move it to validation: compute class counts once on the training set, then use those fixed counts to set the weight for every example during training. This is the same as 'precompute per-class ratio, then weight each example by it.' The validation pass gives me the counts; training pass applies the weight. That's a common pattern.\n\nNow, how do I keep myself honest? The only metric I have to go by is the per-class probability on the test set. I'll run the same experiment for both the unweighted and the weighted loss and compare. Decision rule: if the weighted version does not clearly beat the unweighted version on per-class prob, I keep the simpler one—simplicity and trains faster are important. If weighted does better, I keep it. I won't over-engineer the weights; the counts from the training set are the natural choice.\n\n**Core idea:** Reweight the loss per example by class frequency, computed once from training-class counts and applied during training.\n\n**Non-trivial crux:** The class weight must be applied per-example (example_weight = class_weight * class_frequency), not per-class; so the weights are computed from the full training set and stored, then applied in each training step, requiring a validation pass to compute the class ratios.",
+  "valid": true,
+  "n_attempts": 1
+ }
+}

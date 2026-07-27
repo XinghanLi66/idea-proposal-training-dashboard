@@ -2,153 +2,153 @@
  "tasks": [
   {
    "slug": "ai4bio-mutation-effect-prediction",
-   "domain": "AI for Science",
-   "name": "Mutation Fitness Predictor"
+   "name": "Mutation Fitness Predictor",
+   "domain": "AI for Science"
   },
   {
    "slug": "ai4sci-inverse-diffusion-algo",
-   "domain": "AI for Science",
-   "name": "Diffusion-Prior Inverse Solver"
+   "name": "Diffusion-Prior Inverse Solver",
+   "domain": "AI for Science"
   },
   {
    "slug": "ai4sci-pla-binding-affinity",
-   "domain": "AI for Science",
-   "name": "Protein-Ligand Interaction Model"
+   "name": "Protein-Ligand Interaction Model",
+   "domain": "AI for Science"
   },
   {
    "slug": "causal-discovery-discrete",
-   "domain": "Structured & Causal Reasoning",
-   "name": "Discrete Causal Graph Discovery"
+   "name": "Discrete Causal Graph Discovery",
+   "domain": "Structured & Causal Reasoning"
   },
   {
    "slug": "graph-generation",
-   "domain": "Structured & Causal Reasoning",
-   "name": "Unconditional Graph Generator Architecture"
+   "name": "Unconditional Graph Generator Architecture",
+   "domain": "Structured & Causal Reasoning"
   },
   {
    "slug": "cv-3dgs-densification",
-   "domain": "Vision & Generation",
-   "name": "3D Scene Densification Strategy"
+   "name": "3D Scene Densification Strategy",
+   "domain": "Vision & Generation"
   },
   {
    "slug": "cv-dbm-scheduler",
-   "domain": "Vision & Generation",
-   "name": "Low-Step Diffusion Bridge Sampling"
+   "name": "Low-Step Diffusion Bridge Sampling",
+   "domain": "Vision & Generation"
   },
   {
    "slug": "cv-vae-loss",
-   "domain": "Vision & Generation",
-   "name": "Frequency-Aware Autoencoding Loss"
+   "name": "Frequency-Aware Autoencoding Loss",
+   "domain": "Vision & Generation"
   },
   {
    "slug": "cv-pooling-aggregation",
-   "domain": "Deep Learning",
-   "name": "Spatial Feature Aggregation"
+   "name": "Spatial Feature Aggregation",
+   "domain": "Deep Learning"
   },
   {
    "slug": "dl-activation-function",
-   "domain": "Deep Learning",
-   "name": "Convolutional Activation Nonlinearity"
+   "name": "Convolutional Activation Nonlinearity",
+   "domain": "Deep Learning"
   },
   {
    "slug": "jepa-planning",
-   "domain": "Robotics",
-   "name": "Latent World-Model Planner"
+   "name": "Latent World-Model Planner",
+   "domain": "Robotics"
   },
   {
    "slug": "robo-diffusion-guidance",
-   "domain": "Robotics",
-   "name": "Guided Diffusion Sampling for Robot Actions"
+   "name": "Guided Diffusion Sampling for Robot Actions",
+   "domain": "Robotics"
   },
   {
    "slug": "robo-diffusion-policy",
-   "domain": "Robotics",
-   "name": "Diffusion Policy Learning for Robot Control"
+   "name": "Diffusion Policy Learning for Robot Control",
+   "domain": "Robotics"
   },
   {
    "slug": "robomimic-bc-loss",
-   "domain": "Robotics",
-   "name": "Behavioral Cloning Loss for Manipulation"
+   "name": "Behavioral Cloning Loss for Manipulation",
+   "domain": "Robotics"
   },
   {
    "slug": "llm-dllm-demask-strategy",
-   "domain": "Language Models",
-   "name": "Masked Diffusion Demasking Policy"
+   "name": "Masked Diffusion Demasking Policy",
+   "domain": "Language Models"
   },
   {
    "slug": "llm-pretrain-optimizer",
-   "domain": "Language Models",
-   "name": "Pretraining Optimizer Design"
+   "name": "Pretraining Optimizer Design",
+   "domain": "Language Models"
   },
   {
    "slug": "llm-rl-importance-sampling",
-   "domain": "Language Models",
-   "name": "Reasoning RL Importance-Sampling Granularity"
+   "name": "Reasoning RL Importance-Sampling Granularity",
+   "domain": "Language Models"
   },
   {
    "slug": "llm-ptq-algorithm",
-   "domain": "ML Systems & Efficient ML",
-   "name": "Post-Training Weight Quantization"
+   "name": "Post-Training Weight Quantization",
+   "domain": "ML Systems & Efficient ML"
   },
   {
    "slug": "llm-qat-algorithm",
-   "domain": "ML Systems & Efficient ML",
-   "name": "Quantization-Aware Language-Model Training"
+   "name": "Quantization-Aware Language-Model Training",
+   "domain": "ML Systems & Efficient ML"
   },
   {
    "slug": "mlsys-sparse-attention-inference",
-   "domain": "ML Systems & Efficient ML",
-   "name": "Long-Context Inference-Time Sparse Attention"
+   "name": "Long-Context Inference-Time Sparse Attention",
+   "domain": "ML Systems & Efficient ML"
   },
   {
    "slug": "ml-clustering-algorithm",
-   "domain": "Classical & Adaptive Learning",
-   "name": "Geometry-Robust Clustering Algorithm"
+   "name": "Geometry-Robust Clustering Algorithm",
+   "domain": "Classical & Adaptive Learning"
   },
   {
    "slug": "ml-dimensionality-reduction",
-   "domain": "Classical & Adaptive Learning",
-   "name": "Nonlinear 2D Structure-Preserving Embedding"
+   "name": "Nonlinear 2D Structure-Preserving Embedding",
+   "domain": "Classical & Adaptive Learning"
   },
   {
    "slug": "optimization-multi-objective",
-   "domain": "Optimization & Theory",
-   "name": "Multi-Objective Evolutionary Survival and Variation"
+   "name": "Multi-Objective Evolutionary Survival and Variation",
+   "domain": "Optimization & Theory"
   },
   {
    "slug": "optimization-variance-reduction",
-   "domain": "Optimization & Theory",
-   "name": "Variance-Reduced Stochastic Optimization"
+   "name": "Variance-Reduced Stochastic Optimization",
+   "domain": "Optimization & Theory"
   },
   {
    "slug": "quant-concept-drift",
-   "domain": "Time Series & Forecasting",
-   "name": "Concept-Drift-Aware Quantitative Forecasting"
+   "name": "Concept-Drift-Aware Quantitative Forecasting",
+   "domain": "Time Series & Forecasting"
   },
   {
    "slug": "ts-exogenous-forecast",
-   "domain": "Time Series & Forecasting",
-   "name": "Exogenous-Variable Target Forecasting Model"
+   "name": "Exogenous-Variable Target Forecasting Model",
+   "domain": "Time Series & Forecasting"
   },
   {
    "slug": "ts-imputation",
-   "domain": "Time Series & Forecasting",
-   "name": "Masked Multivariate Time-Series Imputation"
+   "name": "Masked Multivariate Time-Series Imputation",
+   "domain": "Time Series & Forecasting"
   },
   {
    "slug": "rl-value-discrete",
-   "domain": "Reinforcement Learning",
-   "name": "Value-Based Discrete Control"
+   "name": "Value-Based Discrete Control",
+   "domain": "Reinforcement Learning"
   },
   {
    "slug": "security-membership-inference-defense",
-   "domain": "Trustworthy Learning",
-   "name": "Training Regularization for Membership Privacy"
+   "name": "Training Regularization for Membership Privacy",
+   "domain": "Trustworthy Learning"
   },
   {
    "slug": "robo-humanoid-sim2real-algo",
-   "domain": "Robotics",
-   "name": "Humanoid Sim2Real (dropped)"
+   "name": "Humanoid Transfer Policy Learning",
+   "domain": "Robotics"
   }
  ],
  "arms": [
@@ -259,3861 +259,5540 @@
    "label": "Qwen3-235B-A22B RL",
    "family": "Qwen3-235B-A22B",
    "kind": "rl"
+  },
+  {
+   "key": "fable5",
+   "label": "Claude Fable 5 (frontier)",
+   "family": "Frontier (reference)",
+   "kind": "ref"
+  },
+  {
+   "key": "gpt55",
+   "label": "GPT-5.5 (frontier)",
+   "family": "Frontier (reference)",
+   "kind": "ref"
   }
  ],
  "cells": {
   "ai4bio-mutation-effect-prediction": {
    "base8b": {
-    "status": "failed",
-    "score": null,
-    "n_runs": 3,
+    "status": "scored",
+    "score": 31.9,
+    "caveat": true,
+    "fn": 1,
+    "n_runs": 1,
     "n_scored": 0,
     "detail": true
    },
    "sft8b": {
-    "status": "failed",
-    "score": null,
-    "n_runs": 3,
+    "status": "scored",
+    "score": 39.9,
+    "caveat": true,
+    "fn": 1,
+    "n_runs": 1,
     "n_scored": 0,
     "detail": true
    },
    "qwen3-8b-rl": {
-    "status": "failed",
-    "score": null,
-    "n_runs": 3,
+    "status": "scored",
+    "score": 21.0,
+    "caveat": true,
+    "fn": 1,
+    "n_runs": 1,
     "n_scored": 0,
     "detail": true
    },
    "base14b": {
-    "status": "failed",
-    "score": null,
-    "n_runs": 3,
+    "status": "scored",
+    "score": 49.9,
+    "caveat": true,
+    "fn": 1,
+    "n_runs": 1,
     "n_scored": 0,
     "detail": true
    },
    "sft14b": {
-    "status": "failed",
-    "score": null,
-    "n_runs": 3,
+    "status": "scored",
+    "score": 43.6,
+    "caveat": true,
+    "fn": 1,
+    "n_runs": 1,
     "n_scored": 0,
     "detail": true
    },
    "qwen3-14b-rl": {
-    "status": "failed",
-    "score": null,
-    "n_runs": 3,
+    "status": "scored",
+    "score": 52.4,
+    "caveat": true,
+    "fn": 1,
+    "n_runs": 1,
     "n_scored": 0,
     "detail": true
    },
    "base32bq3": {
-    "status": "failed",
-    "score": null,
-    "n_runs": 3,
+    "status": "scored",
+    "score": 50.7,
+    "caveat": true,
+    "fn": 1,
+    "n_runs": 1,
     "n_scored": 0,
     "detail": true
    },
    "sft32b": {
-    "status": "failed",
-    "score": null,
-    "n_runs": 3,
+    "status": "scored",
+    "score": 51.1,
+    "caveat": true,
+    "fn": 1,
+    "n_runs": 1,
     "n_scored": 0,
     "detail": true
    },
    "qwen3-32b-rl": {
-    "status": "failed",
-    "score": null,
-    "n_runs": 3,
+    "status": "scored",
+    "score": 33.9,
+    "caveat": true,
+    "fn": 1,
+    "n_runs": 1,
     "n_scored": 0,
     "detail": true
    },
    "base32b": {
-    "status": "failed",
-    "score": null,
-    "n_runs": 3,
+    "status": "scored",
+    "score": 47.6,
+    "caveat": true,
+    "fn": 1,
+    "n_runs": 1,
     "n_scored": 0,
     "detail": true
    },
    "qwen25sft": {
-    "status": "failed",
-    "score": null,
-    "n_runs": 3,
+    "status": "scored",
+    "score": 47.0,
+    "caveat": true,
+    "fn": 1,
+    "n_runs": 1,
     "n_scored": 0,
     "detail": true
    },
    "rl": {
-    "status": "failed",
-    "score": null,
-    "n_runs": 3,
+    "status": "scored",
+    "score": 48.8,
+    "caveat": true,
+    "fn": 1,
+    "n_runs": 1,
     "n_scored": 0,
     "detail": true
    },
    "d1base": {
-    "status": "failed",
-    "score": null,
-    "n_runs": 3,
+    "status": "scored",
+    "score": 49.1,
+    "caveat": true,
+    "fn": 1,
+    "n_runs": 1,
     "n_scored": 0,
     "detail": true
    },
    "d1sft": {
-    "status": "failed",
-    "score": null,
-    "n_runs": 3,
+    "status": "scored",
+    "score": 51.2,
+    "caveat": true,
+    "fn": 1,
+    "n_runs": 1,
     "n_scored": 0,
     "detail": true
    },
    "d1rl": {
-    "status": "failed",
-    "score": null,
-    "n_runs": 3,
+    "status": "scored",
+    "score": 20.3,
+    "caveat": true,
+    "fn": 1,
+    "n_runs": 1,
     "n_scored": 0,
     "detail": true
    },
    "m2base": {
-    "status": "failed",
-    "score": null,
-    "n_runs": 3,
+    "status": "scored",
+    "score": 44.0,
+    "caveat": true,
+    "fn": 1,
+    "n_runs": 1,
     "n_scored": 0,
     "detail": true
    },
    "m2sft": {
-    "status": "failed",
-    "score": null,
-    "n_runs": 3,
+    "status": "scored",
+    "score": 36.4,
+    "caveat": true,
+    "fn": 1,
+    "n_runs": 1,
     "n_scored": 0,
     "detail": true
    },
    "m2rl": {
-    "status": "unfinished",
-    "score": null,
-    "n_runs": 3,
+    "status": "scored",
+    "score": 24.7,
+    "caveat": true,
+    "fn": 1,
+    "n_runs": 1,
     "n_scored": 0,
-    "detail": false
+    "detail": true
+   },
+   "fable5": {
+    "status": "scored",
+    "score": 44.4,
+    "caveat": true,
+    "fn": 1,
+    "n_runs": 1,
+    "n_scored": 0,
+    "detail": true
+   },
+   "gpt55": {
+    "status": "scored",
+    "score": 42.7,
+    "caveat": true,
+    "fn": 1,
+    "n_runs": 1,
+    "n_scored": 0,
+    "detail": true
    }
   },
   "ai4sci-inverse-diffusion-algo": {
    "base8b": {
-    "status": "ok",
-    "score": 0.0,
+    "status": "scored",
+    "score": 1.0,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 15,
     "detail": true
    },
    "sft8b": {
-    "status": "ok",
-    "score": 0.0,
+    "status": "scored",
+    "score": 1.0,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 6,
     "detail": true
    },
    "qwen3-8b-rl": {
-    "status": "ok",
-    "score": 0.0,
+    "status": "scored",
+    "score": 1.0,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "base14b": {
-    "status": "ok",
-    "score": 0.0,
+    "status": "scored",
+    "score": 1.0,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 15,
     "detail": true
    },
    "sft14b": {
-    "status": "ok",
-    "score": 0.0,
+    "status": "scored",
+    "score": 19.8,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 6,
     "detail": true
    },
    "qwen3-14b-rl": {
-    "status": "ok",
-    "score": 0.0,
+    "status": "scored",
+    "score": 10.6,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "base32bq3": {
-    "status": "ok",
-    "score": 0.0,
+    "status": "scored",
+    "score": 14.6,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 9,
     "detail": true
    },
    "sft32b": {
-    "status": "ok",
-    "score": 0.0,
+    "status": "scored",
+    "score": 62.1,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 6,
     "detail": true
    },
    "qwen3-32b-rl": {
-    "status": "ok",
+    "status": "scored",
     "score": 0.0,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "base32b": {
-    "status": "ok",
-    "score": 0.0,
+    "status": "scored",
+    "score": 11.4,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 6,
     "detail": true
    },
    "qwen25sft": {
-    "status": "ok",
+    "status": "scored",
     "score": 0.0,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "rl": {
-    "status": "ok",
+    "status": "scored",
     "score": 0.0,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 5,
     "detail": true
    },
    "d1base": {
-    "status": "zero",
+    "status": "scored",
     "score": 0.0,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 0,
     "detail": true
    },
    "d1sft": {
-    "status": "ok",
-    "score": 0.0,
+    "status": "scored",
+    "score": 19.1,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 6,
     "detail": true
    },
    "d1rl": {
-    "status": "ok",
-    "score": 0.0,
+    "status": "scored",
+    "score": 10.6,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 6,
     "detail": true
    },
    "m2base": {
-    "status": "ok",
-    "score": 0.0,
+    "status": "scored",
+    "score": 10.6,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "m2sft": {
-    "status": "ok",
-    "score": 0.0,
+    "status": "scored",
+    "score": 3.4,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 8,
     "detail": true
    },
    "m2rl": {
-    "status": "unfinished",
-    "score": null,
+    "status": "scored",
+    "score": 14.1,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
-    "detail": false
+    "detail": true
+   },
+   "fable5": {
+    "status": "scored",
+    "score": 52.2,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 2,
+    "detail": true
+   },
+   "gpt55": {
+    "status": "scored",
+    "score": 0.0,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
    }
   },
   "ai4sci-pla-binding-affinity": {
    "base8b": {
-    "status": "failed",
-    "score": null,
-    "n_runs": 3,
+    "status": "scored",
+    "score": 38.4,
+    "caveat": true,
+    "fn": 1,
+    "n_runs": 1,
     "n_scored": 0,
     "detail": true
    },
    "sft8b": {
-    "status": "failed",
-    "score": null,
-    "n_runs": 3,
+    "status": "scored",
+    "score": 45.9,
+    "caveat": true,
+    "fn": 1,
+    "n_runs": 1,
     "n_scored": 0,
     "detail": true
    },
    "qwen3-8b-rl": {
-    "status": "failed",
-    "score": null,
-    "n_runs": 3,
+    "status": "scored",
+    "score": 43.9,
+    "caveat": true,
+    "fn": 1,
+    "n_runs": 1,
     "n_scored": 0,
     "detail": true
    },
    "base14b": {
-    "status": "failed",
-    "score": null,
-    "n_runs": 3,
+    "status": "scored",
+    "score": 52.8,
+    "caveat": true,
+    "fn": 1,
+    "n_runs": 1,
     "n_scored": 0,
     "detail": true
    },
    "sft14b": {
-    "status": "failed",
-    "score": null,
-    "n_runs": 3,
+    "status": "scored",
+    "score": 46.8,
+    "caveat": true,
+    "fn": 1,
+    "n_runs": 1,
     "n_scored": 0,
     "detail": true
    },
    "qwen3-14b-rl": {
-    "status": "failed",
-    "score": null,
-    "n_runs": 3,
+    "status": "scored",
+    "score": 23.5,
+    "caveat": true,
+    "fn": 1,
+    "n_runs": 1,
     "n_scored": 0,
     "detail": true
    },
    "base32bq3": {
-    "status": "failed",
-    "score": null,
-    "n_runs": 3,
+    "status": "scored",
+    "score": 10.4,
+    "caveat": true,
+    "fn": 1,
+    "n_runs": 1,
     "n_scored": 0,
     "detail": true
    },
    "sft32b": {
-    "status": "failed",
-    "score": null,
-    "n_runs": 3,
+    "status": "scored",
+    "score": 40.6,
+    "caveat": true,
+    "fn": 1,
+    "n_runs": 1,
     "n_scored": 0,
     "detail": true
    },
    "qwen3-32b-rl": {
-    "status": "failed",
-    "score": null,
-    "n_runs": 3,
+    "status": "scored",
+    "score": 51.1,
+    "caveat": true,
+    "fn": 1,
+    "n_runs": 1,
     "n_scored": 0,
     "detail": true
    },
    "base32b": {
-    "status": "failed",
-    "score": null,
-    "n_runs": 3,
+    "status": "scored",
+    "score": 36.8,
+    "caveat": true,
+    "fn": 1,
+    "n_runs": 1,
     "n_scored": 0,
     "detail": true
    },
    "qwen25sft": {
-    "status": "failed",
-    "score": null,
-    "n_runs": 3,
+    "status": "scored",
+    "score": 46.8,
+    "caveat": true,
+    "fn": 1,
+    "n_runs": 1,
     "n_scored": 0,
     "detail": true
    },
    "rl": {
-    "status": "failed",
-    "score": null,
-    "n_runs": 3,
+    "status": "scored",
+    "score": 41.1,
+    "caveat": true,
+    "fn": 1,
+    "n_runs": 1,
     "n_scored": 0,
     "detail": true
    },
    "d1base": {
-    "status": "failed",
-    "score": null,
-    "n_runs": 3,
+    "status": "scored",
+    "score": 45.1,
+    "caveat": true,
+    "fn": 1,
+    "n_runs": 1,
     "n_scored": 0,
     "detail": true
    },
    "d1sft": {
-    "status": "failed",
-    "score": null,
-    "n_runs": 3,
+    "status": "scored",
+    "score": 38.1,
+    "caveat": true,
+    "fn": 1,
+    "n_runs": 1,
     "n_scored": 0,
     "detail": true
    },
    "d1rl": {
-    "status": "failed",
-    "score": null,
-    "n_runs": 3,
+    "status": "scored",
+    "score": 41.3,
+    "caveat": true,
+    "fn": 1,
+    "n_runs": 1,
     "n_scored": 0,
     "detail": true
    },
    "m2base": {
-    "status": "failed",
-    "score": null,
-    "n_runs": 3,
+    "status": "scored",
+    "score": 41.2,
+    "caveat": true,
+    "fn": 1,
+    "n_runs": 1,
     "n_scored": 0,
     "detail": true
    },
    "m2sft": {
-    "status": "failed",
-    "score": null,
-    "n_runs": 3,
+    "status": "scored",
+    "score": 40.9,
+    "caveat": true,
+    "fn": 1,
+    "n_runs": 1,
     "n_scored": 0,
     "detail": true
    },
    "m2rl": {
-    "status": "unfinished",
-    "score": null,
-    "n_runs": 3,
+    "status": "scored",
+    "score": 47.8,
+    "caveat": true,
+    "fn": 1,
+    "n_runs": 1,
     "n_scored": 0,
-    "detail": false
+    "detail": true
+   },
+   "fable5": {
+    "status": "scored",
+    "score": 0.0,
+    "caveat": true,
+    "fn": 1,
+    "n_runs": 1,
+    "n_scored": 0,
+    "detail": true
+   },
+   "gpt55": {
+    "status": "scored",
+    "score": 13.9,
+    "caveat": true,
+    "fn": 1,
+    "n_runs": 1,
+    "n_scored": 0,
+    "detail": true
    }
   },
   "causal-discovery-discrete": {
    "base8b": {
-    "status": "ok",
+    "status": "scored",
     "score": 30.6,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 10,
     "detail": true
    },
    "sft8b": {
-    "status": "ok",
+    "status": "scored",
     "score": 42.0,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 2,
     "detail": true
    },
    "qwen3-8b-rl": {
-    "status": "failed",
-    "score": null,
+    "status": "scored",
+    "score": 0.0,
+    "caveat": true,
+    "fn": 2,
     "n_runs": 3,
     "n_scored": 0,
     "detail": true
    },
    "base14b": {
-    "status": "ok",
+    "status": "scored",
     "score": 24.5,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 8,
     "detail": true
    },
    "sft14b": {
-    "status": "ok",
+    "status": "scored",
     "score": 49.8,
+    "caveat": false,
+    "fn": null,
     "n_runs": 2,
     "n_scored": 2,
     "detail": true
    },
    "qwen3-14b-rl": {
-    "status": "ok",
+    "status": "scored",
     "score": 23.6,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "base32bq3": {
-    "status": "ok",
+    "status": "scored",
     "score": 34.9,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 1,
     "detail": true
    },
    "sft32b": {
-    "status": "ok",
+    "status": "scored",
     "score": 40.7,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "qwen3-32b-rl": {
-    "status": "ok",
+    "status": "scored",
     "score": 30.0,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 1,
     "detail": true
    },
    "base32b": {
-    "status": "ok",
+    "status": "scored",
     "score": 39.1,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "qwen25sft": {
-    "status": "failed",
-    "score": null,
+    "status": "scored",
+    "score": 0.0,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 0,
     "detail": true
    },
    "rl": {
-    "status": "ok",
+    "status": "scored",
     "score": 14.3,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "d1base": {
-    "status": "failed",
-    "score": null,
+    "status": "scored",
+    "score": 0.0,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 0,
     "detail": true
    },
    "d1sft": {
-    "status": "ok",
+    "status": "scored",
     "score": 40.9,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "d1rl": {
-    "status": "ok",
+    "status": "scored",
     "score": 18.5,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "m2base": {
-    "status": "ok",
+    "status": "scored",
     "score": 36.0,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "m2sft": {
-    "status": "ok",
+    "status": "scored",
     "score": 27.6,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "m2rl": {
-    "status": "unfinished",
-    "score": null,
+    "status": "scored",
+    "score": 42.6,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
-    "detail": false
+    "detail": true
+   },
+   "fable5": {
+    "status": "scored",
+    "score": 0.0,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 0,
+    "detail": true
+   },
+   "gpt55": {
+    "status": "scored",
+    "score": 0.0,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 0,
+    "detail": true
    }
   },
   "graph-generation": {
    "base8b": {
-    "status": "ok",
+    "status": "scored",
     "score": 71.5,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 9,
     "detail": true
    },
    "sft8b": {
-    "status": "failed",
-    "score": null,
+    "status": "scored",
+    "score": 0.0,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 0,
     "detail": true
    },
    "qwen3-8b-rl": {
-    "status": "failed",
-    "score": null,
+    "status": "scored",
+    "score": 0.0,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 0,
     "detail": true
    },
    "base14b": {
-    "status": "ok",
+    "status": "scored",
     "score": 72.0,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 6,
     "detail": true
    },
    "sft14b": {
-    "status": "failed",
-    "score": null,
+    "status": "scored",
+    "score": 0.0,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 0,
     "detail": true
    },
    "qwen3-14b-rl": {
-    "status": "failed",
-    "score": null,
+    "status": "scored",
+    "score": 0.0,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 0,
     "detail": true
    },
    "base32bq3": {
-    "status": "ok",
+    "status": "scored",
     "score": 40.8,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "sft32b": {
-    "status": "ok",
+    "status": "scored",
     "score": 59.4,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "qwen3-32b-rl": {
-    "status": "ok",
+    "status": "scored",
     "score": 66.9,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 1,
     "detail": true
    },
    "base32b": {
-    "status": "failed",
-    "score": null,
+    "status": "scored",
+    "score": 0.0,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 0,
     "detail": true
    },
    "qwen25sft": {
-    "status": "ok",
+    "status": "scored",
     "score": 66.1,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "rl": {
-    "status": "ok",
+    "status": "scored",
     "score": 22.5,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "d1base": {
-    "status": "ok",
+    "status": "scored",
     "score": 58.0,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 2,
     "detail": true
    },
    "d1sft": {
-    "status": "ok",
+    "status": "scored",
     "score": 75.1,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "d1rl": {
-    "status": "ok",
+    "status": "scored",
     "score": 0.0,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 1,
     "detail": true
    },
    "m2base": {
-    "status": "ok",
+    "status": "scored",
     "score": 39.5,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "m2sft": {
-    "status": "ok",
+    "status": "scored",
     "score": 45.1,
+    "caveat": false,
+    "fn": null,
     "n_runs": 2,
     "n_scored": 1,
     "detail": true
    },
    "m2rl": {
-    "status": "unfinished",
-    "score": null,
+    "status": "scored",
+    "score": 75.2,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 2,
-    "detail": false
+    "detail": true
+   },
+   "fable5": {
+    "status": "scored",
+    "score": 0.0,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 0,
+    "detail": true
+   },
+   "gpt55": {
+    "status": "scored",
+    "score": 0.0,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 0,
+    "detail": true
    }
   },
   "cv-3dgs-densification": {
    "base8b": {
-    "status": "ok",
+    "status": "scored",
     "score": 0.0,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
-    "n_scored": 13,
+    "n_scored": 19,
     "detail": true
    },
    "sft8b": {
-    "status": "ok",
+    "status": "scored",
     "score": 0.0,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
-    "n_scored": 9,
+    "n_scored": 15,
     "detail": true
    },
    "qwen3-8b-rl": {
-    "status": "ok",
-    "score": 0.0,
-    "n_runs": 3,
-    "n_scored": 3,
-    "detail": true
-   },
-   "base14b": {
-    "status": "ok",
-    "score": 0.0,
-    "n_runs": 3,
-    "n_scored": 11,
-    "detail": true
-   },
-   "sft14b": {
-    "status": "ok",
-    "score": 0.0,
-    "n_runs": 3,
-    "n_scored": 8,
-    "detail": true
-   },
-   "qwen3-14b-rl": {
-    "status": "ok",
-    "score": 0.0,
-    "n_runs": 3,
-    "n_scored": 3,
-    "detail": true
-   },
-   "base32bq3": {
-    "status": "ok",
-    "score": 0.0,
-    "n_runs": 3,
-    "n_scored": 11,
-    "detail": true
-   },
-   "sft32b": {
-    "status": "ok",
-    "score": 0.0,
-    "n_runs": 3,
-    "n_scored": 9,
-    "detail": true
-   },
-   "qwen3-32b-rl": {
-    "status": "ok",
-    "score": 0.0,
-    "n_runs": 3,
-    "n_scored": 3,
-    "detail": true
-   },
-   "base32b": {
-    "status": "ok",
-    "score": 0.0,
-    "n_runs": 3,
-    "n_scored": 11,
-    "detail": true
-   },
-   "qwen25sft": {
-    "status": "ok",
-    "score": 0.0,
-    "n_runs": 3,
-    "n_scored": 3,
-    "detail": true
-   },
-   "rl": {
-    "status": "ok",
-    "score": 0.0,
-    "n_runs": 3,
-    "n_scored": 9,
-    "detail": true
-   },
-   "d1base": {
-    "status": "ok",
-    "score": 0.0,
-    "n_runs": 3,
-    "n_scored": 3,
-    "detail": true
-   },
-   "d1sft": {
-    "status": "ok",
-    "score": 0.0,
-    "n_runs": 3,
-    "n_scored": 4,
-    "detail": true
-   },
-   "d1rl": {
-    "status": "ok",
-    "score": 0.0,
-    "n_runs": 3,
-    "n_scored": 4,
-    "detail": true
-   },
-   "m2base": {
-    "status": "ok",
-    "score": 0.0,
-    "n_runs": 3,
-    "n_scored": 3,
-    "detail": true
-   },
-   "m2sft": {
-    "status": "ok",
-    "score": 0.0,
-    "n_runs": 3,
-    "n_scored": 4,
-    "detail": true
-   },
-   "m2rl": {
-    "status": "unfinished",
-    "score": null,
-    "n_runs": 3,
-    "n_scored": 3,
-    "detail": false
-   }
-  },
-  "cv-dbm-scheduler": {
-   "base8b": {
-    "status": "ok",
-    "score": 0.0,
-    "n_runs": 3,
-    "n_scored": 9,
-    "detail": true
-   },
-   "sft8b": {
-    "status": "ok",
-    "score": 0.0,
-    "n_runs": 3,
-    "n_scored": 6,
-    "detail": true
-   },
-   "qwen3-8b-rl": {
-    "status": "ok",
-    "score": 0.0,
-    "n_runs": 3,
-    "n_scored": 3,
-    "detail": true
-   },
-   "base14b": {
-    "status": "ok",
-    "score": 0.0,
-    "n_runs": 3,
-    "n_scored": 9,
-    "detail": true
-   },
-   "sft14b": {
-    "status": "ok",
-    "score": 0.0,
-    "n_runs": 3,
-    "n_scored": 6,
-    "detail": true
-   },
-   "qwen3-14b-rl": {
-    "status": "ok",
-    "score": 0.0,
-    "n_runs": 3,
-    "n_scored": 3,
-    "detail": true
-   },
-   "base32bq3": {
-    "status": "ok",
-    "score": 0.0,
-    "n_runs": 3,
-    "n_scored": 9,
-    "detail": true
-   },
-   "sft32b": {
-    "status": "ok",
-    "score": 0.0,
-    "n_runs": 3,
-    "n_scored": 6,
-    "detail": true
-   },
-   "qwen3-32b-rl": {
-    "status": "ok",
-    "score": 0.0,
-    "n_runs": 3,
-    "n_scored": 3,
-    "detail": true
-   },
-   "base32b": {
-    "status": "ok",
-    "score": 0.0,
-    "n_runs": 3,
-    "n_scored": 4,
-    "detail": true
-   },
-   "qwen25sft": {
-    "status": "ok",
-    "score": 0.0,
-    "n_runs": 3,
-    "n_scored": 3,
-    "detail": true
-   },
-   "rl": {
-    "status": "ok",
-    "score": 0.0,
-    "n_runs": 3,
-    "n_scored": 6,
-    "detail": true
-   },
-   "d1base": {
-    "status": "ok",
-    "score": 0.0,
-    "n_runs": 3,
-    "n_scored": 3,
-    "detail": true
-   },
-   "d1sft": {
-    "status": "ok",
-    "score": 0.0,
-    "n_runs": 3,
-    "n_scored": 6,
-    "detail": true
-   },
-   "d1rl": {
-    "status": "ok",
-    "score": 0.0,
-    "n_runs": 3,
-    "n_scored": 5,
-    "detail": true
-   },
-   "m2base": {
-    "status": "ok",
-    "score": 0.0,
-    "n_runs": 3,
-    "n_scored": 3,
-    "detail": true
-   },
-   "m2sft": {
-    "status": "ok",
-    "score": 0.0,
-    "n_runs": 3,
-    "n_scored": 5,
-    "detail": true
-   },
-   "m2rl": {
-    "status": "unfinished",
-    "score": null,
-    "n_runs": 3,
-    "n_scored": 3,
-    "detail": false
-   }
-  },
-  "cv-vae-loss": {
-   "base8b": {
-    "status": "ok",
-    "score": 12.1,
-    "n_runs": 3,
-    "n_scored": 8,
-    "detail": true
-   },
-   "sft8b": {
-    "status": "ok",
-    "score": 4.0,
-    "n_runs": 3,
-    "n_scored": 6,
-    "detail": true
-   },
-   "qwen3-8b-rl": {
-    "status": "ok",
-    "score": 46.9,
-    "n_runs": 3,
-    "n_scored": 3,
-    "detail": true
-   },
-   "base14b": {
-    "status": "ok",
-    "score": 47.9,
-    "n_runs": 3,
-    "n_scored": 8,
-    "detail": true
-   },
-   "sft14b": {
-    "status": "ok",
-    "score": 52.2,
-    "n_runs": 3,
-    "n_scored": 6,
-    "detail": true
-   },
-   "qwen3-14b-rl": {
-    "status": "ok",
-    "score": 49.2,
-    "n_runs": 3,
-    "n_scored": 3,
-    "detail": true
-   },
-   "base32bq3": {
-    "status": "ok",
-    "score": 47.5,
-    "n_runs": 3,
-    "n_scored": 9,
-    "detail": true
-   },
-   "sft32b": {
-    "status": "ok",
-    "score": 31.9,
-    "n_runs": 3,
-    "n_scored": 6,
-    "detail": true
-   },
-   "qwen3-32b-rl": {
-    "status": "ok",
-    "score": 2.9,
-    "n_runs": 3,
-    "n_scored": 3,
-    "detail": true
-   },
-   "base32b": {
-    "status": "ok",
-    "score": 3.8,
-    "n_runs": 3,
-    "n_scored": 6,
-    "detail": true
-   },
-   "qwen25sft": {
-    "status": "ok",
-    "score": 48.1,
-    "n_runs": 3,
-    "n_scored": 3,
-    "detail": true
-   },
-   "rl": {
-    "status": "ok",
-    "score": 50.5,
-    "n_runs": 3,
-    "n_scored": 6,
-    "detail": true
-   },
-   "d1base": {
-    "status": "ok",
-    "score": 47.9,
-    "n_runs": 3,
-    "n_scored": 3,
-    "detail": true
-   },
-   "d1sft": {
-    "status": "ok",
-    "score": 0.0,
-    "n_runs": 3,
-    "n_scored": 3,
-    "detail": true
-   },
-   "d1rl": {
-    "status": "ok",
-    "score": 3.8,
-    "n_runs": 3,
-    "n_scored": 3,
-    "detail": true
-   },
-   "m2base": {
-    "status": "ok",
-    "score": 51.1,
-    "n_runs": 3,
-    "n_scored": 3,
-    "detail": true
-   },
-   "m2sft": {
-    "status": "ok",
-    "score": 49.3,
-    "n_runs": 3,
-    "n_scored": 3,
-    "detail": true
-   },
-   "m2rl": {
-    "status": "unfinished",
-    "score": null,
-    "n_runs": 3,
-    "n_scored": 1,
-    "detail": false
-   }
-  },
-  "cv-pooling-aggregation": {
-   "base8b": {
-    "status": "ok",
-    "score": 42.6,
-    "n_runs": 3,
-    "n_scored": 2,
-    "detail": true
-   },
-   "sft8b": {
-    "status": "ok",
-    "score": 44.4,
-    "n_runs": 3,
-    "n_scored": 3,
-    "detail": true
-   },
-   "qwen3-8b-rl": {
-    "status": "ok",
-    "score": 43.7,
-    "n_runs": 3,
-    "n_scored": 3,
-    "detail": true
-   },
-   "base14b": {
-    "status": "ok",
-    "score": 46.3,
-    "n_runs": 3,
-    "n_scored": 3,
-    "detail": true
-   },
-   "sft14b": {
-    "status": "ok",
-    "score": 47.8,
-    "n_runs": 3,
-    "n_scored": 3,
-    "detail": true
-   },
-   "qwen3-14b-rl": {
-    "status": "ok",
-    "score": 43.3,
-    "n_runs": 3,
-    "n_scored": 3,
-    "detail": true
-   },
-   "base32bq3": {
-    "status": "ok",
-    "score": 49.5,
-    "n_runs": 3,
-    "n_scored": 6,
-    "detail": true
-   },
-   "sft32b": {
-    "status": "ok",
-    "score": 45.8,
-    "n_runs": 3,
-    "n_scored": 3,
-    "detail": true
-   },
-   "qwen3-32b-rl": {
-    "status": "ok",
-    "score": 48.4,
-    "n_runs": 3,
-    "n_scored": 3,
-    "detail": true
-   },
-   "base32b": {
-    "status": "ok",
-    "score": 47.2,
-    "n_runs": 3,
-    "n_scored": 3,
-    "detail": true
-   },
-   "qwen25sft": {
-    "status": "ok",
-    "score": 44.6,
-    "n_runs": 3,
-    "n_scored": 3,
-    "detail": true
-   },
-   "rl": {
-    "status": "ok",
-    "score": 46.5,
-    "n_runs": 3,
-    "n_scored": 3,
-    "detail": true
-   },
-   "d1base": {
-    "status": "failed",
-    "score": null,
-    "n_runs": 3,
-    "n_scored": 0,
-    "detail": true
-   },
-   "d1sft": {
-    "status": "ok",
-    "score": 48.5,
-    "n_runs": 3,
-    "n_scored": 3,
-    "detail": true
-   },
-   "d1rl": {
-    "status": "ok",
-    "score": 43.2,
-    "n_runs": 3,
-    "n_scored": 3,
-    "detail": true
-   },
-   "m2base": {
-    "status": "ok",
-    "score": 43.9,
-    "n_runs": 3,
-    "n_scored": 3,
-    "detail": true
-   },
-   "m2sft": {
-    "status": "ok",
-    "score": 44.9,
-    "n_runs": 3,
-    "n_scored": 3,
-    "detail": true
-   },
-   "m2rl": {
-    "status": "unfinished",
-    "score": null,
-    "n_runs": 3,
-    "n_scored": 1,
-    "detail": false
-   }
-  },
-  "dl-activation-function": {
-   "base8b": {
-    "status": "ok",
-    "score": 54.3,
-    "n_runs": 3,
-    "n_scored": 3,
-    "detail": true
-   },
-   "sft8b": {
-    "status": "ok",
-    "score": 3.5,
-    "n_runs": 3,
-    "n_scored": 3,
-    "detail": true
-   },
-   "qwen3-8b-rl": {
-    "status": "ok",
-    "score": 48.5,
-    "n_runs": 3,
-    "n_scored": 3,
-    "detail": true
-   },
-   "base14b": {
-    "status": "ok",
-    "score": 55.0,
-    "n_runs": 3,
-    "n_scored": 3,
-    "detail": true
-   },
-   "sft14b": {
-    "status": "ok",
-    "score": 12.7,
-    "n_runs": 3,
-    "n_scored": 3,
-    "detail": true
-   },
-   "qwen3-14b-rl": {
-    "status": "ok",
-    "score": 39.3,
-    "n_runs": 3,
-    "n_scored": 3,
-    "detail": true
-   },
-   "base32bq3": {
-    "status": "ok",
-    "score": 11.6,
-    "n_runs": 3,
-    "n_scored": 6,
-    "detail": true
-   },
-   "sft32b": {
-    "status": "ok",
-    "score": 0.0,
-    "n_runs": 3,
-    "n_scored": 3,
-    "detail": true
-   },
-   "qwen3-32b-rl": {
-    "status": "ok",
-    "score": 14.2,
-    "n_runs": 3,
-    "n_scored": 3,
-    "detail": true
-   },
-   "base32b": {
-    "status": "ok",
-    "score": 48.0,
-    "n_runs": 3,
-    "n_scored": 3,
-    "detail": true
-   },
-   "qwen25sft": {
-    "status": "ok",
-    "score": 13.5,
-    "n_runs": 3,
-    "n_scored": 3,
-    "detail": true
-   },
-   "rl": {
-    "status": "ok",
-    "score": 0.0,
-    "n_runs": 3,
-    "n_scored": 3,
-    "detail": true
-   },
-   "d1base": {
-    "status": "ok",
-    "score": 51.2,
-    "n_runs": 3,
-    "n_scored": 3,
-    "detail": true
-   },
-   "d1sft": {
-    "status": "ok",
-    "score": 53.6,
-    "n_runs": 3,
-    "n_scored": 3,
-    "detail": true
-   },
-   "d1rl": {
-    "status": "ok",
-    "score": 54.2,
-    "n_runs": 3,
-    "n_scored": 3,
-    "detail": true
-   },
-   "m2base": {
-    "status": "ok",
-    "score": 54.0,
-    "n_runs": 3,
-    "n_scored": 3,
-    "detail": true
-   },
-   "m2sft": {
-    "status": "ok",
-    "score": 44.0,
-    "n_runs": 3,
-    "n_scored": 3,
-    "detail": true
-   },
-   "m2rl": {
-    "status": "unfinished",
-    "score": null,
-    "n_runs": 3,
-    "n_scored": 0,
-    "detail": false
-   }
-  },
-  "jepa-planning": {
-   "base8b": {
-    "status": "ok",
-    "score": 46.7,
-    "n_runs": 3,
-    "n_scored": 1,
-    "detail": true
-   },
-   "sft8b": {
-    "status": "failed",
-    "score": null,
-    "n_runs": 3,
-    "n_scored": 0,
-    "detail": true
-   },
-   "qwen3-8b-rl": {
-    "status": "unfinished",
-    "score": null,
-    "n_runs": 0,
-    "n_scored": 0,
-    "detail": false
-   },
-   "base14b": {
-    "status": "failed",
-    "score": null,
-    "n_runs": 3,
-    "n_scored": 0,
-    "detail": true
-   },
-   "sft14b": {
-    "status": "failed",
-    "score": null,
-    "n_runs": 1,
-    "n_scored": 0,
-    "detail": true
-   },
-   "qwen3-14b-rl": {
-    "status": "failed",
-    "score": null,
-    "n_runs": 1,
-    "n_scored": 0,
-    "detail": true
-   },
-   "base32bq3": {
-    "status": "ok",
-    "score": 37.4,
-    "n_runs": 1,
-    "n_scored": 1,
-    "detail": true
-   },
-   "sft32b": {
-    "status": "ok",
-    "score": 67.9,
-    "n_runs": 3,
-    "n_scored": 1,
-    "detail": true
-   },
-   "qwen3-32b-rl": {
-    "status": "ok",
-    "score": 71.7,
-    "n_runs": 1,
-    "n_scored": 1,
-    "detail": true
-   },
-   "base32b": {
-    "status": "ok",
-    "score": 76.0,
-    "n_runs": 3,
-    "n_scored": 1,
-    "detail": true
-   },
-   "qwen25sft": {
-    "status": "ok",
-    "score": 38.4,
-    "n_runs": 1,
-    "n_scored": 1,
-    "detail": true
-   },
-   "rl": {
-    "status": "ok",
-    "score": 63.0,
-    "n_runs": 3,
-    "n_scored": 1,
-    "detail": true
-   },
-   "d1base": {
-    "status": "ok",
-    "score": 74.4,
-    "n_runs": 1,
-    "n_scored": 1,
-    "detail": true
-   },
-   "d1sft": {
-    "status": "failed",
-    "score": null,
-    "n_runs": 1,
-    "n_scored": 0,
-    "detail": true
-   },
-   "d1rl": {
-    "status": "ok",
-    "score": 75.1,
-    "n_runs": 1,
-    "n_scored": 1,
-    "detail": true
-   },
-   "m2base": {
-    "status": "ok",
-    "score": 75.1,
-    "n_runs": 1,
-    "n_scored": 1,
-    "detail": true
-   },
-   "m2sft": {
-    "status": "ok",
-    "score": 32.1,
-    "n_runs": 1,
-    "n_scored": 1,
-    "detail": true
-   },
-   "m2rl": {
-    "status": "unfinished",
-    "score": null,
-    "n_runs": 1,
-    "n_scored": 0,
-    "detail": false
-   }
-  },
-  "robo-diffusion-guidance": {
-   "base8b": {
-    "status": "ok",
-    "score": 50.6,
-    "n_runs": 3,
-    "n_scored": 1,
-    "detail": true
-   },
-   "sft8b": {
-    "status": "ok",
-    "score": 51.5,
-    "n_runs": 3,
-    "n_scored": 1,
-    "detail": true
-   },
-   "qwen3-8b-rl": {
-    "status": "failed",
-    "score": null,
-    "n_runs": 1,
-    "n_scored": 0,
-    "detail": true
-   },
-   "base14b": {
-    "status": "ok",
-    "score": 54.0,
-    "n_runs": 3,
-    "n_scored": 1,
-    "detail": true
-   },
-   "sft14b": {
-    "status": "ok",
-    "score": 49.8,
-    "n_runs": 1,
-    "n_scored": 1,
-    "detail": true
-   },
-   "qwen3-14b-rl": {
-    "status": "failed",
-    "score": null,
-    "n_runs": 1,
-    "n_scored": 0,
-    "detail": true
-   },
-   "base32bq3": {
-    "status": "ok",
-    "score": 51.7,
-    "n_runs": 1,
-    "n_scored": 1,
-    "detail": true
-   },
-   "sft32b": {
-    "status": "failed",
-    "score": null,
-    "n_runs": 3,
-    "n_scored": 0,
-    "detail": true
-   },
-   "qwen3-32b-rl": {
-    "status": "failed",
-    "score": null,
-    "n_runs": 1,
-    "n_scored": 0,
-    "detail": true
-   },
-   "base32b": {
-    "status": "ok",
-    "score": 52.9,
-    "n_runs": 3,
-    "n_scored": 1,
-    "detail": true
-   },
-   "qwen25sft": {
-    "status": "failed",
-    "score": null,
-    "n_runs": 1,
-    "n_scored": 0,
-    "detail": true
-   },
-   "rl": {
-    "status": "ok",
-    "score": 11.0,
-    "n_runs": 3,
-    "n_scored": 1,
-    "detail": true
-   },
-   "d1base": {
-    "status": "ok",
-    "score": 50.3,
-    "n_runs": 1,
-    "n_scored": 1,
-    "detail": true
-   },
-   "d1sft": {
-    "status": "ok",
-    "score": 53.9,
-    "n_runs": 1,
-    "n_scored": 1,
-    "detail": true
-   },
-   "d1rl": {
-    "status": "ok",
-    "score": 51.3,
-    "n_runs": 1,
-    "n_scored": 1,
-    "detail": true
-   },
-   "m2base": {
-    "status": "ok",
-    "score": 52.9,
-    "n_runs": 1,
-    "n_scored": 1,
-    "detail": true
-   },
-   "m2sft": {
-    "status": "failed",
-    "score": null,
-    "n_runs": 1,
-    "n_scored": 0,
-    "detail": true
-   },
-   "m2rl": {
-    "status": "unfinished",
-    "score": null,
-    "n_runs": 1,
-    "n_scored": 0,
-    "detail": false
-   }
-  },
-  "robo-diffusion-policy": {
-   "base8b": {
-    "status": "ok",
-    "score": 53.0,
-    "n_runs": 3,
-    "n_scored": 1,
-    "detail": true
-   },
-   "sft8b": {
-    "status": "ok",
-    "score": 25.0,
-    "n_runs": 3,
-    "n_scored": 1,
-    "detail": true
-   },
-   "qwen3-8b-rl": {
-    "status": "failed",
-    "score": null,
-    "n_runs": 1,
-    "n_scored": 0,
-    "detail": true
-   },
-   "base14b": {
-    "status": "ok",
-    "score": 52.3,
-    "n_runs": 3,
-    "n_scored": 1,
-    "detail": true
-   },
-   "sft14b": {
-    "status": "ok",
-    "score": 54.3,
-    "n_runs": 1,
-    "n_scored": 1,
-    "detail": true
-   },
-   "qwen3-14b-rl": {
-    "status": "failed",
-    "score": null,
-    "n_runs": 1,
-    "n_scored": 0,
-    "detail": true
-   },
-   "base32bq3": {
-    "status": "ok",
-    "score": 51.7,
-    "n_runs": 1,
-    "n_scored": 1,
-    "detail": true
-   },
-   "sft32b": {
-    "status": "ok",
-    "score": 28.1,
-    "n_runs": 3,
-    "n_scored": 1,
-    "detail": true
-   },
-   "qwen3-32b-rl": {
-    "status": "failed",
-    "score": null,
-    "n_runs": 1,
-    "n_scored": 0,
-    "detail": true
-   },
-   "base32b": {
-    "status": "ok",
-    "score": 48.7,
-    "n_runs": 3,
-    "n_scored": 1,
-    "detail": true
-   },
-   "qwen25sft": {
-    "status": "failed",
-    "score": null,
-    "n_runs": 1,
-    "n_scored": 0,
-    "detail": true
-   },
-   "rl": {
-    "status": "ok",
-    "score": 45.7,
-    "n_runs": 3,
-    "n_scored": 1,
-    "detail": true
-   },
-   "d1base": {
-    "status": "failed",
-    "score": null,
-    "n_runs": 1,
-    "n_scored": 0,
-    "detail": true
-   },
-   "d1sft": {
-    "status": "ok",
-    "score": 52.0,
-    "n_runs": 1,
-    "n_scored": 1,
-    "detail": true
-   },
-   "d1rl": {
-    "status": "ok",
-    "score": 50.8,
-    "n_runs": 1,
-    "n_scored": 1,
-    "detail": true
-   },
-   "m2base": {
-    "status": "failed",
-    "score": null,
-    "n_runs": 1,
-    "n_scored": 0,
-    "detail": true
-   },
-   "m2sft": {
-    "status": "ok",
-    "score": 49.9,
-    "n_runs": 1,
-    "n_scored": 1,
-    "detail": true
-   },
-   "m2rl": {
-    "status": "unfinished",
-    "score": null,
-    "n_runs": 1,
-    "n_scored": 0,
-    "detail": false
-   }
-  },
-  "robomimic-bc-loss": {
-   "base8b": {
-    "status": "failed",
-    "score": null,
-    "n_runs": 3,
-    "n_scored": 0,
-    "detail": true
-   },
-   "sft8b": {
-    "status": "failed",
-    "score": null,
-    "n_runs": 3,
-    "n_scored": 0,
-    "detail": true
-   },
-   "qwen3-8b-rl": {
-    "status": "failed",
-    "score": null,
-    "n_runs": 1,
-    "n_scored": 0,
-    "detail": true
-   },
-   "base14b": {
-    "status": "failed",
-    "score": null,
-    "n_runs": 3,
-    "n_scored": 0,
-    "detail": true
-   },
-   "sft14b": {
-    "status": "failed",
-    "score": null,
-    "n_runs": 1,
-    "n_scored": 0,
-    "detail": true
-   },
-   "qwen3-14b-rl": {
-    "status": "failed",
-    "score": null,
-    "n_runs": 1,
-    "n_scored": 0,
-    "detail": true
-   },
-   "base32bq3": {
-    "status": "failed",
-    "score": null,
-    "n_runs": 1,
-    "n_scored": 0,
-    "detail": true
-   },
-   "sft32b": {
-    "status": "failed",
-    "score": null,
-    "n_runs": 3,
-    "n_scored": 0,
-    "detail": true
-   },
-   "qwen3-32b-rl": {
-    "status": "failed",
-    "score": null,
-    "n_runs": 1,
-    "n_scored": 0,
-    "detail": true
-   },
-   "base32b": {
-    "status": "failed",
-    "score": null,
-    "n_runs": 3,
-    "n_scored": 0,
-    "detail": true
-   },
-   "qwen25sft": {
-    "status": "failed",
-    "score": null,
-    "n_runs": 1,
-    "n_scored": 0,
-    "detail": true
-   },
-   "rl": {
-    "status": "failed",
-    "score": null,
-    "n_runs": 3,
-    "n_scored": 0,
-    "detail": true
-   },
-   "d1base": {
-    "status": "failed",
-    "score": null,
-    "n_runs": 1,
-    "n_scored": 0,
-    "detail": true
-   },
-   "d1sft": {
-    "status": "ok",
-    "score": 69.0,
-    "n_runs": 1,
-    "n_scored": 4,
-    "detail": true
-   },
-   "d1rl": {
-    "status": "failed",
-    "score": null,
-    "n_runs": 1,
-    "n_scored": 0,
-    "detail": true
-   },
-   "m2base": {
-    "status": "failed",
-    "score": null,
-    "n_runs": 1,
-    "n_scored": 0,
-    "detail": true
-   },
-   "m2sft": {
-    "status": "failed",
-    "score": null,
-    "n_runs": 1,
-    "n_scored": 0,
-    "detail": true
-   },
-   "m2rl": {
-    "status": "unfinished",
-    "score": null,
-    "n_runs": 1,
-    "n_scored": 0,
-    "detail": false
-   }
-  },
-  "llm-dllm-demask-strategy": {
-   "base8b": {
-    "status": "ok",
-    "score": 0.0,
-    "n_runs": 3,
-    "n_scored": 9,
-    "detail": true
-   },
-   "sft8b": {
-    "status": "ok",
-    "score": 0.0,
-    "n_runs": 3,
-    "n_scored": 9,
-    "detail": true
-   },
-   "qwen3-8b-rl": {
-    "status": "ok",
-    "score": 0.0,
-    "n_runs": 3,
-    "n_scored": 3,
-    "detail": true
-   },
-   "base14b": {
-    "status": "ok",
-    "score": 0.0,
-    "n_runs": 3,
-    "n_scored": 8,
-    "detail": true
-   },
-   "sft14b": {
-    "status": "ok",
-    "score": 0.0,
-    "n_runs": 3,
-    "n_scored": 5,
-    "detail": true
-   },
-   "qwen3-14b-rl": {
-    "status": "ok",
-    "score": 0.0,
-    "n_runs": 3,
-    "n_scored": 3,
-    "detail": true
-   },
-   "base32bq3": {
-    "status": "ok",
-    "score": 0.0,
+    "status": "scored",
+    "score": 38.8,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 7,
     "detail": true
    },
-   "sft32b": {
-    "status": "ok",
+   "base14b": {
+    "status": "scored",
     "score": 0.0,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 17,
+    "detail": true
+   },
+   "sft14b": {
+    "status": "scored",
+    "score": 5.6,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 14,
+    "detail": true
+   },
+   "qwen3-14b-rl": {
+    "status": "scored",
+    "score": 2.7,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 7,
+    "detail": true
+   },
+   "base32bq3": {
+    "status": "scored",
+    "score": 0.0,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 16,
+    "detail": true
+   },
+   "sft32b": {
+    "status": "scored",
+    "score": 0.0,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 14,
+    "detail": true
+   },
+   "qwen3-32b-rl": {
+    "status": "scored",
+    "score": 0.0,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 6,
+    "detail": true
+   },
+   "base32b": {
+    "status": "scored",
+    "score": 0.0,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 17,
+    "detail": true
+   },
+   "qwen25sft": {
+    "status": "scored",
+    "score": 43.3,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 8,
+    "detail": true
+   },
+   "rl": {
+    "status": "scored",
+    "score": 0.0,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 15,
+    "detail": true
+   },
+   "d1base": {
+    "status": "scored",
+    "score": 40.5,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 6,
+    "detail": true
+   },
+   "d1sft": {
+    "status": "scored",
+    "score": 0.0,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 9,
+    "detail": true
+   },
+   "d1rl": {
+    "status": "scored",
+    "score": 26.2,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 10,
+    "detail": true
+   },
+   "m2base": {
+    "status": "scored",
+    "score": 0.0,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 7,
+    "detail": true
+   },
+   "m2sft": {
+    "status": "scored",
+    "score": 11.6,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 9,
+    "detail": true
+   },
+   "m2rl": {
+    "status": "scored",
+    "score": 6.0,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 7,
+    "detail": true
+   },
+   "fable5": {
+    "status": "scored",
+    "score": 0.0,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 2,
+    "detail": true
+   },
+   "gpt55": {
+    "status": "scored",
+    "score": 0.0,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   }
+  },
+  "cv-dbm-scheduler": {
+   "base8b": {
+    "status": "scored",
+    "score": 24.0,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 18,
+    "detail": true
+   },
+   "sft8b": {
+    "status": "scored",
+    "score": 7.4,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 15,
+    "detail": true
+   },
+   "qwen3-8b-rl": {
+    "status": "scored",
+    "score": 33.1,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 12,
+    "detail": true
+   },
+   "base14b": {
+    "status": "scored",
+    "score": 39.2,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 18,
+    "detail": true
+   },
+   "sft14b": {
+    "status": "scored",
+    "score": 45.5,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 15,
+    "detail": true
+   },
+   "qwen3-14b-rl": {
+    "status": "scored",
+    "score": 40.1,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 12,
+    "detail": true
+   },
+   "base32bq3": {
+    "status": "scored",
+    "score": 47.9,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 18,
+    "detail": true
+   },
+   "sft32b": {
+    "status": "scored",
+    "score": 41.9,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 15,
+    "detail": true
+   },
+   "qwen3-32b-rl": {
+    "status": "scored",
+    "score": 40.6,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 12,
+    "detail": true
+   },
+   "base32b": {
+    "status": "scored",
+    "score": 44.0,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 12,
+    "detail": true
+   },
+   "qwen25sft": {
+    "status": "scored",
+    "score": 36.2,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 12,
+    "detail": true
+   },
+   "rl": {
+    "status": "scored",
+    "score": 36.6,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 15,
+    "detail": true
+   },
+   "d1base": {
+    "status": "scored",
+    "score": 36.1,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 12,
+    "detail": true
+   },
+   "d1sft": {
+    "status": "scored",
+    "score": 44.0,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 15,
+    "detail": true
+   },
+   "d1rl": {
+    "status": "scored",
+    "score": 7.3,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 13,
+    "detail": true
+   },
+   "m2base": {
+    "status": "scored",
+    "score": 45.2,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 12,
+    "detail": true
+   },
+   "m2sft": {
+    "status": "scored",
+    "score": 7.0,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 13,
+    "detail": true
+   },
+   "m2rl": {
+    "status": "scored",
+    "score": 36.1,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 12,
+    "detail": true
+   },
+   "fable5": {
+    "status": "scored",
+    "score": 44.8,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 12,
+    "detail": true
+   },
+   "gpt55": {
+    "status": "scored",
+    "score": 5.5,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 12,
+    "detail": true
+   }
+  },
+  "cv-vae-loss": {
+   "base8b": {
+    "status": "scored",
+    "score": 12.1,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 8,
+    "detail": true
+   },
+   "sft8b": {
+    "status": "scored",
+    "score": 4.0,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 6,
+    "detail": true
+   },
+   "qwen3-8b-rl": {
+    "status": "scored",
+    "score": 46.9,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
+   "base14b": {
+    "status": "scored",
+    "score": 47.9,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 8,
+    "detail": true
+   },
+   "sft14b": {
+    "status": "scored",
+    "score": 52.2,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 6,
+    "detail": true
+   },
+   "qwen3-14b-rl": {
+    "status": "scored",
+    "score": 49.2,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "base32bq3": {
+    "status": "scored",
+    "score": 47.5,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 9,
+    "detail": true
+   },
+   "sft32b": {
+    "status": "scored",
+    "score": 31.9,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 6,
+    "detail": true
+   },
    "qwen3-32b-rl": {
-    "status": "ok",
-    "score": 0.0,
+    "status": "scored",
+    "score": 2.9,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "base32b": {
-    "status": "ok",
-    "score": 0.0,
+    "status": "scored",
+    "score": 3.8,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 6,
     "detail": true
    },
    "qwen25sft": {
-    "status": "ok",
-    "score": 0.0,
+    "status": "scored",
+    "score": 48.1,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "rl": {
-    "status": "ok",
-    "score": 0.0,
+    "status": "scored",
+    "score": 50.5,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
-    "n_scored": 4,
+    "n_scored": 6,
     "detail": true
    },
    "d1base": {
-    "status": "ok",
-    "score": 0.0,
+    "status": "scored",
+    "score": 47.9,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "d1sft": {
-    "status": "ok",
+    "status": "scored",
     "score": 0.0,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
-    "n_scored": 5,
+    "n_scored": 3,
     "detail": true
    },
    "d1rl": {
-    "status": "ok",
+    "status": "scored",
+    "score": 3.8,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "m2base": {
+    "status": "scored",
+    "score": 51.1,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "m2sft": {
+    "status": "scored",
+    "score": 49.3,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "m2rl": {
+    "status": "scored",
     "score": 0.0,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "fable5": {
+    "status": "scored",
+    "score": 43.7,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "gpt55": {
+    "status": "scored",
+    "score": 0.0,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   }
+  },
+  "cv-pooling-aggregation": {
+   "base8b": {
+    "status": "scored",
+    "score": 42.6,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 2,
+    "detail": true
+   },
+   "sft8b": {
+    "status": "scored",
+    "score": 44.4,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "qwen3-8b-rl": {
+    "status": "scored",
+    "score": 43.7,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "base14b": {
+    "status": "scored",
+    "score": 46.3,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "sft14b": {
+    "status": "scored",
+    "score": 47.8,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "qwen3-14b-rl": {
+    "status": "scored",
+    "score": 43.3,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "base32bq3": {
+    "status": "scored",
+    "score": 49.5,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 6,
     "detail": true
    },
-   "m2base": {
-    "status": "ok",
+   "sft32b": {
+    "status": "scored",
+    "score": 45.8,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "qwen3-32b-rl": {
+    "status": "scored",
+    "score": 48.4,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "base32b": {
+    "status": "scored",
+    "score": 47.2,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "qwen25sft": {
+    "status": "scored",
+    "score": 44.6,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "rl": {
+    "status": "scored",
+    "score": 46.5,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "d1base": {
+    "status": "scored",
     "score": 0.0,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 0,
+    "detail": true
+   },
+   "d1sft": {
+    "status": "scored",
+    "score": 48.5,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "d1rl": {
+    "status": "scored",
+    "score": 43.2,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "m2base": {
+    "status": "scored",
+    "score": 43.9,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "m2sft": {
+    "status": "scored",
+    "score": 44.9,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "m2rl": {
+    "status": "scored",
+    "score": 46.8,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "fable5": {
+    "status": "scored",
+    "score": 49.3,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "gpt55": {
+    "status": "scored",
+    "score": 44.7,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   }
+  },
+  "dl-activation-function": {
+   "base8b": {
+    "status": "scored",
+    "score": 54.3,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "sft8b": {
+    "status": "scored",
+    "score": 3.5,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "qwen3-8b-rl": {
+    "status": "scored",
+    "score": 48.5,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "base14b": {
+    "status": "scored",
+    "score": 55.0,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "sft14b": {
+    "status": "scored",
+    "score": 12.7,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "qwen3-14b-rl": {
+    "status": "scored",
+    "score": 39.3,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "base32bq3": {
+    "status": "scored",
+    "score": 11.6,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 6,
+    "detail": true
+   },
+   "sft32b": {
+    "status": "scored",
+    "score": 0.0,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "qwen3-32b-rl": {
+    "status": "scored",
+    "score": 14.2,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "base32b": {
+    "status": "scored",
+    "score": 48.0,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "qwen25sft": {
+    "status": "scored",
+    "score": 13.5,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "rl": {
+    "status": "scored",
+    "score": 0.0,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "d1base": {
+    "status": "scored",
+    "score": 51.2,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "d1sft": {
+    "status": "scored",
+    "score": 53.6,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "d1rl": {
+    "status": "scored",
+    "score": 54.2,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "m2base": {
+    "status": "scored",
+    "score": 54.0,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "m2sft": {
+    "status": "scored",
+    "score": 44.0,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "m2rl": {
+    "status": "scored",
+    "score": 56.8,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "fable5": {
+    "status": "scored",
+    "score": 0.0,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 2,
+    "detail": true
+   },
+   "gpt55": {
+    "status": "scored",
+    "score": 3.6,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   }
+  },
+  "jepa-planning": {
+   "base8b": {
+    "status": "scored",
+    "score": 46.7,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 1,
     "detail": true
    },
-   "m2sft": {
-    "status": "ok",
+   "sft8b": {
+    "status": "scored",
+    "score": 38.3,
+    "caveat": true,
+    "fn": 3,
+    "n_runs": 3,
+    "n_scored": 1,
+    "detail": true
+   },
+   "qwen3-8b-rl": {
+    "status": "scored",
+    "score": 55.6,
+    "caveat": true,
+    "fn": 4,
+    "n_runs": 0,
+    "n_scored": 1,
+    "detail": true
+   },
+   "base14b": {
+    "status": "scored",
     "score": 0.0,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 0,
+    "detail": true
+   },
+   "sft14b": {
+    "status": "scored",
+    "score": 0.0,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 1,
+    "n_scored": 0,
+    "detail": true
+   },
+   "qwen3-14b-rl": {
+    "status": "scored",
+    "score": 0.0,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 1,
+    "n_scored": 1,
+    "detail": true
+   },
+   "base32bq3": {
+    "status": "scored",
+    "score": 37.4,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 1,
+    "n_scored": 1,
+    "detail": true
+   },
+   "sft32b": {
+    "status": "scored",
+    "score": 67.9,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 1,
+    "detail": true
+   },
+   "qwen3-32b-rl": {
+    "status": "scored",
+    "score": 71.7,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 1,
+    "n_scored": 1,
+    "detail": true
+   },
+   "base32b": {
+    "status": "scored",
+    "score": 76.0,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 1,
+    "detail": true
+   },
+   "qwen25sft": {
+    "status": "scored",
+    "score": 38.4,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 1,
+    "n_scored": 1,
+    "detail": true
+   },
+   "rl": {
+    "status": "scored",
+    "score": 63.0,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 1,
+    "detail": true
+   },
+   "d1base": {
+    "status": "scored",
+    "score": 74.4,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 1,
+    "n_scored": 1,
+    "detail": true
+   },
+   "d1sft": {
+    "status": "scored",
+    "score": 0.0,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 1,
+    "n_scored": 0,
+    "detail": true
+   },
+   "d1rl": {
+    "status": "scored",
+    "score": 75.1,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 1,
+    "n_scored": 1,
+    "detail": true
+   },
+   "m2base": {
+    "status": "scored",
+    "score": 75.1,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 1,
+    "n_scored": 1,
+    "detail": true
+   },
+   "m2sft": {
+    "status": "scored",
+    "score": 32.1,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 1,
+    "n_scored": 1,
+    "detail": true
+   },
+   "m2rl": {
+    "status": "scored",
+    "score": 0.0,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 1,
+    "n_scored": 0,
+    "detail": true
+   },
+   "fable5": {
+    "status": "scored",
+    "score": 63.5,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 1,
+    "n_scored": 1,
+    "detail": true
+   },
+   "gpt55": {
+    "status": "scored",
+    "score": 61.9,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 1,
+    "n_scored": 1,
+    "detail": true
+   }
+  },
+  "robo-diffusion-guidance": {
+   "base8b": {
+    "status": "scored",
+    "score": 50.6,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 1,
+    "detail": true
+   },
+   "sft8b": {
+    "status": "scored",
+    "score": 51.5,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 1,
+    "detail": true
+   },
+   "qwen3-8b-rl": {
+    "status": "scored",
+    "score": 18.9,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 1,
+    "n_scored": 1,
+    "detail": true
+   },
+   "base14b": {
+    "status": "scored",
+    "score": 54.0,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 1,
+    "detail": true
+   },
+   "sft14b": {
+    "status": "scored",
+    "score": 49.8,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 1,
+    "n_scored": 1,
+    "detail": true
+   },
+   "qwen3-14b-rl": {
+    "status": "scored",
+    "score": 3.3,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 1,
+    "n_scored": 1,
+    "detail": true
+   },
+   "base32bq3": {
+    "status": "scored",
+    "score": 51.7,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 1,
+    "n_scored": 1,
+    "detail": true
+   },
+   "sft32b": {
+    "status": "scored",
+    "score": 0.0,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 0,
+    "detail": true
+   },
+   "qwen3-32b-rl": {
+    "status": "scored",
+    "score": 0.0,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 1,
+    "n_scored": 0,
+    "detail": true
+   },
+   "base32b": {
+    "status": "scored",
+    "score": 52.9,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 1,
+    "detail": true
+   },
+   "qwen25sft": {
+    "status": "scored",
+    "score": 0.0,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 1,
+    "n_scored": 0,
+    "detail": true
+   },
+   "rl": {
+    "status": "scored",
+    "score": 11.0,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 1,
+    "detail": true
+   },
+   "d1base": {
+    "status": "scored",
+    "score": 50.3,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 1,
+    "n_scored": 1,
+    "detail": true
+   },
+   "d1sft": {
+    "status": "scored",
+    "score": 53.9,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 1,
+    "n_scored": 1,
+    "detail": true
+   },
+   "d1rl": {
+    "status": "scored",
+    "score": 51.3,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 1,
+    "n_scored": 1,
+    "detail": true
+   },
+   "m2base": {
+    "status": "scored",
+    "score": 52.9,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 1,
+    "n_scored": 1,
+    "detail": true
+   },
+   "m2sft": {
+    "status": "scored",
+    "score": 0.0,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 1,
+    "n_scored": 0,
+    "detail": true
+   },
+   "m2rl": {
+    "status": "scored",
+    "score": 48.5,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 1,
+    "n_scored": 1,
+    "detail": true
+   },
+   "fable5": {
+    "status": "scored",
+    "score": 0.0,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 1,
+    "n_scored": 0,
+    "detail": true
+   },
+   "gpt55": {
+    "status": "scored",
+    "score": 47.6,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 1,
+    "n_scored": 1,
+    "detail": true
+   }
+  },
+  "robo-diffusion-policy": {
+   "base8b": {
+    "status": "scored",
+    "score": 53.0,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 1,
+    "detail": true
+   },
+   "sft8b": {
+    "status": "scored",
+    "score": 25.0,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 1,
+    "detail": true
+   },
+   "qwen3-8b-rl": {
+    "status": "scored",
+    "score": 40.0,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 1,
+    "n_scored": 1,
+    "detail": true
+   },
+   "base14b": {
+    "status": "scored",
+    "score": 52.3,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 1,
+    "detail": true
+   },
+   "sft14b": {
+    "status": "scored",
+    "score": 54.3,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 1,
+    "n_scored": 1,
+    "detail": true
+   },
+   "qwen3-14b-rl": {
+    "status": "scored",
+    "score": 43.9,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 1,
+    "n_scored": 1,
+    "detail": true
+   },
+   "base32bq3": {
+    "status": "scored",
+    "score": 51.7,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 1,
+    "n_scored": 1,
+    "detail": true
+   },
+   "sft32b": {
+    "status": "scored",
+    "score": 28.1,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 1,
+    "detail": true
+   },
+   "qwen3-32b-rl": {
+    "status": "scored",
+    "score": 51.1,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 1,
+    "n_scored": 1,
+    "detail": true
+   },
+   "base32b": {
+    "status": "scored",
+    "score": 48.7,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 1,
+    "detail": true
+   },
+   "qwen25sft": {
+    "status": "scored",
+    "score": 51.4,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 1,
+    "n_scored": 1,
+    "detail": true
+   },
+   "rl": {
+    "status": "scored",
+    "score": 45.7,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 1,
+    "detail": true
+   },
+   "d1base": {
+    "status": "scored",
+    "score": 0.0,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 1,
+    "n_scored": 0,
+    "detail": true
+   },
+   "d1sft": {
+    "status": "scored",
+    "score": 52.0,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 1,
+    "n_scored": 1,
+    "detail": true
+   },
+   "d1rl": {
+    "status": "scored",
+    "score": 50.8,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 1,
+    "n_scored": 1,
+    "detail": true
+   },
+   "m2base": {
+    "status": "scored",
+    "score": 50.4,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 1,
+    "n_scored": 1,
+    "detail": true
+   },
+   "m2sft": {
+    "status": "scored",
+    "score": 49.9,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 1,
+    "n_scored": 1,
+    "detail": true
+   },
+   "m2rl": {
+    "status": "scored",
+    "score": 50.9,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 1,
+    "n_scored": 1,
+    "detail": true
+   },
+   "fable5": {
+    "status": "scored",
+    "score": 0.0,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 1,
+    "n_scored": 0,
+    "detail": true
+   },
+   "gpt55": {
+    "status": "scored",
+    "score": 0.0,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 1,
+    "n_scored": 0,
+    "detail": true
+   }
+  },
+  "robomimic-bc-loss": {
+   "base8b": {
+    "status": "scored",
+    "score": 16.3,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 4,
     "detail": true
    },
-   "m2rl": {
-    "status": "unfinished",
-    "score": null,
+   "sft8b": {
+    "status": "scored",
+    "score": 17.9,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
-    "n_scored": 3,
-    "detail": false
+    "n_scored": 4,
+    "detail": true
+   },
+   "qwen3-8b-rl": {
+    "status": "scored",
+    "score": 55.2,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 1,
+    "n_scored": 4,
+    "detail": true
+   },
+   "base14b": {
+    "status": "scored",
+    "score": 17.5,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 4,
+    "detail": true
+   },
+   "sft14b": {
+    "status": "scored",
+    "score": 30.4,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 1,
+    "n_scored": 4,
+    "detail": true
+   },
+   "qwen3-14b-rl": {
+    "status": "scored",
+    "score": 11.4,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 1,
+    "n_scored": 4,
+    "detail": true
+   },
+   "base32bq3": {
+    "status": "scored",
+    "score": 40.7,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 1,
+    "n_scored": 4,
+    "detail": true
+   },
+   "sft32b": {
+    "status": "scored",
+    "score": 33.8,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 4,
+    "detail": true
+   },
+   "qwen3-32b-rl": {
+    "status": "scored",
+    "score": 60.8,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 1,
+    "n_scored": 4,
+    "detail": true
+   },
+   "base32b": {
+    "status": "scored",
+    "score": 61.5,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 4,
+    "detail": true
+   },
+   "qwen25sft": {
+    "status": "scored",
+    "score": 70.2,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 1,
+    "n_scored": 4,
+    "detail": true
+   },
+   "rl": {
+    "status": "scored",
+    "score": 21.9,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 4,
+    "detail": true
+   },
+   "d1base": {
+    "status": "scored",
+    "score": 34.9,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 1,
+    "n_scored": 4,
+    "detail": true
+   },
+   "d1sft": {
+    "status": "scored",
+    "score": 69.0,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 1,
+    "n_scored": 4,
+    "detail": true
+   },
+   "d1rl": {
+    "status": "scored",
+    "score": 52.8,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 1,
+    "n_scored": 4,
+    "detail": true
+   },
+   "m2base": {
+    "status": "scored",
+    "score": 11.5,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 1,
+    "n_scored": 4,
+    "detail": true
+   },
+   "m2sft": {
+    "status": "scored",
+    "score": 65.3,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 1,
+    "n_scored": 4,
+    "detail": true
+   },
+   "m2rl": {
+    "status": "scored",
+    "score": 15.6,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 1,
+    "n_scored": 4,
+    "detail": true
+   },
+   "fable5": {
+    "status": "scored",
+    "score": 70.5,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 1,
+    "n_scored": 4,
+    "detail": true
+   },
+   "gpt55": {
+    "status": "scored",
+    "score": 72.6,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 1,
+    "n_scored": 4,
+    "detail": true
+   }
+  },
+  "llm-dllm-demask-strategy": {
+   "base8b": {
+    "status": "scored",
+    "score": 53.1,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 15,
+    "detail": true
+   },
+   "sft8b": {
+    "status": "scored",
+    "score": 11.1,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 14,
+    "detail": true
+   },
+   "qwen3-8b-rl": {
+    "status": "scored",
+    "score": 29.7,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 9,
+    "detail": true
+   },
+   "base14b": {
+    "status": "scored",
+    "score": 31.0,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 13,
+    "detail": true
+   },
+   "sft14b": {
+    "status": "scored",
+    "score": 36.0,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 9,
+    "detail": true
+   },
+   "qwen3-14b-rl": {
+    "status": "scored",
+    "score": 29.6,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 8,
+    "detail": true
+   },
+   "base32bq3": {
+    "status": "scored",
+    "score": 43.6,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 13,
+    "detail": true
+   },
+   "sft32b": {
+    "status": "scored",
+    "score": 50.3,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 9,
+    "detail": true
+   },
+   "qwen3-32b-rl": {
+    "status": "scored",
+    "score": 38.3,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 8,
+    "detail": true
+   },
+   "base32b": {
+    "status": "scored",
+    "score": 35.6,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 12,
+    "detail": true
+   },
+   "qwen25sft": {
+    "status": "scored",
+    "score": 10.1,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 9,
+    "detail": true
+   },
+   "rl": {
+    "status": "scored",
+    "score": 38.9,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 10,
+    "detail": true
+   },
+   "d1base": {
+    "status": "scored",
+    "score": 49.3,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 9,
+    "detail": true
+   },
+   "d1sft": {
+    "status": "scored",
+    "score": 38.4,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 11,
+    "detail": true
+   },
+   "d1rl": {
+    "status": "scored",
+    "score": 33.7,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 12,
+    "detail": true
+   },
+   "m2base": {
+    "status": "scored",
+    "score": 38.0,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 7,
+    "detail": true
+   },
+   "m2sft": {
+    "status": "scored",
+    "score": 37.7,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 10,
+    "detail": true
+   },
+   "m2rl": {
+    "status": "scored",
+    "score": 44.8,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 7,
+    "detail": true
+   },
+   "fable5": {
+    "status": "scored",
+    "score": 22.9,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 6,
+    "detail": true
+   },
+   "gpt55": {
+    "status": "scored",
+    "score": 25.0,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 8,
+    "detail": true
    }
   },
   "llm-pretrain-optimizer": {
    "base8b": {
-    "status": "ok",
+    "status": "scored",
     "score": 56.4,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 1,
     "detail": true
    },
    "sft8b": {
-    "status": "ok",
+    "status": "scored",
     "score": 56.3,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 2,
     "detail": true
    },
    "qwen3-8b-rl": {
-    "status": "failed",
-    "score": null,
+    "status": "scored",
+    "score": 55.6,
+    "caveat": false,
+    "fn": null,
     "n_runs": 1,
-    "n_scored": 0,
+    "n_scored": 1,
     "detail": true
    },
    "base14b": {
-    "status": "ok",
+    "status": "scored",
     "score": 55.3,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 2,
     "detail": true
    },
    "sft14b": {
-    "status": "ok",
+    "status": "scored",
     "score": 56.3,
+    "caveat": false,
+    "fn": null,
     "n_runs": 1,
     "n_scored": 2,
     "detail": true
    },
    "qwen3-14b-rl": {
-    "status": "failed",
-    "score": null,
+    "status": "scored",
+    "score": 48.1,
+    "caveat": false,
+    "fn": null,
     "n_runs": 1,
-    "n_scored": 0,
+    "n_scored": 1,
     "detail": true
    },
    "base32bq3": {
-    "status": "ok",
+    "status": "scored",
     "score": 54.6,
+    "caveat": false,
+    "fn": null,
     "n_runs": 1,
     "n_scored": 2,
     "detail": true
    },
    "sft32b": {
-    "status": "ok",
+    "status": "scored",
     "score": 56.5,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 2,
     "detail": true
    },
    "qwen3-32b-rl": {
-    "status": "failed",
-    "score": null,
+    "status": "scored",
+    "score": 0.0,
+    "caveat": false,
+    "fn": null,
     "n_runs": 1,
     "n_scored": 0,
     "detail": true
    },
    "base32b": {
-    "status": "ok",
+    "status": "scored",
     "score": 56.8,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 2,
     "detail": true
    },
    "qwen25sft": {
-    "status": "failed",
-    "score": null,
+    "status": "scored",
+    "score": 55.6,
+    "caveat": false,
+    "fn": null,
     "n_runs": 1,
-    "n_scored": 0,
+    "n_scored": 1,
     "detail": true
    },
    "rl": {
-    "status": "ok",
+    "status": "scored",
     "score": 50.2,
+    "caveat": false,
+    "fn": null,
     "n_runs": 1,
     "n_scored": 2,
     "detail": true
    },
    "d1base": {
-    "status": "failed",
-    "score": null,
+    "status": "scored",
+    "score": 48.2,
+    "caveat": false,
+    "fn": null,
     "n_runs": 1,
-    "n_scored": 0,
+    "n_scored": 1,
     "detail": true
    },
    "d1sft": {
-    "status": "ok",
+    "status": "scored",
     "score": 54.9,
+    "caveat": false,
+    "fn": null,
     "n_runs": 1,
     "n_scored": 1,
     "detail": true
    },
    "d1rl": {
-    "status": "ok",
+    "status": "scored",
     "score": 57.0,
+    "caveat": false,
+    "fn": null,
     "n_runs": 1,
     "n_scored": 1,
     "detail": true
    },
    "m2base": {
-    "status": "failed",
-    "score": null,
+    "status": "scored",
+    "score": 57.5,
+    "caveat": false,
+    "fn": null,
     "n_runs": 1,
-    "n_scored": 0,
+    "n_scored": 1,
     "detail": true
    },
    "m2sft": {
-    "status": "ok",
+    "status": "scored",
     "score": 56.4,
+    "caveat": false,
+    "fn": null,
     "n_runs": 1,
     "n_scored": 1,
     "detail": true
    },
    "m2rl": {
-    "status": "unfinished",
-    "score": null,
+    "status": "scored",
+    "score": 57.6,
+    "caveat": false,
+    "fn": null,
     "n_runs": 1,
-    "n_scored": 0,
-    "detail": false
+    "n_scored": 1,
+    "detail": true
+   },
+   "fable5": {
+    "status": "scored",
+    "score": 49.9,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 1,
+    "n_scored": 1,
+    "detail": true
+   },
+   "gpt55": {
+    "status": "scored",
+    "score": 60.0,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 1,
+    "n_scored": 1,
+    "detail": true
    }
   },
   "llm-rl-importance-sampling": {
    "base8b": {
-    "status": "ok",
+    "status": "scored",
     "score": 0.0,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 1,
     "detail": true
    },
    "sft8b": {
-    "status": "failed",
-    "score": null,
+    "status": "scored",
+    "score": 0.0,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 0,
     "detail": true
    },
    "qwen3-8b-rl": {
-    "status": "failed",
-    "score": null,
+    "status": "scored",
+    "score": 0.0,
+    "caveat": false,
+    "fn": null,
     "n_runs": 1,
     "n_scored": 0,
     "detail": true
    },
    "base14b": {
-    "status": "ok",
+    "status": "scored",
     "score": 28.6,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 1,
     "detail": true
    },
    "sft14b": {
-    "status": "failed",
-    "score": null,
+    "status": "scored",
+    "score": 0.0,
+    "caveat": false,
+    "fn": null,
     "n_runs": 1,
     "n_scored": 0,
     "detail": true
    },
    "qwen3-14b-rl": {
-    "status": "failed",
-    "score": null,
+    "status": "scored",
+    "score": 0.0,
+    "caveat": false,
+    "fn": null,
     "n_runs": 1,
     "n_scored": 0,
     "detail": true
    },
    "base32bq3": {
-    "status": "ok",
+    "status": "scored",
     "score": 13.9,
+    "caveat": false,
+    "fn": null,
     "n_runs": 1,
     "n_scored": 1,
     "detail": true
    },
    "sft32b": {
-    "status": "failed",
-    "score": null,
+    "status": "scored",
+    "score": 0.0,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 0,
     "detail": true
    },
    "qwen3-32b-rl": {
-    "status": "failed",
-    "score": null,
+    "status": "scored",
+    "score": 0.0,
+    "caveat": false,
+    "fn": null,
     "n_runs": 1,
     "n_scored": 0,
     "detail": true
    },
    "base32b": {
-    "status": "failed",
-    "score": null,
+    "status": "scored",
+    "score": 0.0,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 0,
     "detail": true
    },
    "qwen25sft": {
-    "status": "failed",
-    "score": null,
+    "status": "scored",
+    "score": 0.0,
+    "caveat": false,
+    "fn": null,
     "n_runs": 1,
     "n_scored": 0,
     "detail": true
    },
    "rl": {
-    "status": "ok",
+    "status": "scored",
     "score": 16.3,
+    "caveat": false,
+    "fn": null,
     "n_runs": 1,
     "n_scored": 2,
     "detail": true
    },
    "d1base": {
-    "status": "failed",
-    "score": null,
+    "status": "scored",
+    "score": 0.0,
+    "caveat": false,
+    "fn": null,
     "n_runs": 1,
     "n_scored": 0,
     "detail": true
    },
    "d1sft": {
-    "status": "ok",
+    "status": "scored",
     "score": 14.0,
+    "caveat": false,
+    "fn": null,
     "n_runs": 1,
     "n_scored": 1,
     "detail": true
    },
    "d1rl": {
-    "status": "ok",
+    "status": "scored",
     "score": 0.0,
+    "caveat": false,
+    "fn": null,
     "n_runs": 1,
     "n_scored": 1,
     "detail": true
    },
    "m2base": {
-    "status": "failed",
-    "score": null,
+    "status": "scored",
+    "score": 0.0,
+    "caveat": false,
+    "fn": null,
     "n_runs": 1,
     "n_scored": 0,
     "detail": true
    },
    "m2sft": {
-    "status": "failed",
-    "score": null,
+    "status": "scored",
+    "score": 0.0,
+    "caveat": false,
+    "fn": null,
     "n_runs": 1,
     "n_scored": 0,
     "detail": true
    },
    "m2rl": {
-    "status": "unfinished",
-    "score": null,
+    "status": "scored",
+    "score": 0.0,
+    "caveat": false,
+    "fn": null,
     "n_runs": 1,
     "n_scored": 0,
-    "detail": false
+    "detail": true
+   },
+   "fable5": {
+    "status": "scored",
+    "score": 0.0,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 1,
+    "n_scored": 0,
+    "detail": true
+   },
+   "gpt55": {
+    "status": "scored",
+    "score": 0.0,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 1,
+    "n_scored": 0,
+    "detail": true
    }
   },
   "llm-ptq-algorithm": {
    "base8b": {
-    "status": "ok",
+    "status": "scored",
     "score": 3.3,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 6,
     "detail": true
    },
    "sft8b": {
-    "status": "ok",
+    "status": "scored",
     "score": 75.2,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "qwen3-8b-rl": {
-    "status": "ok",
+    "status": "scored",
     "score": 0.0,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "base14b": {
-    "status": "ok",
+    "status": "scored",
     "score": 55.3,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 4,
     "detail": true
    },
    "sft14b": {
-    "status": "ok",
+    "status": "scored",
     "score": 3.2,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "qwen3-14b-rl": {
-    "status": "ok",
+    "status": "scored",
     "score": 68.6,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "base32bq3": {
-    "status": "ok",
+    "status": "scored",
     "score": 66.0,
+    "caveat": false,
+    "fn": null,
     "n_runs": 2,
     "n_scored": 2,
     "detail": true
    },
    "sft32b": {
-    "status": "ok",
+    "status": "scored",
     "score": 2.5,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "qwen3-32b-rl": {
-    "status": "ok",
+    "status": "scored",
     "score": 56.3,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "base32b": {
-    "status": "ok",
+    "status": "scored",
     "score": 65.8,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "qwen25sft": {
-    "status": "ok",
+    "status": "scored",
     "score": 2.5,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "rl": {
-    "status": "ok",
+    "status": "scored",
     "score": 42.9,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "d1base": {
-    "status": "ok",
+    "status": "scored",
     "score": 58.2,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "d1sft": {
-    "status": "ok",
+    "status": "scored",
     "score": 63.3,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "d1rl": {
-    "status": "ok",
+    "status": "scored",
     "score": 59.8,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "m2base": {
-    "status": "ok",
+    "status": "scored",
     "score": 56.2,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "m2sft": {
-    "status": "ok",
+    "status": "scored",
     "score": 53.6,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "m2rl": {
-    "status": "unfinished",
-    "score": null,
+    "status": "scored",
+    "score": 0.0,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 2,
-    "detail": false
+    "detail": true
+   },
+   "fable5": {
+    "status": "scored",
+    "score": 55.2,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "gpt55": {
+    "status": "scored",
+    "score": 59.4,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
    }
   },
   "llm-qat-algorithm": {
    "base8b": {
-    "status": "ok",
+    "status": "scored",
     "score": 64.8,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "sft8b": {
-    "status": "ok",
+    "status": "scored",
     "score": 63.9,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "qwen3-8b-rl": {
-    "status": "ok",
+    "status": "scored",
     "score": 64.6,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "base14b": {
-    "status": "ok",
+    "status": "scored",
     "score": 64.6,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "sft14b": {
-    "status": "ok",
+    "status": "scored",
     "score": 64.7,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "qwen3-14b-rl": {
-    "status": "ok",
+    "status": "scored",
     "score": 64.0,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "base32bq3": {
-    "status": "ok",
+    "status": "scored",
     "score": 62.3,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "sft32b": {
-    "status": "ok",
+    "status": "scored",
     "score": 64.7,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 2,
     "detail": true
    },
    "qwen3-32b-rl": {
-    "status": "ok",
+    "status": "scored",
     "score": 65.2,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "base32b": {
-    "status": "ok",
+    "status": "scored",
     "score": 64.7,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "qwen25sft": {
-    "status": "ok",
+    "status": "scored",
     "score": 61.2,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "rl": {
-    "status": "ok",
+    "status": "scored",
     "score": 62.3,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "d1base": {
-    "status": "ok",
+    "status": "scored",
     "score": 62.5,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "d1sft": {
-    "status": "ok",
+    "status": "scored",
     "score": 65.4,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "d1rl": {
-    "status": "ok",
+    "status": "scored",
     "score": 61.3,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "m2base": {
-    "status": "ok",
+    "status": "scored",
     "score": 64.4,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "m2sft": {
-    "status": "ok",
+    "status": "scored",
     "score": 65.0,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "m2rl": {
-    "status": "unfinished",
-    "score": null,
+    "status": "scored",
+    "score": 64.1,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
-    "detail": false
+    "detail": true
+   },
+   "fable5": {
+    "status": "scored",
+    "score": 65.2,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "gpt55": {
+    "status": "scored",
+    "score": 64.2,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 2,
+    "detail": true
    }
   },
   "mlsys-sparse-attention-inference": {
    "base8b": {
-    "status": "ok",
+    "status": "scored",
     "score": 16.2,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 2,
     "detail": true
    },
    "sft8b": {
-    "status": "ok",
+    "status": "scored",
     "score": 58.6,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "qwen3-8b-rl": {
-    "status": "ok",
+    "status": "scored",
     "score": 49.5,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "base14b": {
-    "status": "ok",
+    "status": "scored",
     "score": 58.4,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "sft14b": {
-    "status": "ok",
+    "status": "scored",
     "score": 62.4,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "qwen3-14b-rl": {
-    "status": "ok",
+    "status": "scored",
     "score": 22.6,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "base32bq3": {
-    "status": "ok",
+    "status": "scored",
     "score": 61.3,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "sft32b": {
-    "status": "ok",
+    "status": "scored",
     "score": 60.1,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "qwen3-32b-rl": {
-    "status": "ok",
+    "status": "scored",
     "score": 50.0,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 1,
     "detail": true
    },
    "base32b": {
-    "status": "ok",
+    "status": "scored",
     "score": 57.2,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "qwen25sft": {
-    "status": "ok",
+    "status": "scored",
     "score": 59.6,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "rl": {
-    "status": "ok",
+    "status": "scored",
     "score": 54.7,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 2,
     "detail": true
    },
    "d1base": {
-    "status": "ok",
+    "status": "scored",
     "score": 58.1,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 2,
     "detail": true
    },
    "d1sft": {
-    "status": "ok",
+    "status": "scored",
     "score": 23.8,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 2,
     "detail": true
    },
    "d1rl": {
-    "status": "ok",
+    "status": "scored",
     "score": 57.7,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "m2base": {
-    "status": "ok",
+    "status": "scored",
     "score": 59.3,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "m2sft": {
-    "status": "ok",
+    "status": "scored",
     "score": 60.8,
+    "caveat": false,
+    "fn": null,
     "n_runs": 2,
     "n_scored": 2,
     "detail": true
    },
    "m2rl": {
-    "status": "unfinished",
-    "score": null,
+    "status": "scored",
+    "score": 57.7,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
-    "n_scored": 0,
-    "detail": false
+    "n_scored": 3,
+    "detail": true
+   },
+   "fable5": {
+    "status": "scored",
+    "score": 31.3,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 2,
+    "detail": true
+   },
+   "gpt55": {
+    "status": "scored",
+    "score": 57.3,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
    }
   },
   "ml-clustering-algorithm": {
    "base8b": {
-    "status": "ok",
+    "status": "scored",
     "score": 67.6,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "sft8b": {
-    "status": "ok",
+    "status": "scored",
     "score": 69.1,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "qwen3-8b-rl": {
-    "status": "ok",
+    "status": "scored",
     "score": 67.0,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "base14b": {
-    "status": "ok",
+    "status": "scored",
     "score": 37.6,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "sft14b": {
-    "status": "ok",
+    "status": "scored",
     "score": 66.5,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "qwen3-14b-rl": {
-    "status": "ok",
+    "status": "scored",
     "score": 69.0,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "base32bq3": {
-    "status": "ok",
+    "status": "scored",
     "score": 69.3,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "sft32b": {
-    "status": "ok",
+    "status": "scored",
     "score": 69.8,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "qwen3-32b-rl": {
-    "status": "ok",
+    "status": "scored",
     "score": 69.0,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "base32b": {
-    "status": "ok",
+    "status": "scored",
     "score": 64.7,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "qwen25sft": {
-    "status": "ok",
+    "status": "scored",
     "score": 69.1,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "rl": {
-    "status": "ok",
+    "status": "scored",
     "score": 16.6,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "d1base": {
-    "status": "failed",
-    "score": null,
+    "status": "scored",
+    "score": 0.0,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 0,
     "detail": true
    },
    "d1sft": {
-    "status": "ok",
+    "status": "scored",
     "score": 64.3,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "d1rl": {
-    "status": "ok",
+    "status": "scored",
     "score": 69.7,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "m2base": {
-    "status": "ok",
+    "status": "scored",
     "score": 60.2,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "m2sft": {
-    "status": "ok",
+    "status": "scored",
     "score": 69.9,
+    "caveat": false,
+    "fn": null,
     "n_runs": 1,
     "n_scored": 1,
     "detail": true
    },
    "m2rl": {
-    "status": "unfinished",
-    "score": null,
+    "status": "scored",
+    "score": 63.1,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
-    "detail": false
+    "detail": true
+   },
+   "fable5": {
+    "status": "scored",
+    "score": 45.6,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "gpt55": {
+    "status": "scored",
+    "score": 68.7,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
    }
   },
   "ml-dimensionality-reduction": {
    "base8b": {
-    "status": "ok",
+    "status": "scored",
     "score": 17.2,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "sft8b": {
-    "status": "ok",
+    "status": "scored",
     "score": 8.7,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "qwen3-8b-rl": {
-    "status": "ok",
+    "status": "scored",
     "score": 33.0,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "base14b": {
-    "status": "ok",
+    "status": "scored",
     "score": 45.8,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "sft14b": {
-    "status": "ok",
+    "status": "scored",
     "score": 8.3,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "qwen3-14b-rl": {
-    "status": "ok",
+    "status": "scored",
     "score": 17.2,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "base32bq3": {
-    "status": "ok",
+    "status": "scored",
     "score": 47.4,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "sft32b": {
-    "status": "ok",
+    "status": "scored",
     "score": 46.7,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "qwen3-32b-rl": {
-    "status": "ok",
+    "status": "scored",
     "score": 9.9,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "base32b": {
-    "status": "ok",
+    "status": "scored",
     "score": 30.7,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "qwen25sft": {
-    "status": "ok",
+    "status": "scored",
     "score": 50.2,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "rl": {
-    "status": "ok",
+    "status": "scored",
     "score": 44.2,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "d1base": {
-    "status": "failed",
-    "score": null,
+    "status": "scored",
+    "score": 0.0,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 0,
     "detail": true
    },
    "d1sft": {
-    "status": "ok",
+    "status": "scored",
     "score": 49.4,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "d1rl": {
-    "status": "ok",
+    "status": "scored",
     "score": 50.2,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "m2base": {
-    "status": "ok",
+    "status": "scored",
     "score": 48.2,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "m2sft": {
-    "status": "ok",
+    "status": "scored",
     "score": 31.9,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "m2rl": {
-    "status": "unfinished",
-    "score": null,
+    "status": "scored",
+    "score": 31.3,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
-    "detail": false
+    "detail": true
+   },
+   "fable5": {
+    "status": "scored",
+    "score": 29.8,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "gpt55": {
+    "status": "scored",
+    "score": 21.9,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
    }
   },
   "optimization-multi-objective": {
    "base8b": {
-    "status": "ok",
+    "status": "scored",
     "score": 52.9,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "sft8b": {
-    "status": "ok",
+    "status": "scored",
     "score": 44.2,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "qwen3-8b-rl": {
-    "status": "ok",
+    "status": "scored",
     "score": 44.0,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 1,
     "detail": true
    },
    "base14b": {
-    "status": "ok",
+    "status": "scored",
     "score": 33.2,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "sft14b": {
-    "status": "ok",
+    "status": "scored",
     "score": 46.4,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "qwen3-14b-rl": {
-    "status": "ok",
+    "status": "scored",
     "score": 38.2,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "base32bq3": {
-    "status": "ok",
+    "status": "scored",
     "score": 38.1,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "sft32b": {
-    "status": "ok",
+    "status": "scored",
     "score": 46.5,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "qwen3-32b-rl": {
-    "status": "ok",
+    "status": "scored",
     "score": 45.1,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 2,
     "detail": true
    },
    "base32b": {
-    "status": "ok",
+    "status": "scored",
     "score": 40.2,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "qwen25sft": {
-    "status": "ok",
+    "status": "scored",
     "score": 34.9,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "rl": {
-    "status": "ok",
+    "status": "scored",
     "score": 34.7,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "d1base": {
-    "status": "failed",
-    "score": null,
+    "status": "scored",
+    "score": 0.0,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 0,
     "detail": true
    },
    "d1sft": {
-    "status": "ok",
+    "status": "scored",
     "score": 47.4,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "d1rl": {
-    "status": "ok",
+    "status": "scored",
     "score": 12.4,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "m2base": {
-    "status": "ok",
+    "status": "scored",
     "score": 30.3,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "m2sft": {
-    "status": "ok",
+    "status": "scored",
     "score": 37.6,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "m2rl": {
-    "status": "unfinished",
-    "score": null,
+    "status": "scored",
+    "score": 15.1,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
-    "detail": false
+    "detail": true
+   },
+   "fable5": {
+    "status": "scored",
+    "score": 44.0,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "gpt55": {
+    "status": "scored",
+    "score": 31.8,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 2,
+    "detail": true
    }
   },
   "optimization-variance-reduction": {
    "base8b": {
-    "status": "ok",
+    "status": "scored",
     "score": 44.0,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "sft8b": {
-    "status": "ok",
+    "status": "scored",
     "score": 13.7,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "qwen3-8b-rl": {
-    "status": "ok",
+    "status": "scored",
     "score": 49.2,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "base14b": {
-    "status": "ok",
+    "status": "scored",
     "score": 36.1,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "sft14b": {
-    "status": "ok",
+    "status": "scored",
     "score": 58.5,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "qwen3-14b-rl": {
-    "status": "ok",
+    "status": "scored",
     "score": 16.4,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "base32bq3": {
-    "status": "ok",
+    "status": "scored",
     "score": 54.6,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "sft32b": {
-    "status": "ok",
+    "status": "scored",
     "score": 40.3,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "qwen3-32b-rl": {
-    "status": "ok",
+    "status": "scored",
     "score": 13.0,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 2,
     "detail": true
    },
    "base32b": {
-    "status": "ok",
+    "status": "scored",
     "score": 4.6,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "qwen25sft": {
-    "status": "ok",
+    "status": "scored",
     "score": 4.6,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "rl": {
-    "status": "ok",
+    "status": "scored",
     "score": 65.3,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "d1base": {
-    "status": "ok",
+    "status": "scored",
     "score": 47.8,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "d1sft": {
-    "status": "ok",
+    "status": "scored",
     "score": 65.7,
+    "caveat": false,
+    "fn": null,
     "n_runs": 2,
     "n_scored": 2,
     "detail": true
    },
    "d1rl": {
-    "status": "ok",
+    "status": "scored",
     "score": 57.8,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "m2base": {
-    "status": "ok",
+    "status": "scored",
     "score": 44.1,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "m2sft": {
-    "status": "ok",
+    "status": "scored",
     "score": 46.6,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "m2rl": {
-    "status": "unfinished",
-    "score": null,
+    "status": "scored",
+    "score": 41.0,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
-    "detail": false
+    "detail": true
+   },
+   "fable5": {
+    "status": "scored",
+    "score": 62.0,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "gpt55": {
+    "status": "scored",
+    "score": 59.8,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
    }
   },
   "quant-concept-drift": {
    "base8b": {
-    "status": "ok",
+    "status": "scored",
     "score": 34.6,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 4,
     "detail": true
    },
    "sft8b": {
-    "status": "ok",
+    "status": "scored",
     "score": 50.2,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "qwen3-8b-rl": {
-    "status": "ok",
+    "status": "scored",
     "score": 45.2,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "base14b": {
-    "status": "ok",
+    "status": "scored",
     "score": 50.0,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 4,
     "detail": true
    },
    "sft14b": {
-    "status": "ok",
+    "status": "scored",
     "score": 15.0,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 2,
     "detail": true
    },
    "qwen3-14b-rl": {
-    "status": "ok",
+    "status": "scored",
     "score": 34.0,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "base32bq3": {
-    "status": "ok",
+    "status": "scored",
     "score": 35.6,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 4,
     "detail": true
    },
    "sft32b": {
-    "status": "ok",
+    "status": "scored",
     "score": 26.2,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 4,
     "detail": true
    },
    "qwen3-32b-rl": {
-    "status": "ok",
+    "status": "scored",
     "score": 34.6,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "base32b": {
-    "status": "ok",
+    "status": "scored",
     "score": 32.6,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 5,
     "detail": true
    },
    "qwen25sft": {
-    "status": "ok",
+    "status": "scored",
     "score": 2.9,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "rl": {
-    "status": "ok",
+    "status": "scored",
     "score": 41.4,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 2,
     "detail": true
    },
    "d1base": {
-    "status": "failed",
-    "score": null,
+    "status": "scored",
+    "score": 0.0,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 0,
     "detail": true
    },
    "d1sft": {
-    "status": "ok",
+    "status": "scored",
     "score": 23.2,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "d1rl": {
-    "status": "ok",
+    "status": "scored",
     "score": 53.6,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "m2base": {
-    "status": "ok",
+    "status": "scored",
     "score": 22.1,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "m2sft": {
-    "status": "ok",
+    "status": "scored",
     "score": 27.9,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "m2rl": {
-    "status": "unfinished",
-    "score": null,
+    "status": "scored",
+    "score": 70.5,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
-    "detail": false
+    "detail": true
+   },
+   "fable5": {
+    "status": "scored",
+    "score": 0.0,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 1,
+    "detail": true
+   },
+   "gpt55": {
+    "status": "scored",
+    "score": 61.6,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
    }
   },
   "ts-exogenous-forecast": {
    "base8b": {
-    "status": "ok",
+    "status": "scored",
     "score": 48.1,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "sft8b": {
-    "status": "ok",
+    "status": "scored",
     "score": 25.2,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "qwen3-8b-rl": {
-    "status": "ok",
+    "status": "scored",
     "score": 43.1,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "base14b": {
-    "status": "ok",
+    "status": "scored",
     "score": 44.8,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "sft14b": {
-    "status": "ok",
+    "status": "scored",
     "score": 13.5,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "qwen3-14b-rl": {
-    "status": "ok",
+    "status": "scored",
     "score": 42.1,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "base32bq3": {
-    "status": "ok",
+    "status": "scored",
     "score": 46.9,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "sft32b": {
-    "status": "ok",
+    "status": "scored",
     "score": 46.9,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "qwen3-32b-rl": {
-    "status": "ok",
+    "status": "scored",
     "score": 44.9,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "base32b": {
-    "status": "ok",
+    "status": "scored",
     "score": 39.8,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "qwen25sft": {
-    "status": "ok",
+    "status": "scored",
     "score": 32.3,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "rl": {
-    "status": "ok",
+    "status": "scored",
     "score": 44.3,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "d1base": {
-    "status": "failed",
-    "score": null,
+    "status": "scored",
+    "score": 0.0,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 0,
     "detail": true
    },
    "d1sft": {
-    "status": "ok",
+    "status": "scored",
     "score": 42.1,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "d1rl": {
-    "status": "ok",
+    "status": "scored",
     "score": 45.2,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "m2base": {
-    "status": "ok",
+    "status": "scored",
     "score": 45.0,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "m2sft": {
-    "status": "ok",
+    "status": "scored",
     "score": 44.0,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "m2rl": {
-    "status": "unfinished",
-    "score": null,
+    "status": "scored",
+    "score": 46.4,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
-    "detail": false
+    "detail": true
+   },
+   "fable5": {
+    "status": "scored",
+    "score": 39.3,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "gpt55": {
+    "status": "scored",
+    "score": 27.4,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
    }
   },
   "ts-imputation": {
    "base8b": {
-    "status": "ok",
+    "status": "scored",
     "score": 69.3,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 2,
     "detail": true
    },
    "sft8b": {
-    "status": "ok",
+    "status": "scored",
     "score": 42.5,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "qwen3-8b-rl": {
-    "status": "ok",
+    "status": "scored",
     "score": 60.3,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "base14b": {
-    "status": "ok",
+    "status": "scored",
     "score": 58.3,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "sft14b": {
-    "status": "ok",
+    "status": "scored",
     "score": 44.9,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "qwen3-14b-rl": {
-    "status": "ok",
+    "status": "scored",
     "score": 43.1,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "base32bq3": {
-    "status": "failed",
-    "score": null,
+    "status": "scored",
+    "score": 59.4,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 0,
     "detail": true
    },
    "sft32b": {
-    "status": "ok",
+    "status": "scored",
     "score": 42.1,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "qwen3-32b-rl": {
-    "status": "ok",
+    "status": "scored",
     "score": 42.2,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "base32b": {
-    "status": "ok",
+    "status": "scored",
     "score": 60.0,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "qwen25sft": {
-    "status": "ok",
+    "status": "scored",
     "score": 53.9,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "rl": {
-    "status": "ok",
+    "status": "scored",
     "score": 48.2,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "d1base": {
-    "status": "ok",
+    "status": "scored",
     "score": 46.2,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "d1sft": {
-    "status": "ok",
+    "status": "scored",
     "score": 52.0,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "d1rl": {
-    "status": "ok",
+    "status": "scored",
     "score": 36.7,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "m2base": {
-    "status": "ok",
+    "status": "scored",
     "score": 11.6,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "m2sft": {
-    "status": "ok",
+    "status": "scored",
     "score": 60.7,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "m2rl": {
-    "status": "unfinished",
-    "score": null,
+    "status": "scored",
+    "score": 60.3,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
-    "detail": false
+    "detail": true
+   },
+   "fable5": {
+    "status": "scored",
+    "score": 48.9,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "gpt55": {
+    "status": "scored",
+    "score": 61.5,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
    }
   },
   "rl-value-discrete": {
    "base8b": {
-    "status": "ok",
+    "status": "scored",
     "score": 12.0,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 24,
     "detail": true
    },
    "sft8b": {
-    "status": "ok",
+    "status": "scored",
     "score": 3.7,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 16,
     "detail": true
    },
    "qwen3-8b-rl": {
-    "status": "ok",
+    "status": "scored",
     "score": 1.7,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 12,
     "detail": true
    },
    "base14b": {
-    "status": "ok",
+    "status": "scored",
     "score": 9.2,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 24,
     "detail": true
    },
    "sft14b": {
-    "status": "ok",
+    "status": "scored",
     "score": 25.6,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 20,
     "detail": true
    },
    "qwen3-14b-rl": {
-    "status": "ok",
+    "status": "scored",
     "score": 31.8,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 12,
     "detail": true
    },
    "base32bq3": {
-    "status": "ok",
+    "status": "scored",
     "score": 17.4,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 24,
     "detail": true
    },
    "sft32b": {
-    "status": "ok",
+    "status": "scored",
     "score": 6.7,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 20,
     "detail": true
    },
    "qwen3-32b-rl": {
-    "status": "ok",
+    "status": "scored",
     "score": 29.0,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 12,
     "detail": true
    },
    "base32b": {
-    "status": "ok",
+    "status": "scored",
     "score": 2.2,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 24,
     "detail": true
    },
    "qwen25sft": {
-    "status": "ok",
+    "status": "scored",
     "score": 19.6,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 12,
     "detail": true
    },
    "rl": {
-    "status": "ok",
+    "status": "scored",
     "score": 3.2,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 24,
     "detail": true
    },
    "d1base": {
-    "status": "ok",
+    "status": "scored",
     "score": 9.9,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 8,
     "detail": true
    },
    "d1sft": {
-    "status": "ok",
+    "status": "scored",
     "score": 32.8,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 24,
     "detail": true
    },
    "d1rl": {
-    "status": "ok",
+    "status": "scored",
     "score": 8.2,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 20,
     "detail": true
    },
    "m2base": {
-    "status": "ok",
+    "status": "scored",
     "score": 36.4,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 12,
     "detail": true
    },
    "m2sft": {
-    "status": "ok",
+    "status": "scored",
     "score": 8.8,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 24,
     "detail": true
    },
    "m2rl": {
-    "status": "unfinished",
-    "score": null,
+    "status": "scored",
+    "score": 1.6,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
-    "n_scored": 0,
-    "detail": false
+    "n_scored": 12,
+    "detail": true
+   },
+   "fable5": {
+    "status": "scored",
+    "score": 12.4,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 12,
+    "detail": true
+   },
+   "gpt55": {
+    "status": "scored",
+    "score": 11.9,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 12,
+    "detail": true
    }
   },
   "security-membership-inference-defense": {
    "base8b": {
-    "status": "ok",
+    "status": "scored",
     "score": 39.0,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "sft8b": {
-    "status": "ok",
+    "status": "scored",
     "score": 27.9,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "qwen3-8b-rl": {
-    "status": "ok",
+    "status": "scored",
     "score": 28.4,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "base14b": {
-    "status": "ok",
+    "status": "scored",
     "score": 32.0,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "sft14b": {
-    "status": "ok",
+    "status": "scored",
     "score": 14.7,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "qwen3-14b-rl": {
-    "status": "ok",
+    "status": "scored",
     "score": 14.1,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "base32bq3": {
-    "status": "ok",
+    "status": "scored",
     "score": 29.3,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "sft32b": {
-    "status": "ok",
+    "status": "scored",
     "score": 24.5,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "qwen3-32b-rl": {
-    "status": "ok",
+    "status": "scored",
     "score": 27.7,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "base32b": {
-    "status": "ok",
+    "status": "scored",
     "score": 61.8,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "qwen25sft": {
-    "status": "ok",
+    "status": "scored",
     "score": 43.2,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "rl": {
-    "status": "ok",
+    "status": "scored",
     "score": 22.0,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "d1base": {
-    "status": "unfinished",
-    "score": null,
-    "n_runs": 0,
-    "n_scored": 0,
-    "detail": false
+    "status": "scored",
+    "score": 22.9,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
    },
    "d1sft": {
-    "status": "ok",
+    "status": "scored",
     "score": 30.5,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "d1rl": {
-    "status": "unfinished",
-    "score": null,
-    "n_runs": 0,
-    "n_scored": 0,
-    "detail": false
+    "status": "scored",
+    "score": 28.5,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
    },
    "m2base": {
-    "status": "ok",
+    "status": "scored",
     "score": 30.4,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "m2sft": {
-    "status": "ok",
+    "status": "scored",
     "score": 33.5,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
     "n_scored": 3,
     "detail": true
    },
    "m2rl": {
-    "status": "unfinished",
-    "score": null,
+    "status": "scored",
+    "score": 0.0,
+    "caveat": false,
+    "fn": null,
     "n_runs": 3,
-    "n_scored": 1,
-    "detail": false
+    "n_scored": 2,
+    "detail": true
+   },
+   "fable5": {
+    "status": "scored",
+    "score": 46.7,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
+   },
+   "gpt55": {
+    "status": "scored",
+    "score": 37.5,
+    "caveat": false,
+    "fn": null,
+    "n_runs": 3,
+    "n_scored": 3,
+    "detail": true
    }
   },
   "robo-humanoid-sim2real-algo": {
    "base8b": {
-    "status": "unfinished",
-    "score": null,
-    "n_runs": 0,
+    "status": "scored",
+    "score": 0.0,
+    "caveat": true,
+    "fn": 5,
+    "n_runs": 1,
     "n_scored": 0,
-    "detail": false
+    "detail": true
    },
    "sft8b": {
-    "status": "unfinished",
-    "score": null,
-    "n_runs": 0,
+    "status": "scored",
+    "score": 0.0,
+    "caveat": true,
+    "fn": 5,
+    "n_runs": 1,
     "n_scored": 0,
-    "detail": false
+    "detail": true
    },
    "qwen3-8b-rl": {
-    "status": "unfinished",
-    "score": null,
-    "n_runs": 0,
+    "status": "scored",
+    "score": 0.0,
+    "caveat": true,
+    "fn": 5,
+    "n_runs": 1,
     "n_scored": 0,
-    "detail": false
+    "detail": true
    },
    "base14b": {
-    "status": "unfinished",
-    "score": null,
-    "n_runs": 0,
+    "status": "scored",
+    "score": 0.0,
+    "caveat": true,
+    "fn": 5,
+    "n_runs": 1,
     "n_scored": 0,
-    "detail": false
+    "detail": true
    },
    "sft14b": {
-    "status": "unfinished",
-    "score": null,
-    "n_runs": 0,
+    "status": "scored",
+    "score": 0.0,
+    "caveat": true,
+    "fn": 5,
+    "n_runs": 1,
     "n_scored": 0,
-    "detail": false
+    "detail": true
    },
    "qwen3-14b-rl": {
-    "status": "unfinished",
-    "score": null,
-    "n_runs": 0,
+    "status": "scored",
+    "score": 0.0,
+    "caveat": true,
+    "fn": 5,
+    "n_runs": 1,
     "n_scored": 0,
-    "detail": false
+    "detail": true
    },
    "base32bq3": {
-    "status": "unfinished",
-    "score": null,
-    "n_runs": 0,
+    "status": "scored",
+    "score": 0.0,
+    "caveat": true,
+    "fn": 5,
+    "n_runs": 1,
     "n_scored": 0,
-    "detail": false
+    "detail": true
    },
    "sft32b": {
-    "status": "unfinished",
-    "score": null,
-    "n_runs": 0,
+    "status": "scored",
+    "score": 0.0,
+    "caveat": true,
+    "fn": 5,
+    "n_runs": 1,
     "n_scored": 0,
-    "detail": false
+    "detail": true
    },
    "qwen3-32b-rl": {
-    "status": "unfinished",
-    "score": null,
-    "n_runs": 0,
+    "status": "scored",
+    "score": 0.0,
+    "caveat": true,
+    "fn": 5,
+    "n_runs": 1,
     "n_scored": 0,
-    "detail": false
+    "detail": true
    },
    "base32b": {
-    "status": "unfinished",
-    "score": null,
-    "n_runs": 0,
+    "status": "scored",
+    "score": 0.0,
+    "caveat": true,
+    "fn": 5,
+    "n_runs": 1,
     "n_scored": 0,
-    "detail": false
+    "detail": true
    },
    "qwen25sft": {
-    "status": "unfinished",
-    "score": null,
-    "n_runs": 0,
+    "status": "scored",
+    "score": 0.0,
+    "caveat": true,
+    "fn": 5,
+    "n_runs": 1,
     "n_scored": 0,
-    "detail": false
+    "detail": true
    },
    "rl": {
-    "status": "unfinished",
-    "score": null,
-    "n_runs": 0,
+    "status": "scored",
+    "score": 0.0,
+    "caveat": true,
+    "fn": 5,
+    "n_runs": 1,
     "n_scored": 0,
-    "detail": false
+    "detail": true
    },
    "d1base": {
-    "status": "unfinished",
-    "score": null,
-    "n_runs": 0,
+    "status": "scored",
+    "score": 0.0,
+    "caveat": true,
+    "fn": 5,
+    "n_runs": 1,
     "n_scored": 0,
-    "detail": false
+    "detail": true
    },
    "d1sft": {
-    "status": "unfinished",
-    "score": null,
-    "n_runs": 0,
+    "status": "scored",
+    "score": 0.0,
+    "caveat": true,
+    "fn": 5,
+    "n_runs": 1,
     "n_scored": 0,
-    "detail": false
+    "detail": true
    },
    "d1rl": {
-    "status": "unfinished",
-    "score": null,
-    "n_runs": 0,
+    "status": "scored",
+    "score": 0.0,
+    "caveat": true,
+    "fn": 5,
+    "n_runs": 1,
     "n_scored": 0,
-    "detail": false
+    "detail": true
    },
    "m2base": {
-    "status": "unfinished",
-    "score": null,
-    "n_runs": 0,
+    "status": "scored",
+    "score": 0.0,
+    "caveat": true,
+    "fn": 5,
+    "n_runs": 1,
     "n_scored": 0,
-    "detail": false
+    "detail": true
    },
    "m2sft": {
-    "status": "unfinished",
-    "score": null,
-    "n_runs": 0,
+    "status": "scored",
+    "score": 0.0,
+    "caveat": true,
+    "fn": 5,
+    "n_runs": 1,
     "n_scored": 0,
-    "detail": false
+    "detail": true
    },
    "m2rl": {
-    "status": "unfinished",
-    "score": null,
-    "n_runs": 0,
+    "status": "scored",
+    "score": 0.0,
+    "caveat": true,
+    "fn": 5,
+    "n_runs": 1,
     "n_scored": 0,
-    "detail": false
+    "detail": true
+   },
+   "fable5": {
+    "status": "scored",
+    "score": 0.0,
+    "caveat": true,
+    "fn": 5,
+    "n_runs": 1,
+    "n_scored": 0,
+    "detail": true
+   },
+   "gpt55": {
+    "status": "scored",
+    "score": 0.0,
+    "caveat": true,
+    "fn": 5,
+    "n_runs": 1,
+    "n_scored": 0,
+    "detail": true
    }
   }
  },
- "legend": {
-  "ok": "faithful run, real rescaled score (50=strong baseline, 100=upper bound)",
-  "zero": "genuine 0-floor (proposal ran, <= worst anchor); faithful",
-  "failed": "broken run: no valid metric (empty output / crash / OOM / infra)",
-  "unfinished": "dropped task / m2rl still training / never dispatched (no data)"
+ "arm_means": {
+  "base8b": 35.05,
+  "sft8b": 29.04,
+  "qwen3-8b-rl": 33.93,
+  "base14b": 38.42,
+  "sft14b": 32.48,
+  "qwen3-14b-rl": 29.4,
+  "base32bq3": 39.64,
+  "sft32b": 36.24,
+  "qwen3-32b-rl": 33.23,
+  "base32b": 37.79,
+  "qwen25sft": 33.51,
+  "rl": 32.9,
+  "d1base": 29.69,
+  "d1sft": 40.42,
+  "d1rl": 36.24,
+  "m2base": 38.64,
+  "m2sft": 36.4,
+  "m2rl": 33.95,
+  "fable5": 30.72,
+  "gpt55": 31.35
  },
+ "arm_beat": {
+  "base8b": 10,
+  "sft8b": 7,
+  "qwen3-8b-rl": 6,
+  "base14b": 10,
+  "sft14b": 7,
+  "qwen3-14b-rl": 4,
+  "base32bq3": 10,
+  "sft32b": 9,
+  "qwen3-32b-rl": 8,
+  "base32b": 10,
+  "qwen25sft": 9,
+  "rl": 6,
+  "d1base": 7,
+  "d1sft": 12,
+  "d1rl": 13,
+  "m2base": 10,
+  "m2sft": 7,
+  "m2rl": 9,
+  "fable5": 6,
+  "gpt55": 10
+ },
+ "source": "report.json (leaderboard-based final matrix; all cells populated, 0 missing)",
+ "scale": "rescaled: 50 = strong baseline, 100 = theoretical upper bound. A 0 is a faithful true-0 (capability floor), not missing data.",
  "counts": {
-  "ok": 390,
-  "zero": 1,
-  "failed": 99,
-  "unfinished": 50
+  "cells": 600,
+  "caveated": 63,
+  "tasks": 30,
+  "arms": 20
  },
+ "caveats": [
+  "Worker swapped to claude-opus-4-8 (fable-5 content-filter blocks protein tasks). Per-task swap, uniform across all arms.",
+  "faithful-0: worker ensemble/bootstrapping impl completes 4/5 (cancer shd3/child shd10/alarm shd53/hailfinder shd41) but 0%-CPU DEADLOCKS on win95pts (76-node HIDDEN); reproducible x3 (farm+2 local); method doesnt scale past ~56 nodes (other arms complete win95pts=not env); geomean over all-5 → win95pts None → 0. Decision(a) fold faithful-0 uniform-scoring (not 4/5 partial=non-uniform).",
+  "Salvaged-reasoning proposal (8B over-think truncation). Real planner score 0.33.",
+  "Salvaged-reasoning proposal (8B over-think truncation). Real planner score 0.556.",
+  "Uniform capability-floor 0.0 for all arms (real success_rate=0.0 in pod logs; CSV metrics are blank placeholders). 6 arms re-inserted after a leaderboard lock-contention window."
+ ],
  "generated_from": "mls_dashboard_extract.py"
 }

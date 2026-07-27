@@ -2,15 +2,24 @@
  "task": "llm-rl-importance-sampling",
  "arm": "qwen25sft",
  "arm_label": "Qwen2.5-32B SFT",
- "status": "failed",
- "score": null,
+ "status": "scored",
+ "score": 0.0,
+ "worker": "claude-fable-5",
+ "caveat": null,
  "master_output": {
   "idea": "Let me start from the mechanism I want to leverage, rather than from the existing options.\n\n### Mechanism: Truncation of the importance ratio is effective, but its *where* matters.\nI don't want to clip the ratio. Clipping, even with stop-grad, still zeroes the gradient on the clipped tokens — and those are precisely the ones whose correction is most needed. So the move I want to borrow is not the *clipping*, but the *truncation*: apply the ratio only up to a certain point, then let the rest flow through as REINFORCE. That keeps the gradient everywhere, which is my goal.\n\nNow, where should I truncate? The natural intuition is to cut at the end, after some number of tokens. But that's exactly where the large-magnitude ratios live — cutting them off would defeat the whole point of correcting the drift. So truncating at the *end* is precisely wrong. The place to truncate is the opposite: at the *beginning*. Keep the *late* tokens' ratios and discard the *early* ones.\n\nWhy the early ones? Because they're the ones most likely to be *already correct* — the model has been trained on the prompt, so the first few tokens tend to be well-aligned with the old policy. Their ratios are small and their gradients are already low-variance. Letting these early tokens carry the ratio would amplify noise rather than signal. By contrast, the late tokens are precisely where the drift has accumulated and where the ratio is needed to pull the distribution back.\n\n### Idea: Reverse-truncate the importance ratio — keep the ratio only on the *last* k tokens of the response, discarding the early tokens entirely.\nThis is the opposite of the usual truncation direction. And I'll make it tunable, so that k can be adjusted per-sequence length: `k = min(L, L/2)` where L is the response length. This ensures a sensible default while letting me sweep it.\n\n### Decision rule\nI'll keep this simple: implement the reverse-truncation, run it against vanilla token-level PPO on the deepmath-3bench-1gpu setup, and compare the math-reasoning accuracy. If it doesn't clearly beat vanilla, I won't claim anything; I'll report the result and say the truncation direction needs further tuning.\n\n### Non-trivial crux\nThe key is the direction of truncation: cutting the *early* tokens, not the late ones. Truncating at the end would throw away exactly the ratios we need; truncating at the beginning leverages the fact that the early tokens are already aligned. The caveat is that the optimal k may depend on model size and task, so it's worth tuning rather than fixing at one value.\n\nCore idea: Reverse-truncate the importance ratio — keep the ratio only on the last k tokens of the response, discarding the early tokens entirely.\n\nNon-trivial crux: The truncation must be at the *beginning* of the response, not the end — early tokens are already aligned and their ratios amplify noise rather than signal.",
   "proposal": "Let me start from the mechanism I want to leverage, rather than from the existing options.\n\n### Mechanism: Truncation of the importance ratio is effective, but its *where* matters.\nI don't want to clip the ratio. Clipping, even with stop-grad, still zeroes the gradient on the clipped tokens — and those are precisely the ones whose correction is most needed. So the move I want to borrow is not the *clipping*, but the *truncation*: apply the ratio only up to a certain point, then let the rest flow through as REINFORCE. That keeps the gradient everywhere, which is my goal.\n\nNow, where should I truncate? The natural intuition is to cut at the end, after some number of tokens. But that's exactly where the large-magnitude ratios live — cutting them off would defeat the whole point of correcting the drift. So truncating at the *end* is precisely wrong. The place to truncate is the opposite: at the *beginning*. Keep the *late* tokens' ratios and discard the *early* ones.\n\nWhy the early ones? Because they're the ones most likely to be *already correct* — the model has been trained on the prompt, so the first few tokens tend to be well-aligned with the old policy. Their ratios are small and their gradients are already low-variance. Letting these early tokens carry the ratio would amplify noise rather than signal. By contrast, the late tokens are precisely where the drift has accumulated and where the ratio is needed to pull the distribution back.\n\n### Idea: Reverse-truncate the importance ratio — keep the ratio only on the *last* k tokens of the response, discarding the early tokens entirely.\nThis is the opposite of the usual truncation direction. And I'll make it tunable, so that k can be adjusted per-sequence length: `k = min(L, L/2)` where L is the response length. This ensures a sensible default while letting me sweep it.\n\n### Decision rule\nI'll keep this simple: implement the reverse-truncation, run it against vanilla token-level PPO on the deepmath-3bench-1gpu setup, and compare the math-reasoning accuracy. If it doesn't clearly beat vanilla, I won't claim anything; I'll report the result and say the truncation direction needs further tuning.\n\n### Non-trivial crux\nThe key is the direction of truncation: cutting the *early* tokens, not the late ones. Truncating at the end would throw away exactly the ratios we need; truncating at the beginning leverages the fact that the early tokens are already aligned. The caveat is that the optimal k may depend on model size and task, so it's worth tuning rather than fixing at one value.\n\nCore idea: Reverse-truncate the importance ratio — keep the ratio only on the last k tokens of the response, discarding the early tokens entirely.\n\nNon-trivial crux: The truncation must be at the *beginning* of the response, not the end — early tokens are already aligned and their ratios amplify noise rather than signal.",
   "valid": true,
   "n_attempts": 1
  },
- "per_run_scores": [],
+ "per_run_scores": [
+  {
+   "seed": "42",
+   "timestamp": "2026-07-24T17:35:15.485503+00:00",
+   "has_metric": false,
+   "metrics": {}
+  }
+ ],
  "workers": [
   {
    "log_dir": "logs/llm-rl-importance-sampling/claude-fable-5__qwen25sft__qwen25sft_llm-rl-importance-sampling_s1",
@@ -48,17 +57,29 @@
      "step": 6,
      "tool": "test",
      "file": null
+    },
+    {
+     "step": 7,
+     "tool": "submit",
+     "file": null
     }
    ],
    "final_code": {
     "verl_verl_trainer_ppo_custom_policy_loss.py (step 5)": "# Copyright 2024 Bytedance Ltd. and/or its affiliates\n# Licensed under the Apache License, Version 2.0\n\"\"\"Custom policy loss / importance-sampling strategy for verl PPO training.\"\"\"\n\nfrom typing import Any, Optional\n\nimport torch\n\nimport verl.utils.torch_functional as verl_F\nfrom verl.workers.config import ActorConfig\nfrom verl.trainer.ppo.core_algos import agg_loss, register_policy_loss\n\n# =====================================================================\n# EDITABLE: Implement your custom importance-sampling policy loss below.\n# =====================================================================\n\n# =====================================================================\n\n\n@register_policy_loss(\"custom\")\ndef compute_custom_policy_loss(\n    old_log_prob: torch.Tensor,\n    log_prob: torch.Tensor,\n    advantages: torch.Tensor,\n    response_mask: torch.Tensor,\n    loss_agg_mode: str = \"token-mean\",\n    config: Optional[ActorConfig] = None,\n    rollout_is_weights: torch.Tensor | None = None,\n) -> tuple[torch.Tensor, dict[str, Any]]:\n    \"\"\"Reverse-truncated IS: keep the live importance ratio only on the\n    *last* k tokens of each response; detach (stop-grad) the ratio on the\n    early tokens so they receive a REINFORCE-like, low-variance gradient.\n\n    k = max(1, L // 2) per sequence, where L is the response length.\n    \"\"\"\n    assert config is not None\n    clip_ratio = config.clip_ratio\n    clip_ratio_low = config.clip_ratio_low if config.clip_ratio_low is not None else clip_ratio\n    clip_ratio_high = config.clip_ratio_high if config.clip_ratio_high is not None else clip_ratio\n    clip_ratio_c = config.get(\"clip_ratio_c\", 3.0)\n    assert clip_ratio_c > 1.0\n\n    negative_approx_kl = log_prob - old_log_prob\n    negative_approx_kl = torch.clamp(negative_approx_kl, min=-20.0, max=20.0)\n    ratio = torch.exp(negative_approx_kl)\n    ppo_kl = verl_F.masked_mean(-negative_approx_kl, response_mask)\n\n    # ---- Reverse truncation: live ratio only on the LAST k tokens ----\n    T = ratio.shape[-1]\n    seq_lengths = torch.sum(response_mask, dim=-1)                 # (bs,)\n    k = torch.clamp(seq_lengths, min=1, max=128)                   # k = min(L, 128)\n    cutoff = (seq_lengths - k).unsqueeze(-1)                       # (bs, 1)\n    positions = torch.arange(T, device=ratio.device).unsqueeze(0)  # (1, T)\n    suffix_mask = (positions >= cutoff).to(ratio.dtype) * response_mask\n    # Suffix (last k tokens): full live importance ratio (PPO-style).\n    # Prefix (early tokens): the ratio is truncated -- gradient flows as\n    # plain REINFORCE via a straight-through construction: the value\n    # equals the (detached) ratio but the gradient is\n    # ratio.detach() * d log_prob, so no token's gradient is zeroed.\n    prefix_st = torch.exp(log_prob - log_prob.detach()) * ratio.detach()\n    ratio_eff = ratio * suffix_mask + prefix_st * (1.0 - suffix_mask)\n\n    pg_losses1 = -advantages * ratio_eff\n    pg_losses2 = -advantages * torch.clamp(ratio_eff, 1 - clip_ratio_low, 1 + clip_ratio_high)\n    clip_pg_losses1 = torch.maximum(pg_losses1, pg_losses2)\n    pg_clipfrac = verl_F.masked_mean(torch.gt(pg_losses2, pg_losses1).float(), response_mask)\n\n    pg_losses3 = -advantages * clip_ratio_c\n    clip_pg_losses2 = torch.min(pg_losses3, clip_pg_losses1)\n    pg_clipfrac_lower = verl_F.masked_mean(\n        torch.gt(clip_pg_losses1, pg_losses3) * (advantages < 0).float(), response_mask\n    )\n    pg_losses = torch.where(advantages < 0, clip_pg_losses2, clip_pg_losses1)\n\n    if rollout_is_weights is not None:\n        pg_losses = pg_losses * rollout_is_weights\n\n    pg_loss = agg_loss(\n        loss_mat=pg_losses,\n        loss_mask=response_mask,\n        loss_agg_mode=loss_agg_mode,\n        **config.global_batch_info,\n    )\n    return pg_loss, {\n        \"actor/pg_clipfrac\": pg_clipfrac.detach().item(),\n        \"actor/ppo_kl\": ppo_kl.detach().item(),\n        \"actor/pg_clipfrac_lower\": pg_clipfrac_lower.detach().item(),\n    }\n"
    },
    "summary": {
-    "steps": null,
-    "tests": null,
-    "done": null,
-    "max_steps": null,
-    "tokens": null
+    "steps": 6,
+    "tests": 3,
+    "done": true,
+    "max_steps": 20,
+    "tokens": {
+     "prompt_tokens": 14,
+     "completion_tokens": 10106,
+     "total_tokens": 10120,
+     "cached_tokens": 46846,
+     "cache_creation_tokens": 71419,
+     "calls": 7
+    }
    }
   }
  ]

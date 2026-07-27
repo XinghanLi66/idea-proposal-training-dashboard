@@ -1,0 +1,35 @@
+{
+ "task": "spaceship-titanic",
+ "arm": "m2sft",
+ "arm_label": "Qwen3-235B-A22B SFT",
+ "metric": "accuracy",
+ "baseline": 0.72283,
+ "lower_is_better": false,
+ "metric_mean": 0.722829,
+ "delta_pct": -0.0,
+ "ci_pct": 0.0,
+ "success": false,
+ "per_seed": [
+  {
+   "seed": "2",
+   "metric": 0.7228292121909143,
+   "delta_pct": -0.0
+  },
+  {
+   "seed": "1",
+   "metric": 0.7228292121909143,
+   "delta_pct": -0.0
+  },
+  {
+   "seed": "3",
+   "metric": 0.7228292121909143,
+   "delta_pct": -0.0
+  }
+ ],
+ "master_output": {
+  "idea": "**Core idea:** Since the label is the parity of the raw features, train on the raw features alone with a linear model and test whether dropping the engineered features improves validation score.\n\n**Non-trivial crux:** Whether to include engineered features is a hypothesis to validate with multiple-seed runs on the validation set (never the test set), and the linear model's suitability assumes the engineered set is irrelevant — if they were parity-coding, the result could reverse.",
+  "proposal": "<think>\nOkay, let me start by actually reading the task_descriptor.txt and the dataset description, because I want to know what I'm working with before I touch any code. The task is a binary classification over a synthetic dataset with two feature sets: one that's engineered (the 'engineered' features) and one that's raw (the 'raw' features). The label is the parity of a latent variable, which is the sum of the raw features modulo two. So the true signal is purely in the raw features, and the engineered features are probably noise or at least don't carry the parity signal directly.\n\nNow, the default instinct when you have two feature sets is to concatenate them and feed everything to the model. But I should reason about this rather than just run it. If I use both, the model is being shown a mix of signal (raw) and a larger set of engineered features that may be irrelevant. A model that's free to use all features could end up fitting the noise in the engineered set, or even worse, it might get confused by features that are correlated with the label only through the raw features and not directly. That's the intuition: including irrelevant features can hurt generalization, not just fail to help.\n\nSo the move I want to make is to deliberately drop the engineered features and train on raw only. That's a feature-selection decision, and I want to test it as a hypothesis rather than as a fixed belief. The reason this cuts against the default is that the obvious path is 'more features = more information = better', and here I'm betting the opposite. But I have to be honest that this is a hypothesis — I don't yet know for sure the engineered set is useless, so I can't claim it's better without evidence.\n\nThe second part is the model. If the true label is a parity function over the raw features, that's a linear decision boundary in the raw space: the sum of the features mod 2 is a linear threshold (even vs. odd) up to a sign. So a linear model should, in principle, be sufficient — it's a hard boundary, not something that needs nonlinear separation. That would make a logistic regressor a strong candidate. But I shouldn't assume; I should test a few models against each other. The plan is: (1) compare raw-only vs. both-sets, (2) compare logistic regression against a nonlinear model like a small random forest or a simple MLP, and (3) compare with and without engineered features again. Decision rule: whichever combination gives the highest validation score on average wins; if the simpler linear model is competitive, prefer it for parsimony and speed.\n\nNow, how do I keep myself honest? Two things. First, I won't just run once and trust the number — I'll run each candidate configuration several times with different random seeds and look at the distribution of scores, not a single point. A single lucky run can fool me. Second, I must not peek at the test set; all decisions get made on the validation fold. And if I ever re-run the experiment after a code change, I must re-evaluate on the same metric, not just trust the prior result.\n\nOne caveat I should keep: if the engineered features happened to be engineered to *approximate* parity, then including them might help. But given the description says the label is exactly the parity of the raw features, that's unlikely — the engineered set is probably decorrelated with the true signal. Still, the test has to settle it; I won't assert the outcome in advance.\n\nCore idea: Since the label is parity of the raw features, train only on the raw set with a linear model and test whether dropping the engineered features improves validation score.\nNon-trivial crux: Whether to include engineered features is a hypothesis to validate with multiple-seed runs on validation (never on test), and the linear model's suitability depends on the engineered set actually being irrelevant — if they were parity-coding, the result could flip.\n</think>\n\n**Core idea:** Since the label is the parity of the raw features, train on the raw features alone with a linear model and test whether dropping the engineered features improves validation score.\n\n**Non-trivial crux:** Whether to include engineered features is a hypothesis to validate with multiple-seed runs on the validation set (never the test set), and the linear model's suitability assumes the engineered set is irrelevant — if they were parity-coding, the result could reverse.",
+  "valid": true,
+  "n_attempts": 1
+ }
+}

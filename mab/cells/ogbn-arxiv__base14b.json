@@ -1,0 +1,35 @@
+{
+ "task": "ogbn-arxiv",
+ "arm": "base14b",
+ "arm_label": "Qwen3-14B (base)",
+ "metric": "test_acc",
+ "baseline": 0.31559,
+ "lower_is_better": false,
+ "metric_mean": 0.512156,
+ "delta_pct": 62.285,
+ "ci_pct": 0.274,
+ "success": true,
+ "per_seed": [
+  {
+   "seed": "2",
+   "metric": 0.5131164742917104,
+   "delta_pct": 62.59
+  },
+  {
+   "seed": "1",
+   "metric": 0.5121083060716417,
+   "delta_pct": 62.27
+  },
+  {
+   "seed": "3",
+   "metric": 0.5112441618830114,
+   "delta_pct": 61.996
+  }
+ ],
+ "master_output": {
+  "idea": "Core idea: Implement a dynamic learning rate scheduler that uses a warmup phase followed by cosine decay, tailored to the 10-epoch constraint. This allows the model to explore the loss landscape aggressively early on and fine-tune later, maximizing learning efficiency.  \n\nNon-trivial crux: Balancing the warmup duration and decay magnitude to avoid premature convergence or instability, requiring precise hyperparameter tuning within the strict epoch limit.",
+  "proposal": "<think>\nOkay, let's see. The user wants to improve the model performance in train.py with a novel idea, keeping training within 10 epochs. Hmm, the current hyperparameters might not be optimal. But how to make a non-obvious change?\n\nFirst, I need to think about what's commonly done. Maybe they're using a standard optimizer like SGD or Adam. But perhaps there's a way to adjust the learning rate dynamically. Wait, the user mentioned training for only 10 epochs, which is very short. So the model might not be learning enough. But how to make the most of those 10 epochs?\n\nI remember that learning rate schedules can be really effective. Like, starting with a higher learning rate and then decaying it. But maybe even more clever. What if we use a cyclic learning rate? Or maybe a warmup phase where the learning rate increases first, then decreases. That way, the model can explore the loss landscape more effectively early on and then fine-tune later.\n\nWait, the core idea could be a dynamic learning rate adjustment that adapts during training. But how to implement that without changing the optimizer too much? Maybe using a custom learning rate scheduler that's not too complex. For example, a cosine annealing schedule with restarts. But that might be too involved.\n\nAlternatively, what about using a different optimizer? Like AdamW with a warmup? But the user said the hyperparameters are in train.py. Maybe they are using a fixed learning rate. So changing the learning rate schedule could be a key point.\n\nAnother thought: gradient clipping. If the gradients are too large, the model might not converge. But that's more of a standard technique. Maybe not novel enough.\n\nWait, here's an idea. What if we use a learning rate that's not fixed but adjusted based on the validation loss? Like, a learning rate finder that identifies the optimal range and then uses that. But since we have only 10 epochs, maybe we can't afford to do a full search. Hmm.\n\nAlternatively, maybe using a one-cycle learning rate policy. That's where you increase the learning rate to a peak and then decrease it. This is supposed to help with faster convergence. The one-cycle policy is a bit more advanced than a simple step decay. If the current code uses a fixed learning rate, switching to one-cycle could help.\n\nBut how to implement that in 10 epochs? Let's think: the one-cycle policy typically has a certain number of steps. For example, if the training is 10 epochs, maybe the schedule would be designed over those steps. So, the core idea is to implement a one-cycle learning rate schedule that starts low, increases to a peak, and then decreases, which can lead to better convergence in fewer epochs.\n\nAnother angle: maybe the model isn't using weight decay. Adding weight decay to the optimizer could help prevent overfitting and improve generalization. But if the current code doesn't have it, that's a simple change. However, the user wants a novel idea. Weight decay is standard now, though.\n\nWait, what about using a different initialization strategy? Like He or Xavier, but again, that's more of a standard practice. Maybe not novel.\n\nHmm, perhaps combining a learning rate scheduler with a different optimizer. For example, using Adam with a warmup and then cosine decay. That could be more effective. But is that non-obvious?\n\nAlternatively, using a different loss function. But the user hasn't mentioned the loss function being the issue.\n\nWait, maybe the model is not using mixed precision training. That could speed things up and allow for larger learning rates. But the user is focused on model performance, not just training time. Though mixed precision can help with convergence.\n\nBut the core idea needs to be in the train.py script. So, if the current script doesn't use mixed precision, adding that could be a novel idea. But is it non-trivial? Maybe not, since it's a common optimization.\n\nAlternatively, what about using label smoothing? If the dataset has some noise, that might help. But again, that's a known technique.\n\nBack to the learning rate. If the current code uses a fixed learning rate, changing to a dynamic one that's more aggressive during training could help. The one-cycle policy is a good candidate. Let me think: the one-cycle policy is designed for fast convergence. For example, in 10 epochs, you can have the learning rate go up to a peak and then come down. That might help the model reach better minima quickly.\n\nSo the core idea would be implementing a one-cycle learning rate schedule, which adjusts the learning rate dynamically during training. The non-trivial crux would be determining the optimal peak learning rate and cycle configuration that works within the 10-epoch constraint. That's a bit more involved because you need to set the parameters correctly without overfitting or underfitting.\n</think>\n\nCore idea: Implement a dynamic learning rate scheduler that uses a warmup phase followed by cosine decay, tailored to the 10-epoch constraint. This allows the model to explore the loss landscape aggressively early on and fine-tune later, maximizing learning efficiency.  \n\nNon-trivial crux: Balancing the warmup duration and decay magnitude to avoid premature convergence or instability, requiring precise hyperparameter tuning within the strict epoch limit.",
+  "valid": true,
+  "n_attempts": 1
+ }
+}

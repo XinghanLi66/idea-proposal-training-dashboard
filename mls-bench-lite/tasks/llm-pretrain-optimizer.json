@@ -2,6 +2,7 @@
  "slug": "llm-pretrain-optimizer",
  "domain": "Language Models",
  "name": "Pretraining Optimizer Design",
+ "worker": "claude-fable-5",
  "description": "# LLM Pretraining: Optimizer & Learning Rate Schedule Optimization\n\n## Research Question\nDesign an improved optimizer and/or learning rate schedule for GPT-2 language model pretraining. Your modifications should reduce validation loss compared to the standard AdamW with cosine annealing schedule.\n\n## What You Can Modify\nTwo regions in `custom_pretrain.py`:\n1. **configure_optimizers method** (lines 172-189): Optimizer creation and parameter grouping\n2. **get_lr function** (lines 192-201): Learning rate schedule\n\nYou can modify:\n- The optimization algorithm (default: AdamW with fused implementation)\n- Parameter grouping strategy (default: weight decay for 2D params, no decay for 1D)\n- Learning rate schedule shape (default: cosine with linear warmup)\n- Any optimizer hyperparameters\n\n**Note**: The training loop calls `get_lr(it, warmup_iters, lr_decay_iters, learning_rate, min_lr)` — keep this signature compatible. The optimizer returned by `configure_optimizers` must support `.zero_grad()`, `.step()`, and `.param_groups`.\n\n## Evaluation\n- **Metric**: Validation loss (cross-entropy, lower is better), plus perplexity (WikiText-2, LAMBADA) and downstream accuracy (ARC-Easy, HellaSwag, PIQA, WinoGrande)\n- **Model**: GPT-2 Medium (24L/16H/1024D, ~355M params)\n- **Dataset**: FineWeb 10B (GPT-2 tokenizer), ~7.1B tokens (D=20N Chinchilla-optimal)\n- **Training**: 12030 iterations, BSZ=96, GA=6, 2-GPU DDP\n- **Hardware**: H200 GPU\n\n",
  "metric": "val_loss_gpt-345m",
  "lower_is_better": true,
@@ -9,6 +10,7 @@
   "system": "You are a world-class AI researcher. You are given a machine-learning task with a specific editable code component. Reason step by step in your own distinctive style toward ONE genuinely novel, non-obvious idea to improve that component. Make the creative core unmistakably clear and explain how you arrived at it. Focus on ideas and mechanisms, not full implementation code.",
   "user": "# LLM Pretraining: Optimizer & Learning Rate Schedule Optimization\n\n## Research Question\nDesign an improved optimizer and/or learning rate schedule for GPT-2 language model pretraining. Your modifications should reduce validation loss compared to the standard AdamW with cosine annealing schedule.\n\n## What You Can Modify\nTwo regions in `custom_pretrain.py`:\n1. **configure_optimizers method** (lines 172-189): Optimizer creation and parameter grouping\n2. **get_lr function** (lines 192-201): Learning rate schedule\n\nYou can modify:\n- The optimization algorithm (default: AdamW with fused implementation)\n- Parameter grouping strategy (default: weight decay for 2D params, no decay for 1D)\n- Learning rate schedule shape (default: cosine with linear warmup)\n- Any optimizer hyperparameters\n\n**Note**: The training loop calls `get_lr(it, warmup_iters, lr_decay_iters, learning_rate, min_lr)` — keep this signature compatible. The optimizer returned by `configure_optimizers` must support `.zero_grad()`, `.step()`, and `.param_groups`.\n\n## Evaluation\n- **Metric**: Validation loss (cross-entropy, lower is better), plus perplexity (WikiText-2, LAMBADA) and downstream accuracy (ARC-Easy, HellaSwag, PIQA, WinoGrande)\n- **Model**: GPT-2 Medium (24L/16H/1024D, ~355M params)\n- **Dataset**: FineWeb 10B (GPT-2 tokenizer), ~7.1B tokens (D=20N Chinchilla-optimal)\n- **Training**: 12030 iterations, BSZ=96, GA=6, 2-GPU DDP\n- **Hardware**: H200 GPU\n\n\n\nThe editable component is `nanoGPT/custom_pretrain.py` (evaluation setting: gpt-345m). Propose ONE concrete, novel idea to improve it. Conclude with two lines: 'Core idea:' and 'Non-trivial crux:'."
  },
+ "row_caveat": null,
  "baselines": {
   "methods": [
    {
@@ -54,6 +56,6 @@
     }
    }
   ],
-  "note": "rescaled cells: 50 = strong baseline, 100 = theoretical upper bound. Baseline methods below are the reference implementations the proposals compete against."
+  "note": "rescaled cells: 50 = strong baseline, 100 = theoretical upper bound."
  }
 }

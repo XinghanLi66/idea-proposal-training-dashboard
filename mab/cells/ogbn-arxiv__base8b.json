@@ -1,0 +1,35 @@
+{
+ "task": "ogbn-arxiv",
+ "arm": "base8b",
+ "arm_label": "Qwen3-8B (base)",
+ "metric": "test_acc",
+ "baseline": 0.31559,
+ "lower_is_better": false,
+ "metric_mean": 0.524748,
+ "delta_pct": 66.275,
+ "ci_pct": 6.482,
+ "success": true,
+ "per_seed": [
+  {
+   "seed": "2",
+   "metric": 0.5197621545995104,
+   "delta_pct": 64.695
+  },
+  {
+   "seed": "1",
+   "metric": 0.5489578832582351,
+   "delta_pct": 73.947
+  },
+  {
+   "seed": "3",
+   "metric": 0.5055243503487439,
+   "delta_pct": 60.184
+  }
+ ],
+ "master_output": {
+  "idea": "Core idea: Introduce a dynamic curriculum learning strategy where the model trains on progressively harder examples, determined by the model's own confidence scores from early iterations. This leverages the model's intermediate predictions to prioritize data points that are initially easier to learn, allowing it to build robust representations faster.\n\nNon-trivial crux: Efficiently compute and update the difficulty metric (e.g., prediction confidence) during training without introducing significant computational overhead, while ensuring the curriculum adapts smoothly across epochs.",
+  "proposal": "<think>\nOkay, let's see. The user wants to improve the model performance in train.py without running too many epochs, up to 10. The editable component is the training script itself. So I need to think of a novel idea that can be implemented in the training script to boost performance quickly.\n\nHmm, current models often use standard training techniques. Maybe there's a way to optimize the training process itself. Wait, what about dynamic learning rate adjustment? But that's common. Or maybe something with the data augmentation? But that's also standard.\n\nWait, the user mentioned hyperparameters in train.py. Maybe they're using fixed hyperparameters. What if we can adapt the training process based on the model's performance during training? Like, dynamically adjusting the learning rate or other parameters based on validation loss. But that's similar to learning rate scheduling.\n\nWait, another thought: sometimes models can benefit from different initialization strategies. But how to incorporate that into the training script? Maybe using a better initializer, but that's not novel.\n\nWait, what about knowledge distillation? But that requires a teacher model, which might not be feasible here. Unless the user is using a pre-trained model. But the problem states to improve the current model, so maybe not.\n\nWait, what about the training data itself? Maybe the current training script is not using the data efficiently. Like, maybe the data is not shuffled properly, or the batch size is not optimal. But the user wants to improve performance within 10 epochs, so maybe adjusting the batch size? But that's a hyperparameter.\n\nWait, here's an idea: using a curriculum learning approach. Instead of training on all data at once, start with easier examples and gradually introduce harder ones. This can help the model learn more effectively in fewer epochs. But how to implement that in the training script?\n\nCurriculum learning requires modifying the data loading process. For example, sorting the data by difficulty and gradually increasing the difficulty during training. But how to determine the difficulty? Maybe based on some precomputed metric, like confidence scores or model predictions from a pre-trained model.\n\nWait, but if we can't use a pre-trained model, maybe we can use the model's own predictions during training to sort the data. For instance, in the first epoch, train on the easiest examples (those where the model is most confident), then in subsequent epochs, include more challenging examples. This way, the model builds up its understanding step by step, which might lead to better performance in fewer epochs.\n\nBut how to implement this in the training script? The code would need to dynamically adjust the dataset based on the model's predictions during training. That's possible by generating a list of data indices sorted by the model's confidence, then using that to create a curriculum. However, this requires modifying the data loader to sample from the curriculum as training progresses.\n\nAnother consideration: the model's predictions during training might not be reliable early on. So maybe using a pre-trained model's predictions as a proxy for difficulty. But if the model isn't pre-trained, this might not work. Alternatively, use a simple classifier to estimate difficulty, but that adds complexity.\n\nWait, but the user's goal is to improve performance quickly. So maybe even a basic curriculum approach, where the data is sorted by some metric (like class distribution or input complexity) and the training starts with easier samples. This could help the model converge faster.\n\nSo the core idea would be to implement curriculum learning by dynamically adjusting the dataset's difficulty during training, which can lead to better performance in fewer epochs. The non-trivial part is determining the difficulty metric and integrating it into the training loop without overcomplicating the code.\n</think>\n\nCore idea: Introduce a dynamic curriculum learning strategy where the model trains on progressively harder examples, determined by the model's own confidence scores from early iterations. This leverages the model's intermediate predictions to prioritize data points that are initially easier to learn, allowing it to build robust representations faster.\n\nNon-trivial crux: Efficiently compute and update the difficulty metric (e.g., prediction confidence) during training without introducing significant computational overhead, while ensuring the curriculum adapts smoothly across epochs.",
+  "valid": true,
+  "n_attempts": 1
+ }
+}

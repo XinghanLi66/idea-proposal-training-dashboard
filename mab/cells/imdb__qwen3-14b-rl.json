@@ -1,0 +1,35 @@
+{
+ "task": "imdb",
+ "arm": "qwen3-14b-rl",
+ "arm_label": "Qwen3-14B RL",
+ "metric": "accuracy",
+ "baseline": 0.91089,
+ "lower_is_better": false,
+ "metric_mean": 0.909973,
+ "delta_pct": -0.101,
+ "ci_pct": 0.296,
+ "success": false,
+ "per_seed": [
+  {
+   "seed": "3",
+   "metric": 0.90668,
+   "delta_pct": -0.462
+  },
+  {
+   "seed": "2",
+   "metric": 0.911,
+   "delta_pct": 0.012
+  },
+  {
+   "seed": "1",
+   "metric": 0.91224,
+   "delta_pct": 0.148
+  }
+ ],
+ "master_output": {
+  "idea": "**Mocking:** A world-class AI researcher, let me reason this through step by step.\n\nStart from the objective: finetune a pretrained model on a small text classification task and output calibrated class probabilities. The skeleton gives me the boilerplate — tokenizer, model, trainer, and a CSV-saving hook. My instinct is not to add another model or a fancy loss, but to interrogate the *inference* pipeline: where do probabilities tend to misrepresent the truth, and how can I systematically correct that?\n\nThe standard story for probability calibration is 'add a temperature scaling layer on top of the logits.' That's a clean, interpretable fix, and it's precisely the kind of layer that sits *outside* the model's architecture — a scalar transform of the final logits. That's promising, because it means I can retrofit it to a model I didn't train myself. But the default story stops at 'fit a single temperature.' I want to ask the sharper question: does a single scalar actually capture the systematic error, or do I need a *parametric* function of the logits to model the mismatch?\n\nHere's where I lean on an invariant I trust. In well-calibrated models, the predicted probability should equal the empirical frequency: for a given class, the average predicted probability across examples that actually belong to it should match the fraction of examples in that class. This is a *per-class* property, and it's a testable, interpretable claim — not a black-box artifact. So the calibration error is not a global property; it lives in the *logit space* and can be different for different classes.\n\nThat reframes the problem. Instead of fitting a single temperature, I fit a separate temperature AND a per-class bias *in the logit space* — a simple affine transformation of the logits. The model's raw logits become `logits / temp + bias`, and I optimize temp and bias to make the predicted probabilities match the empirical frequencies. Crucially, this stays a *one-line* modification of the inference pass; I don't have to re-train anything.\n\nNow the discipline: I must not treat this as a heuristic. I'll validate it using the *same* invariant — per-class expected frequency — and I'll check it across the entire probability range, not just a bin. And I'll be honest about the boundary: this is only as good as the assumption that the error is affine in logit space; if the true distortion is higher-order (quadratic, etc.), the fit will be imperfect, and I should say so. It also only helps when the model's calibration is the limiting factor — if accuracy is the bottleneck, this buys little.\n\n**Core idea:** After finetuning, improve per-class probability calibration by fitting a per-class affine (temperature + bias) transformation of the model's logits, chosen to match the empirical frequency of each class rather than using a single temperature.\n\n**Non-trivial crux:** The calibration correction should be fit *on the logit scale* with per-class bias and a shared temperature, validated by the per-class expected frequency invariant — and this only pays off if the model's calibration, not its accuracy, is the limiting factor; it cannot correct for a fundamentally misfit model.",
+  "proposal": "<think>\n\n</think>\n\n**Mocking:** A world-class AI researcher, let me reason this through step by step.\n\nStart from the objective: finetune a pretrained model on a small text classification task and output calibrated class probabilities. The skeleton gives me the boilerplate — tokenizer, model, trainer, and a CSV-saving hook. My instinct is not to add another model or a fancy loss, but to interrogate the *inference* pipeline: where do probabilities tend to misrepresent the truth, and how can I systematically correct that?\n\nThe standard story for probability calibration is 'add a temperature scaling layer on top of the logits.' That's a clean, interpretable fix, and it's precisely the kind of layer that sits *outside* the model's architecture — a scalar transform of the final logits. That's promising, because it means I can retrofit it to a model I didn't train myself. But the default story stops at 'fit a single temperature.' I want to ask the sharper question: does a single scalar actually capture the systematic error, or do I need a *parametric* function of the logits to model the mismatch?\n\nHere's where I lean on an invariant I trust. In well-calibrated models, the predicted probability should equal the empirical frequency: for a given class, the average predicted probability across examples that actually belong to it should match the fraction of examples in that class. This is a *per-class* property, and it's a testable, interpretable claim — not a black-box artifact. So the calibration error is not a global property; it lives in the *logit space* and can be different for different classes.\n\nThat reframes the problem. Instead of fitting a single temperature, I fit a separate temperature AND a per-class bias *in the logit space* — a simple affine transformation of the logits. The model's raw logits become `logits / temp + bias`, and I optimize temp and bias to make the predicted probabilities match the empirical frequencies. Crucially, this stays a *one-line* modification of the inference pass; I don't have to re-train anything.\n\nNow the discipline: I must not treat this as a heuristic. I'll validate it using the *same* invariant — per-class expected frequency — and I'll check it across the entire probability range, not just a bin. And I'll be honest about the boundary: this is only as good as the assumption that the error is affine in logit space; if the true distortion is higher-order (quadratic, etc.), the fit will be imperfect, and I should say so. It also only helps when the model's calibration is the limiting factor — if accuracy is the bottleneck, this buys little.\n\n**Core idea:** After finetuning, improve per-class probability calibration by fitting a per-class affine (temperature + bias) transformation of the model's logits, chosen to match the empirical frequency of each class rather than using a single temperature.\n\n**Non-trivial crux:** The calibration correction should be fit *on the logit scale* with per-class bias and a shared temperature, validated by the per-class expected frequency invariant — and this only pays off if the model's calibration, not its accuracy, is the limiting factor; it cannot correct for a fundamentally misfit model.",
+  "valid": true,
+  "n_attempts": 1
+ }
+}

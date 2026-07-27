@@ -1,0 +1,35 @@
+{
+ "task": "spaceship-titanic",
+ "arm": "m2rl",
+ "arm_label": "Qwen3-235B-A22B RL",
+ "metric": "accuracy",
+ "baseline": 0.72283,
+ "lower_is_better": false,
+ "metric_mean": 0.796818,
+ "delta_pct": 10.236,
+ "ci_pct": 0.258,
+ "success": true,
+ "per_seed": [
+  {
+   "seed": "3",
+   "metric": 0.79700977573318,
+   "delta_pct": 10.262
+  },
+  {
+   "seed": "1",
+   "metric": 0.7947096032202415,
+   "delta_pct": 9.944
+  },
+  {
+   "seed": "2",
+   "metric": 0.7987349051178838,
+   "delta_pct": 10.501
+  }
+ ],
+ "master_output": {
+  "idea": "Core idea: Make the whole pipeline a sweepable knob — model type, time-aware vs shuffled split, forward-stepwise feature selection — and let the CV distribution, not a lucky seed, decide the best combination.\n\nNon-trivial crux: TimeSeriesSplit is only justified when the data has genuine temporal ordering; on a cross-sectional set a shuffled split is correct and a time-aware split would be an overkill bias.",
+  "proposal": "<think>\nLet me start by actually reading the task_descriptor to anchor myself. The task is regression on a dataset with ~30 features, and the metric is MAE. The given train.py is probably a barebones pipeline: load, train, predict. That's exactly where most of the low-hanging fruit sits, not in the model itself. So my instinct is to treat the pipeline as the object I want to tune, not just the estimator.\n\nFirst, the obvious fix: the default regressor is likely a DecisionTree or something naive. Swap that for a well-behaved ensemble like RandomForestRegressor and a gradient-boosted one like XGBoost, then pick the better one. That's the entry point, not the novel part.\n\nThe leap comes from asking *why* the default split might be lying to me. If the data is time-ordered or has any natural ordering (which I should check the descriptor for, but the default is a shuffled split), shuffling destroys temporal structure and my CV folds are contaminated with future-looking information. The naive move is 'fix the random seed and report CV' — but that's just picking a lucky seed. I want a mechanism that is *robust to the data's inherent structure*, not to my RNG. So the concrete decision is to switch to a *time-aware split* — TimeSeriesSplit — which respects order and prevents leakage. I'll keep both split strategies and compare them explicitly. This is the same discipline I apply elsewhere: never trust a single point estimate; expose the *distribution* of what the method actually delivers.\n\nNow, the less obvious thing: feature selection. The default is to throw all 30 features in. But not every feature is equally useful, and some may be noise or collinear. A naive ranking (e.g. feature importances) could miss *interactions* — a feature that's useless alone but powerful in combination. So I don't want a one-shot ranking; I want a *search* over subsets, and I want it to be cheap enough to run. That's where forward-stepwise selection fits: greedily add the next feature that most improves the metric. It's greedy, so it won't find the global best subset, but it's fast and it surfaces how many features are actually pulling weight. I'll treat the number of features as a tuning knob and let the CV decide where the curve flattens — that's my stopping rule, not a fixed number.\n\nPutting it all together into a single knob: a sweep over (model, split strategy, feature count). Each axis is a cheap knob, and the whole sweep can be one loop. This is the part I keep coming back to — don't build a big complicated thing first; build a small thing, make it sweepable, and let the sweep surface the signal. I refuse to declare 'XGBoost is best' or 'keep 10 features' in advance; the sweep decides.\n\nHow I keep myself honest: report *both* split strategies side by side so I can't cherry-pick the good one; for the feature sweep, report the trend and the stopping point, not just the max; and I'll only keep a change if the sweep clearly moves the CV in the right direction — if it doesn't, I drop it on parsimony grounds. And I must remember the crux: TimeSeriesSplit is only the right choice if the data actually has a time ordering; if it's a genuinely shuffled cross-sectional set, a shuffled split is correct and TimeSeriesSplit would be overkill that biases downward. The decision rule is data-dependent, not a one-size-fits-all.\n\nCore idea: Make the whole pipeline a sweepable knob — model type, time-aware vs shuffled split, forward-stepwise feature selection — and let the CV distribution, not a lucky seed, decide the best combination.\nNon-trivial crux: TimeSeriesSplit is only justified when the data has genuine temporal ordering; on a cross-sectional set a shuffled split is correct and a time-aware split would be an overkill bias.\n</think>\n\nCore idea: Make the whole pipeline a sweepable knob — model type, time-aware vs shuffled split, forward-stepwise feature selection — and let the CV distribution, not a lucky seed, decide the best combination.\n\nNon-trivial crux: TimeSeriesSplit is only justified when the data has genuine temporal ordering; on a cross-sectional set a shuffled split is correct and a time-aware split would be an overkill bias.",
+  "valid": true,
+  "n_attempts": 1
+ }
+}

@@ -2,8 +2,10 @@
  "task": "jepa-planning",
  "arm": "sft32b",
  "arm_label": "Qwen3-32B SFT",
- "status": "ok",
+ "status": "scored",
  "score": 67.9,
+ "worker": "claude-fable-5",
+ "caveat": null,
  "master_output": {
   "idea": null,
   "proposal": "<think>\n\n</think>\n\n**Core idea:** Replace the fixed planning horizon with a goal-conditioned, variable-horizon search that automatically shortens the planning range as the goal is approached, reducing unnecessary computation and improving stability near the target.\n\n**Non-trivial crux:** The variable horizon must be learned or estimated from the world model's dynamics to avoid under-shooting the goal, so I will derive a stopping criterion from the model's prediction uncertainty — halting when the predicted state encodings show minimal change across future steps, indicating the goal is near.\n\n**Step-by-step reasoning:**\n1. Standard planners use a fixed horizon, but in a grid world like Two Rooms, a fixed-length plan may waste computation on long horizons when the goal is nearby.\n2. A short horizon near the goal is more stable because the model's prediction error grows with horizon length, so a dynamic horizon that reduces as the agent approaches the goal should improve both speed and accuracy.\n3. The horizon can't be fixed per episode — it must depend on the current state's distance to the goal, which is encoded in the world model's latent state.\n4. To make this adaptive without learning a separate stopping network, I'll estimate stopping from the model's own outputs: if unrolling a short horizon gives nearly identical encodings for multiple steps, the state is likely near the goal and the horizon should shrink.\n5. This requires modifying the `plan()` method to compute a stopping criterion at each iteration, and reducing the effective planning length accordingly.\n\n**How I keep it honest:** I'll test this against fixed-horizon baselines (30, 60, 90) on the same seed-controlled Two Rooms episodes and compare success rates and steps-to-goal, ensuring any gain is from horizon adaptation and not random seed luck.",

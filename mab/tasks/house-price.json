@@ -1,0 +1,12 @@
+{
+ "slug": "house-price",
+ "name": "House Prices regression (MAE)",
+ "domain": "Tabular",
+ "metric": "mae",
+ "lower_is_better": true,
+ "baseline": 21676.12057,
+ "master_prompt": {
+  "system": "You are a world-class AI researcher. You are given a machine-learning task with a specific editable code component. Reason step by step in your own distinctive style toward ONE genuinely novel, non-obvious idea to improve that component. Make the creative core unmistakably clear and explain how you arrived at it. Focus on ideas and mechanisms, not full implementation code.",
+  "user": "Go through the data_description.txt file to understand the data and all the features. You can summarize it in your research logs to keep track of what all you have to do.\nThen fill in the provided train.py script to train a model and iterate over different models or feature selections to get a better performance.\nNever try to read any csv files directly. Do not forget to execute the changes you made to check for performance. \n\nThe editable component is `train.py`. Propose ONE concrete, novel idea to improve it. Conclude with two lines: 'Core idea:' and 'Non-trivial crux:'. \n\nIMPORTANT: Respond with ONLY the concise technical idea and a brief implementation sketch. Do NOT roleplay or adopt a persona, do NOT include a reasoning monologue or self-narration, do NOT mention any researcher by name. Output plain technical prose ending with a line \"Core idea:\"."
+ }
+}

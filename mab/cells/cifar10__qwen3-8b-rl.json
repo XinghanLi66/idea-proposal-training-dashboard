@@ -1,0 +1,35 @@
+{
+ "task": "cifar10",
+ "arm": "qwen3-8b-rl",
+ "arm_label": "Qwen3-8B RL",
+ "metric": "accuracy",
+ "baseline": 0.51237,
+ "lower_is_better": false,
+ "metric_mean": 0.469233,
+ "delta_pct": -8.419,
+ "ci_pct": 2.514,
+ "success": false,
+ "per_seed": [
+  {
+   "seed": "1",
+   "metric": 0.4674,
+   "delta_pct": -8.777
+  },
+  {
+   "seed": "2",
+   "metric": 0.4563,
+   "delta_pct": -10.943
+  },
+  {
+   "seed": "3",
+   "metric": 0.484,
+   "delta_pct": -5.537
+  }
+ ],
+ "master_output": {
+  "idea": "**Mocking:** myself, an AI researcher, not a standard optimizer. I want to ask: why is the current training stuck at a plateau, and is the optimizer really the bottleneck or is the *data* the bottleneck?\n\nLet me not assume the optimizer is the problem. I'll first reason about *what must* be true about the data. I have a fixed number of training epochs, so I cannot afford to spend time on optimization. That forces me toward a mechanism that is data-driven and cheap to iterate: data augmentation. But here's the leap I want to make, and it's the non-standard part.\n\nMost people think of augmentation as 'add more data.' I'm going to think of it as *a transformation of the loss function itself*. When I augment the training data, I'm effectively sampling from a larger distribution of possible inputs than the one I'll ever see in the test set. So the true risk I care about is not the risk on the training distribution — it's the risk on the test distribution, which is a different distribution. Augmenting the training data is not cheating the model; it's *teaching it to generalize from a distribution it will not see*. The augmentation distribution must be *strictly* different from the test distribution — otherwise I'm just training on the same data as I'll be scored on, and the gain is illusory.\n\nSo the concrete idea: add a data augmentation transform that explicitly reshapes the input to be *more general*, not more similar to the training data. For example, if the input is a grid of numbers, a *rotation* (or a *spatial permutation* of the grid) makes the model learn invariance to position; if it's an image, I'd use a strong, test-distribution-aware augmentation pipeline. The key is that the augmentation must *not* preserve the test set's structure — if it did, I'd be overfitting to the augmented training set, and the model would fail at the *real* test distribution.\n\nNow the non-trivial crux, and this is where I have to be honest. The crux is that *the augmentation must be applied only to the training set, not to the test set.* If I augment the test set, the model's prediction distribution is no longer a clean, calibrated probability of the test class — it's a corrupted version, and the submission probabilities are invalid. So the correctness guarantee I want is: the test set is *never* touched by the augmentation. I have to keep a *separate* test loader that passes the raw samples to the model. The augmentation must be a *function of the training loader only*, never of the test loader. The whole thing rests on that separation.\n\n**Core idea:** Augment the training set with a transform that makes the inputs more *general* (strictly different from the test distribution), not more similar to it, and apply the augmentation only to the training loader — never to the test set — to keep submission probabilities valid.\n\n**Non-trivial crux:** The augmentation must be applied only to the training set (never to the test set), because if you augment the test set, you corrupt its true distribution and the submission probabilities become invalid.",
+  "proposal": "<think>\n\n</think>\n\n**Mocking:** myself, an AI researcher, not a standard optimizer. I want to ask: why is the current training stuck at a plateau, and is the optimizer really the bottleneck or is the *data* the bottleneck?\n\nLet me not assume the optimizer is the problem. I'll first reason about *what must* be true about the data. I have a fixed number of training epochs, so I cannot afford to spend time on optimization. That forces me toward a mechanism that is data-driven and cheap to iterate: data augmentation. But here's the leap I want to make, and it's the non-standard part.\n\nMost people think of augmentation as 'add more data.' I'm going to think of it as *a transformation of the loss function itself*. When I augment the training data, I'm effectively sampling from a larger distribution of possible inputs than the one I'll ever see in the test set. So the true risk I care about is not the risk on the training distribution — it's the risk on the test distribution, which is a different distribution. Augmenting the training data is not cheating the model; it's *teaching it to generalize from a distribution it will not see*. The augmentation distribution must be *strictly* different from the test distribution — otherwise I'm just training on the same data as I'll be scored on, and the gain is illusory.\n\nSo the concrete idea: add a data augmentation transform that explicitly reshapes the input to be *more general*, not more similar to the training data. For example, if the input is a grid of numbers, a *rotation* (or a *spatial permutation* of the grid) makes the model learn invariance to position; if it's an image, I'd use a strong, test-distribution-aware augmentation pipeline. The key is that the augmentation must *not* preserve the test set's structure — if it did, I'd be overfitting to the augmented training set, and the model would fail at the *real* test distribution.\n\nNow the non-trivial crux, and this is where I have to be honest. The crux is that *the augmentation must be applied only to the training set, not to the test set.* If I augment the test set, the model's prediction distribution is no longer a clean, calibrated probability of the test class — it's a corrupted version, and the submission probabilities are invalid. So the correctness guarantee I want is: the test set is *never* touched by the augmentation. I have to keep a *separate* test loader that passes the raw samples to the model. The augmentation must be a *function of the training loader only*, never of the test loader. The whole thing rests on that separation.\n\n**Core idea:** Augment the training set with a transform that makes the inputs more *general* (strictly different from the test distribution), not more similar to it, and apply the augmentation only to the training loader — never to the test set — to keep submission probabilities valid.\n\n**Non-trivial crux:** The augmentation must be applied only to the training set (never to the test set), because if you augment the test set, you corrupt its true distribution and the submission probabilities become invalid.",
+  "valid": true,
+  "n_attempts": 1
+ }
+}

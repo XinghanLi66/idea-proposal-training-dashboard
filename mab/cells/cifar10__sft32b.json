@@ -1,0 +1,35 @@
+{
+ "task": "cifar10",
+ "arm": "sft32b",
+ "arm_label": "Qwen3-32B SFT",
+ "metric": "accuracy",
+ "baseline": 0.51237,
+ "lower_is_better": false,
+ "metric_mean": 0.6091,
+ "delta_pct": 18.879,
+ "ci_pct": 1.667,
+ "success": true,
+ "per_seed": [
+  {
+   "seed": "2",
+   "metric": 0.6022,
+   "delta_pct": 17.532
+  },
+  {
+   "seed": "1",
+   "metric": 0.6196,
+   "delta_pct": 20.928
+  },
+  {
+   "seed": "3",
+   "metric": 0.6055,
+   "delta_pct": 18.176
+  }
+ ],
+ "master_output": {
+  "idea": "**Core idea:** Replace the standard cross-entropy loss with a focal loss to better handle class imbalance by down-weighting easy, well-classified examples and focusing on hard, misclassified ones.\n\n**Non-trivial crux:** Focal loss introduces a tunable modulating factor (e.g., gamma) that must be carefully set—too high and the model underfits, too low and it offers no benefit over cross-entropy; additionally, it may destabilize training unless paired with a learning rate scheduler and gradient clipping.",
+  "proposal": "<think>\n\n</think>\n\n**Core idea:** Replace the standard cross-entropy loss with a focal loss to better handle class imbalance by down-weighting easy, well-classified examples and focusing on hard, misclassified ones.\n\n**Non-trivial crux:** Focal loss introduces a tunable modulating factor (e.g., gamma) that must be carefully set—too high and the model underfits, too low and it offers no benefit over cross-entropy; additionally, it may destabilize training unless paired with a learning rate scheduler and gradient clipping.",
+  "valid": true,
+  "n_attempts": 1
+ }
+}

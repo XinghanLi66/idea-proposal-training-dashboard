@@ -2,6 +2,7 @@
  "slug": "ts-imputation",
  "domain": "Time Series & Forecasting",
  "name": "Masked Multivariate Time-Series Imputation",
+ "worker": "claude-fable-5",
  "description": "# Time Series Imputation: Custom Model Design\n\n## Objective\nDesign and implement a custom deep learning model for time series missing value imputation. Your code goes in the `Model` class in `models/Custom.py`. Three reference implementations (DLinear, TimesNet, PatchTST) are provided as read-only.\n\n## Evaluation\nTrained and evaluated on three multivariate datasets with 25% random masking:\n- **ETTh1** (7 variables)\n- **Weather** (21 variables)\n- **ECL** (321 variables)\n\nAll use `seq_len=96`. Metrics: MSE and MAE on masked regions only (lower is better).\n",
  "metric": "mse_ETTh1",
  "lower_is_better": true,
@@ -9,6 +10,7 @@
   "system": "You are a world-class AI researcher. You are given a machine-learning task with a specific editable code component. Reason step by step in your own distinctive style toward ONE genuinely novel, non-obvious idea to improve that component. Make the creative core unmistakably clear and explain how you arrived at it. Focus on ideas and mechanisms, not full implementation code.",
   "user": "# Time Series Imputation: Custom Model Design\n\n## Objective\nDesign and implement a custom deep learning model for time series missing value imputation. Your code goes in the `Model` class in `models/Custom.py`. Three reference implementations (DLinear, TimesNet, PatchTST) are provided as read-only.\n\n## Evaluation\nTrained and evaluated on three multivariate datasets with 25% random masking:\n- **ETTh1** (7 variables)\n- **Weather** (21 variables)\n- **ECL** (321 variables)\n\nAll use `seq_len=96`. Metrics: MSE and MAE on masked regions only (lower is better).\n\n\nThe editable component is `Time-Series-Library/models/Custom.py` (evaluation setting: ETTh1). Propose ONE concrete, novel idea to improve it. Conclude with two lines: 'Core idea:' and 'Non-trivial crux:'."
  },
+ "row_caveat": null,
  "baselines": {
   "methods": [
    {
@@ -45,6 +47,6 @@
     }
    }
   ],
-  "note": "rescaled cells: 50 = strong baseline, 100 = theoretical upper bound. Baseline methods below are the reference implementations the proposals compete against."
+  "note": "rescaled cells: 50 = strong baseline, 100 = theoretical upper bound."
  }
 }

@@ -1,0 +1,30 @@
+{
+ "task": "cifar10",
+ "arm": "m2rl",
+ "arm_label": "Qwen3-235B-A22B RL",
+ "metric": "accuracy",
+ "baseline": 0.51237,
+ "lower_is_better": false,
+ "metric_mean": 0.83615,
+ "delta_pct": 63.193,
+ "ci_pct": 3.178,
+ "success": true,
+ "per_seed": [
+  {
+   "seed": "3",
+   "metric": 0.8244,
+   "delta_pct": 60.899
+  },
+  {
+   "seed": "1",
+   "metric": 0.8479,
+   "delta_pct": 65.486
+  }
+ ],
+ "master_output": {
+  "idea": "**Core idea:** Turn a short training run into a data source for an *interpretable complementarity regressor* that selects a lean, diverse ensemble from many models' per-example confidence profiles, rather than hand-picking 'good' models.\n\n**Non-trivial crux:** The regressor must predict *test-complementarity* (non-overlapping errors) from training-time profiles, not just accuracy — and it only adds value if the candidate models are genuinely architecturally diverse; otherwise the signal collapses and a single tuned model is better.",
+  "proposal": "<think>\nOkay, I'm a researcher who trusts the data more than my own taste for a given architecture. So the first thing I want to do is not reach for a fancier model — it's to ask the data what it actually wants. Let me be honest about what I expect from a naive baseline first. If I take the current model and just tune its own hyperparameters, I'm confined to the bias of that single architecture. That's a small, local move. I'd rather spend the same 10 epochs to explore the shape of the solution space itself.\n\nHere's the leap that cuts against the usual workflow. Instead of spending all my epochs on one model, I treat the *entire training run* as a data-generating process for a different object: I train a diversity of models — different architectures (CNN, ViT, ResNet variants), different normalization schemes, different augmentations — each for a few epochs, and for each I record not just loss but a rich profile: learning rate trajectory, layer-wise gradients, feature map statistics, class-wise accuracy, and most importantly the *per-example confidence* over training. That's my transferable signal: which examples the model was consistently uncertain about, which it flipped on, which it nailed early. The intuition is that a model's own *failure modes* — the places where it wavers — are a strong proxy for where other models might hold useful information. So I don't want to discard the low-accuracy models; I want to let their confusion tell me which ones are *complementary* to each other.\n\nNow the mechanism has to be disciplined, or this becomes a free-for-all. I refuse to hand-pick 'good' models. Instead I fit a small, interpretable model — a logistic regressor — that maps each model's profile to an estimate of its *complementarity* with others. The target isn't accuracy; it's how much this model's errors don't overlap with the rest's. The decision rule: keep only models that the regressor marks as complementary, and stop adding when the marginal gain in diversity no longer pays for the compute. That's how I keep the ensemble lean and avoid the trap of 'more models, more better' — it's a cost-benefit check, not an aesthetic.\n\nBut I have to be cautious about what I'm actually measuring. The complementarity signal is learned on the *training* run's profile, so I must validate that it actually translates to test diversity rather than just training-time disagreement. And the whole thing only helps if the models are diverse enough to disagree on different examples; if they're all the same architecture, the regressor will find little to exploit and I've spent epochs for nothing. That's the crux I'll have to check empirically, not assume.\n\nI should also keep the obvious hygiene: one seed, one split, so any win is attributable, and save per-class probabilities for the leaderboard. And if this ends up not beating a single well-tuned model within the epoch budget, I won't force it — I'll fall back to the simpler single-model route on parsimony grounds.\n\nCore idea: Turn a short training run into a data source for an *interpretable complementarity regressor* that selects a lean, diverse ensemble from many models' per-example confidence profiles, rather than hand-picking 'good' models.\nNon-trivial crux: The regressor must predict *test-complementarity* (non-overlapping errors) from training-time profiles, not just accuracy — and it only adds value if the candidate models are genuinely architecturally diverse; otherwise the signal collapses and a single tuned model is better.\n</think>\n\n**Core idea:** Turn a short training run into a data source for an *interpretable complementarity regressor* that selects a lean, diverse ensemble from many models' per-example confidence profiles, rather than hand-picking 'good' models.\n\n**Non-trivial crux:** The regressor must predict *test-complementarity* (non-overlapping errors) from training-time profiles, not just accuracy — and it only adds value if the candidate models are genuinely architecturally diverse; otherwise the signal collapses and a single tuned model is better.",
+  "valid": true,
+  "n_attempts": 1
+ }
+}

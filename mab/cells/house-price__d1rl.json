@@ -1,0 +1,35 @@
+{
+ "task": "house-price",
+ "arm": "d1rl",
+ "arm_label": "DeepSeek-R1-Qwen3-8B RL",
+ "metric": "mae",
+ "baseline": 21676.12057,
+ "lower_is_better": true,
+ "metric_mean": 20818.954096,
+ "delta_pct": 3.954,
+ "ci_pct": 0.561,
+ "success": false,
+ "per_seed": [
+  {
+   "seed": "2",
+   "metric": 20877.29126257377,
+   "delta_pct": 3.685
+  },
+  {
+   "seed": "1",
+   "metric": 20911.287974223174,
+   "delta_pct": 3.528
+  },
+  {
+   "seed": "3",
+   "metric": 20668.283051044687,
+   "delta_pct": 4.65
+  }
+ ],
+ "master_output": {
+  "idea": "**Mocking:** World-class AI researcher, stepping into this. Let me not start from an algorithm — start from what MUST be true about the data and what I can actually measure.\n\nFirst, the data-description file is my only map. I'm going to read it to get one thing for sure: which features are ordinal (ordered by rating) and which are nominal (unordered categories). That's the invariant I need to treat features differently — ordinal features deserve linear relationships; nominal features deserve one-hot encoding or a binning penalty. So the decision rule is not 'which model' but 'which feature treatment for each feature type.' That's the crux I want to force into the code, not into my head: treat ordinal and nominal features as two orthogonal knobs.\n\nNow, how do I keep myself honest? I refuse to optimize 'which model' blind. The whole point of the ordinal/nominal split is that it changes what the model can even learn — a model that treats ordinal features as ordinal cannot be expected to match a model that treats them as nominal. So the design is: split the features into ordinal and nominal, and let the model fit each subset separately. If I don't do this, I'm comparing apples to apples that are never the same apple. I'll check the baseline first — a model that treats features as nominal-only — and the ordinal-only model has to beat it, or the whole split is worthless.\n\nWhy does this cut against the default? The default move is to 'try different models and pick the best one.' That's a search over many knobs. My claim is the opposite: my knob is only two — ordinal vs. nominal — and the model can be something simple, like a linear model, because the feature split is what carries the information. Simpler, faster, and I get a small, justified model instead of a big one with many hyperparameters. The only caveat I'll keep honest: this only works when features are genuinely ordinal. If a feature is genuinely ordinal, the split pays off; if it's not, forcing it into ordinal would hurt.\n\nHow I keep myself honest, not how I run: (1) Do a baseline model that treats all features as nominal, measure its performance. (2) Run the ordinal-only model, and if the ordinal-only model does not clearly outperform the baseline, the ordinal split is not justifiable and I drop it back, not because I'm lazy. (3) I do not look at the coefficients to explain why; I let the cross-validation numbers decide.\n\nCore idea: Treat ordinal and nominal features as two orthogonal knobs, fit separate models on each, and use a simple model so the feature split carries the information instead of a complex model.\nNon-trivial crux: The split is justified only if the features are genuinely ordinal; otherwise the forced ordinal treatment will hurt, so you must compare the ordinal-only model against the nominal-only baseline and drop it if it doesn't outperform.",
+  "proposal": "**Mocking:** World-class AI researcher, stepping into this. Let me not start from an algorithm — start from what MUST be true about the data and what I can actually measure.\n\nFirst, the data-description file is my only map. I'm going to read it to get one thing for sure: which features are ordinal (ordered by rating) and which are nominal (unordered categories). That's the invariant I need to treat features differently — ordinal features deserve linear relationships; nominal features deserve one-hot encoding or a binning penalty. So the decision rule is not 'which model' but 'which feature treatment for each feature type.' That's the crux I want to force into the code, not into my head: treat ordinal and nominal features as two orthogonal knobs.\n\nNow, how do I keep myself honest? I refuse to optimize 'which model' blind. The whole point of the ordinal/nominal split is that it changes what the model can even learn — a model that treats ordinal features as ordinal cannot be expected to match a model that treats them as nominal. So the design is: split the features into ordinal and nominal, and let the model fit each subset separately. If I don't do this, I'm comparing apples to apples that are never the same apple. I'll check the baseline first — a model that treats features as nominal-only — and the ordinal-only model has to beat it, or the whole split is worthless.\n\nWhy does this cut against the default? The default move is to 'try different models and pick the best one.' That's a search over many knobs. My claim is the opposite: my knob is only two — ordinal vs. nominal — and the model can be something simple, like a linear model, because the feature split is what carries the information. Simpler, faster, and I get a small, justified model instead of a big one with many hyperparameters. The only caveat I'll keep honest: this only works when features are genuinely ordinal. If a feature is genuinely ordinal, the split pays off; if it's not, forcing it into ordinal would hurt.\n\nHow I keep myself honest, not how I run: (1) Do a baseline model that treats all features as nominal, measure its performance. (2) Run the ordinal-only model, and if the ordinal-only model does not clearly outperform the baseline, the ordinal split is not justifiable and I drop it back, not because I'm lazy. (3) I do not look at the coefficients to explain why; I let the cross-validation numbers decide.\n\nCore idea: Treat ordinal and nominal features as two orthogonal knobs, fit separate models on each, and use a simple model so the feature split carries the information instead of a complex model.\nNon-trivial crux: The split is justified only if the features are genuinely ordinal; otherwise the forced ordinal treatment will hurt, so you must compare the ordinal-only model against the nominal-only baseline and drop it if it doesn't outperform.",
+  "valid": true,
+  "n_attempts": 1
+ }
+}

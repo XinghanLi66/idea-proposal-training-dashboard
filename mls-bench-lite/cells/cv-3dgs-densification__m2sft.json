@@ -2,8 +2,10 @@
  "task": "cv-3dgs-densification",
  "arm": "m2sft",
  "arm_label": "Qwen3-235B-A22B SFT",
- "status": "ok",
- "score": 0.0,
+ "status": "scored",
+ "score": 11.6,
+ "worker": "claude-fable-5",
+ "caveat": null,
  "master_output": {
   "idea": "Core idea: Replace fixed gradient/split thresholds with a *per-Gaussian relative* criterion (local gradient divided by local reconstruction quality) and a minimum opacity floor, so densification adapts to scene scale and current fidelity with no per-scene hyperparameter.\n\nNon-trivial crux: The relative metric must be per-Gaussian (not global) and computed during `step_pre_backward` then stored — if computed too late or normalized globally, it falsely triggers splits on large/far Gaussians and gets gamed by low opacities, so it must be paired with an absolute opacity floor and a reset-opacities schedule.",
   "proposal": "<think>\nI'm a researcher who likes to borrow mechanisms from neighboring fields and ask: what is the *real* constraint here that people are papering over?\n\nStart from the observation that every densification paper is basically trying to answer the same question: where should I add or split Gaussians so the reconstruction improves? The default answer is to use a fixed gradient threshold and a fixed schedule, which is the lazy move — it assumes a one-size-fits-all criterion. But that's exactly the problem. The reconstruction fidelity is not a static thing; it depends on the scene's scale, on the camera's distance, and on the current state of the Gaussians themselves. A threshold that works on a garden scene won't necessarily work on a macro or a large-scale scene, and a schedule that's optimal early won't be optimal late.\n\nSo I should ask where this kind of adaptive, scale-invariant reasoning already exists. The obvious source is the classical computer vision / graphics literature on adaptive sampling — e.g. how you sample points on a surface such that the sampling density is *relative to the surface's scale*. The core idea transfers cleanly: instead of an absolute gradient magnitude or an absolute split/clone threshold, measure gradients relative to the local reconstruction quality. A region that's already well-reconstructed (high opacity, low error) needs fewer new Gaussians; a region that's under-reconstructed (low opacity, high gradient) needs more. That's the relative criterion.\n\nNow the crux is not the intuition — it's the engineering. Let me be precise about what breaks when I make the criterion relative. If I just normalize gradients by a global statistic, I lose the per-Gaussian scale: a Gaussian that's genuinely large (because it's far away) gets mistaken for a candidate to split, and a tiny one that's actually important gets culled. So the normalization must be *per-Gaussian*, not global. The second trap is that gradients are transient — they're only valid in the backward pass, and if I compute my relative metric after the backward pass has already consumed them, it's too late. So the relative metric has to be computed inside `step_pre_backward` and stored in `state`, then used in `step_post_backward`. The third trap is that a purely relative metric can be gamed by the optimizer: you could push opacities toward zero to artificially inflate the ratio. So I need a *minimum absolute opacity floor* as a hard constraint on top of the relative rule, so no region can be completely dropped. And I need to keep the existing reset-opacities mechanism to break symmetry — it's still needed because the relative rule alone won't prune unneeded Gaussians.\n\nWhy this cuts against consensus: most densification papers treat the threshold as a hyperparameter to be tuned per scene. I'm proposing to remove that hyperparameter entirely by tying the criterion to the reconstruction's own state, at the cost of making the strategy more stateful and requiring careful per-Gaussian normalization.\n\nHow I keep myself honest: I'll sweep the relative threshold and the minimum opacity floor on garden, and compare against a fixed absolute threshold baseline. Decision rule: keep the relative criterion only if it either (a) matches the fixed baseline at a lower Gaussian count, or (b) clearly improves quality on hard scenes (macro, large-scale) where scale varies — otherwise it's not worth the added complexity. And I'd check whether the MCMC-inspired sampling machinery can be reused to sample new Gaussians from the relative distribution, since that machinery already does weighted sampling.\n\nAlso, for the clone operation: the current `duplicate` just copies parameters, but that leaves the two Gaussians in exactly the same place. To make cloning actually useful, I should add a small positional jitter to the clone, so they start in slightly different locations and can diverge during optimization. This is a small but necessary addition to make cloning effective.\n\nAnd finally, I should test the whole thing with the 'reset_opacities' schedule, because without that the relative metric alone won't clean up redundant Gaussians — the two mechanisms are meant to work together.\n\nCore idea: Replace fixed gradient/split thresholds with a *per-Gaussian relative* criterion (local gradient divided by local reconstruction quality) and a minimum opacity floor, so densification adapts to scene scale and current fidelity with no per-scene hyperparameter.\n\nNon-trivial crux: The relative metric must be per-Gaussian (not global) and computed during `step_pre_backward` then stored — if computed too late or normalized globally, it falsely triggers splits on large/far Gaussians and gets gamed by low opacities, so it must be paired with an absolute opacity floor and a reset-opacities schedule.\n</think>\n\nCore idea: Replace fixed gradient/split thresholds with a *per-Gaussian relative* criterion (local gradient divided by local reconstruction quality) and a minimum opacity floor, so densification adapts to scene scale and current fidelity with no per-scene hyperparameter.\n\nNon-trivial crux: The relative metric must be per-Gaussian (not global) and computed during `step_pre_backward` then stored — if computed too late or normalized globally, it falsely triggers splits on large/far Gaussians and gets gamed by low opacities, so it must be paired with an absolute opacity floor and a reset-opacities schedule.",
@@ -104,6 +106,104 @@
     "num_gs": "9998784",
     "best_psnr": "27.62"
    }
+  },
+  {
+   "seed": "42",
+   "timestamp": "2026-07-25T04:48:48.897058+00:00",
+   "has_metric": true,
+   "metrics": {
+    "best_psnr_garden": "29.852",
+    "best_psnr_bicycle": "27.008",
+    "best_psnr_stump": "27.62",
+    "elapsed_garden": "1245.4",
+    "elapsed_bicycle": "1147.0",
+    "elapsed_bonsai": "18.5",
+    "elapsed_stump": "1075.0",
+    "psnr": "27.62",
+    "ssim": "0.8186",
+    "lpips": "0.094",
+    "num_gs": "9998784.0",
+    "best_psnr": "27.62"
+   }
+  },
+  {
+   "seed": "42",
+   "timestamp": "2026-07-25T04:49:05.563167+00:00",
+   "has_metric": true,
+   "metrics": {
+    "best_psnr_garden": "29.852",
+    "best_psnr_bicycle": "27.008",
+    "best_psnr_stump": "27.62",
+    "elapsed_garden": "1245.4",
+    "elapsed_bicycle": "1147.0",
+    "elapsed_bonsai": "18.5",
+    "elapsed_stump": "1075.0",
+    "psnr": "27.62",
+    "ssim": "0.8186",
+    "lpips": "0.094",
+    "num_gs": "9998784.0",
+    "best_psnr": "27.62"
+   }
+  },
+  {
+   "seed": "42",
+   "timestamp": "2026-07-26T04:20:21.268613+00:00",
+   "has_metric": true,
+   "metrics": {
+    "best_psnr_garden": "25.23",
+    "best_psnr_bicycle": "22.773",
+    "best_psnr_bonsai": "22.437",
+    "best_psnr_stump": "22.156",
+    "elapsed_garden": "277.7",
+    "elapsed_bicycle": "268.3",
+    "elapsed_bonsai": "349.5",
+    "elapsed_stump": "268.6",
+    "psnr": "22.156",
+    "ssim": "0.5222",
+    "lpips": "0.51",
+    "num_gs": "15592",
+    "best_psnr": "22.156"
+   }
+  },
+  {
+   "seed": "42",
+   "timestamp": "2026-07-26T04:37:59.302965+00:00",
+   "has_metric": true,
+   "metrics": {
+    "best_psnr_garden": "29.666",
+    "best_psnr_bicycle": "26.777",
+    "best_psnr_bonsai": "32.875",
+    "best_psnr_stump": "26.61",
+    "elapsed_garden": "621.8",
+    "elapsed_bicycle": "569.0",
+    "elapsed_bonsai": "501.5",
+    "elapsed_stump": "529.1",
+    "psnr": "26.61",
+    "ssim": "0.7714",
+    "lpips": "0.135",
+    "num_gs": "4558220",
+    "best_psnr": "26.61"
+   }
+  },
+  {
+   "seed": "42",
+   "timestamp": "2026-07-26T04:39:01.889376+00:00",
+   "has_metric": true,
+   "metrics": {
+    "best_psnr_garden": "29.884",
+    "best_psnr_bicycle": "27.159",
+    "best_psnr_bonsai": "33.023",
+    "best_psnr_stump": "27.901",
+    "elapsed_garden": "550.2",
+    "elapsed_bicycle": "715.3",
+    "elapsed_bonsai": "391.7",
+    "elapsed_stump": "702.3",
+    "psnr": "27.901",
+    "ssim": "0.8392",
+    "lpips": "0.084",
+    "num_gs": "5782841",
+    "best_psnr": "27.901"
+   }
   }
  ],
  "workers": [
@@ -115,7 +215,7 @@
      "step": 1,
      "tool": "edit",
      "file": "gsplat/custom_strategy.py",
-     "preview": "@dataclass\nclass CustomStrategy(Strategy):\n    \"\"\"Per-Gaussian RELATIVE gradient densification.\n\n    Densify when (local image-space gradient) / (local reconstruction\n    quality) exceeds a scale-free threshold. The local quality proxy is\n    computed per-Gaussian BEFORE backward (opacity x screen footprint) and\n    stored, then paired with the post-backward gradient. An absolute\n    opacity floor"
+     "preview": "@dataclass\nclass CustomStrategy(Strategy):\n    \"\"\"Per-Gaussian *relative* densification criterion.\n\n    Densify when (local gradient) / (local reconstruction-fidelity proxy)\n    exceeds a single scale-free threshold. The fidelity proxy is the\n    per-Gaussian apparent screen-size fraction, accumulated during\n    step_pre_backward (before the backward pass) so it reflects the state\n    of the scene"
     },
     {
      "step": 2,
@@ -126,13 +226,13 @@
      "step": 3,
      "tool": "edit",
      "file": "gsplat/custom_strategy.py",
-     "preview": "            opa = torch.sigmoid(params[\"opacities\"].flatten())\n            # relative criterion + absolute opacity floor\n            is_high = (avg_rel > self.rel_grow) & (opa >= self.opa_floor)\n            # capacity safety: limit growth per refine and total count\n            n_now = avg_rel.numel()\n            budget = min(self.max_gs - n_now, int(0.25 * n_now))\n            n_cand = int(is_high."
+     "preview": "        sel, gs_ids, _ = self._visible(info, n)\n"
     },
     {
      "step": 4,
      "tool": "edit",
      "file": "gsplat/custom_strategy.py",
-     "preview": "    rel_grow: float = 1.5e-3       # relative-gradient threshold (scale-free)\n    max_gs: int = 5_500_000        # hard capacity cap (memory/runtime safety)"
+     "preview": "    @staticmethod\n    def _visible(info, n):\n        \"\"\"Return (sel, gaussian_ids, max_radius) robust to radii layout.\"\"\"\n        radii = info[\"radii\"].float()\n        if radii.dim() == 3:\n            sel = (radii > 0.0).all(dim=-1)          # [C, N]\n            rmax = radii.amax(dim=-1)                # [C, N]\n            gs_ids = torch.where(sel)[1]\n        elif radii.dim() == 2 and radii.shape["
     },
     {
      "step": 5,
@@ -142,14 +242,13 @@
     {
      "step": 6,
      "tool": "edit",
-     "file": "gsplat/custom_strategy.py",
-     "preview": "            q = (opa.clamp_min(self.opa_floor) / self.opa_ref).unsqueeze(0) \\\n                * torch.sqrt(r.clamp(self.r_lo, self.r_hi) / self.r_ref)"
+     "file": null
     },
     {
      "step": 7,
      "tool": "edit",
      "file": "gsplat/custom_strategy.py",
-     "preview": "    rel_grow: float = 5e-4         # relative-gradient threshold (scale-free)\n    max_gs: int = 10_000_000       # hard capacity cap (memory/runtime safety)\n    grow_scale3d: float = 0.01\n    prune_scale3d: float = 0.1\n    refine_start_iter: int = 500\n    refine_stop_iter: int = 18_000\n    reset_every: int = 3000\n    refine_every: int = 100\n    # local-quality normalization constants (screen-space"
+     "preview": "@dataclass\nclass CustomStrategy(Strategy):\n    \"\"\"Per-Gaussian *relative* densification criterion.\n\n    Densify when (local gradient) / (local reconstruction-fidelity proxy)\n    exceeds a single scale-free threshold. The fidelity proxy is the\n    per-Gaussian apparent screen-size fraction, accumulated during\n    step_pre_backward (before the backward pass). Low-opacity Gaussians are\n    excluded v"
     },
     {
      "step": 8,
@@ -163,7 +262,7 @@
     }
    ],
    "final_code": {
-    "gsplat_custom_strategy.py (step 7)": "\"\"\"Custom densification strategy for 3D Gaussian Splatting.\n\nThis file defines the CustomStrategy class that controls how Gaussians\nare added, split, and pruned during per-scene optimization.\n\"\"\"\n\nfrom dataclasses import dataclass\nfrom typing import Any, Dict, Tuple, Union\n\nimport math\nimport torch\nfrom gsplat.strategy.base import Strategy\nfrom gsplat.strategy.ops import (\n    duplicate, split, remove, reset_opa,\n    relocate, sample_add, inject_noise_to_position,\n)\n\n\n# ============================================================================\n# Densification Strategy (EDITABLE REGION: lines 20-90)\n# ============================================================================\n\n@dataclass\nclass CustomStrategy(Strategy):\n    \"\"\"Per-Gaussian RELATIVE gradient densification.\n\n    Densify when (local image-space gradient) / (local reconstruction\n    quality) exceeds a scale-free threshold. The local quality proxy is\n    computed per-Gaussian BEFORE backward (opacity x screen footprint) and\n    stored, then paired with the post-backward gradient. An absolute\n    opacity floor prevents low-opacity Gaussians from gaming the ratio;\n    the periodic opacity reset keeps pruning effective.\n    \"\"\"\n\n    prune_opa: float = 0.005\n    opa_floor: float = 0.05        # absolute opacity floor for densification\n    rel_grow: float = 5e-4         # relative-gradient threshold (scale-free)\n    max_gs: int = 10_000_000       # hard capacity cap (memory/runtime safety)\n    grow_scale3d: float = 0.01\n    prune_scale3d: float = 0.1\n    refine_start_iter: int = 500\n    refine_stop_iter: int = 18_000\n    reset_every: int = 3000\n    refine_every: int = 100\n    # local-quality normalization constants (screen-space, per-Gaussian)\n    r_lo: float = 2.0              # min effective radius (px)\n    r_hi: float = 32.0             # max effective radius (px)\n    r_ref: float = 8.0             # reference radius (px)\n    opa_ref: float = 0.5           # reference opacity\n\n    def initialize_state(self, scene_scale: float = 1.0) -> Dict[str, Any]:\n        return {\"relgrad\": None, \"count\": None, \"scene_scale\": scene_scale,\n                \"quality_step\": [None]}  # list => skipped by resize ops\n\n    def check_sanity(self, params, optimizers):\n        super().check_sanity(params, optimizers)\n        for key in [\"means\", \"scales\", \"quats\", \"opacities\"]:\n            assert key in params, f\"{key} is required in params but missing.\"\n\n    def step_pre_backward(self, params, optimizers, state, step, info):\n        info[\"means2d\"].retain_grad()\n        # Per-Gaussian local quality computed BEFORE backward and stored:\n        # quality = (opacity / opa_ref) * (screen_radius / r_ref), clamped.\n        with torch.no_grad():\n            radii = info[\"radii\"].float()\n            r = radii.max(dim=-1).values if radii.dim() == 3 else radii\n            opa = torch.sigmoid(params[\"opacities\"].detach()).flatten()\n            q = (opa.clamp_min(self.opa_floor) / self.opa_ref).unsqueeze(0) \\\n                * torch.sqrt(r.clamp(self.r_lo, self.r_hi) / self.r_ref)\n            state[\"quality_step\"] = [q]  # [C, N]\n\n    def step_post_backward(self, params, optimizers, state, step, info,\n                           packed=False):\n        if step >= self.refine_stop_iter:\n            return\n\n        if hasattr(info[\"means2d\"], \"absgrad\") and info[\"means2d\"].absgrad is not None:\n            grads = info[\"means2d\"].absgrad.clone()\n        else:\n            grads = info[\"means2d\"].grad.abs().clone()\n        grads[..., 0] *= info[\"width\"] / 2.0 * info[\"n_cameras\"]\n        grads[..., 1] *= info[\"height\"] / 2.0 * info[\"n_cameras\"]\n\n        n = len(list(params.values())[0])\n        if state[\"relgrad\"] is None:\n            state[\"relgrad\"] = torch.zeros(n, device=grads.device)\n            state[\"count\"] = torch.zeros(n, device=grads.device)\n\n        sel = (info[\"radii\"] > 0.0).all(dim=-1)\n        gs_ids = torch.where(sel)[1]\n        q = state[\"quality_step\"][0]\n        rel = grads[sel].norm(dim=-1) / q[sel].clamp_min(1e-8)\n        state[\"relgrad\"].index_add_(0, gs_ids, rel)\n        state[\"count\"].index_add_(0, gs_ids,\n                                  torch.ones_like(gs_ids, dtype=torch.float32))\n\n        if step > self.refine_start_iter and step % self.refine_every == 0:\n            avg_rel = state[\"relgrad\"] / state[\"count\"].clamp_min(1)\n            scene_scale = state[\"scene_scale\"]\n\n            opa = torch.sigmoid(params[\"opacities\"].flatten())\n            # relative criterion + absolute opacity floor\n            is_high = (avg_rel > self.rel_grow) & (opa >= self.opa_floor)\n            # capacity safety: limit growth per refine and total count\n            n_now = avg_rel.numel()\n            budget = min(self.max_gs - n_now, int(0.25 * n_now))\n            n_cand = int(is_high.sum())\n            if budget <= 0:\n                is_high = torch.zeros_like(is_high)\n            elif n_cand > budget:\n                scores = torch.where(is_high, avg_rel,\n                                     torch.full_like(avg_rel, -1.0))\n                kth = torch.topk(scores, budget).values.min()\n                is_high = is_high & (scores >= kth)\n            scale_max = torch.exp(params[\"scales\"]).max(dim=-1).values\n            is_small = scale_max <= self.grow_scale3d * scene_scale\n\n            is_dupli = is_high & is_small\n            if is_dupli.sum() > 0:\n                duplicate(params=params, optimizers=optimizers, state=state,\n                          mask=is_dupli)\n\n            is_split = is_high & ~is_small\n            is_split = torch.cat([is_split,\n                                  torch.zeros(is_dupli.sum(), dtype=torch.bool,\n                                              device=is_split.device)])\n            if is_split.sum() > 0:\n                split(params=params, optimizers=optimizers, state=state,\n                      mask=is_split, revised_opacity=True)\n\n            is_prune = torch.sigmoid(params[\"opacities\"].flatten()) < self.prune_opa\n            if step > self.reset_every:\n                scale_max = torch.exp(params[\"scales\"]).max(dim=-1).values\n                is_prune = is_prune | (scale_max > self.prune_scale3d * scene_scale)\n            if is_prune.sum() > 0:\n                remove(params=params, optimizers=optimizers, state=state,\n                       mask=is_prune)\n\n            state[\"relgrad\"].zero_()\n            state[\"count\"].zero_()\n            torch.cuda.empty_cache()\n\n        if step % self.reset_every == 0 and step > 0:\n            reset_opa(params=params, optimizers=optimizers, state=state,\n                      value=self.prune_opa * 2.0)\n"
+    "gsplat_custom_strategy.py (step 7)": "\"\"\"Custom densification strategy for 3D Gaussian Splatting.\n\nThis file defines the CustomStrategy class that controls how Gaussians\nare added, split, and pruned during per-scene optimization.\n\"\"\"\n\nfrom dataclasses import dataclass\nfrom typing import Any, Dict, Tuple, Union\n\nimport math\nimport torch\nfrom gsplat.strategy.base import Strategy\nfrom gsplat.strategy.ops import (\n    duplicate, split, remove, reset_opa,\n    relocate, sample_add, inject_noise_to_position,\n)\n\n\n# ============================================================================\n# Densification Strategy (EDITABLE REGION: lines 20-90)\n# ============================================================================\n\n@dataclass\nclass CustomStrategy(Strategy):\n    \"\"\"Per-Gaussian *relative* densification criterion.\n\n    Densify when (local gradient) / (local reconstruction-fidelity proxy)\n    exceeds a single scale-free threshold. The fidelity proxy is the\n    per-Gaussian apparent screen-size fraction, accumulated during\n    step_pre_backward (before the backward pass). Low-opacity Gaussians are\n    excluded via an absolute opacity floor so they cannot game the relative\n    metric, and the periodic reset-opacities schedule is kept.\n    \"\"\"\n\n    prune_opa: float = 0.005\n    rel_thresh: float = 0.06        # threshold on grad / apparent-size ratio\n    opa_floor: float = 0.05         # absolute opacity floor for densification\n    size_floor: float = 0.005       # denominator clamp (fraction of image)\n    size_cap: float = 0.04          # protects large/far Gaussians\n    grow_scale3d: float = 0.01\n    prune_scale3d: float = 0.1\n    refine_start_iter: int = 500\n    refine_stop_iter: int = 15_000\n    reset_every: int = 3000\n    refine_every: int = 100\n\n    def initialize_state(self, scene_scale: float = 1.0) -> Dict[str, Any]:\n        return {\"grad2d\": None, \"count\": None, \"size\": None,\n                \"scene_scale\": scene_scale}\n\n    def check_sanity(self, params, optimizers):\n        super().check_sanity(params, optimizers)\n        for key in [\"means\", \"scales\", \"quats\", \"opacities\"]:\n            assert key in params, f\"{key} is required in params but missing.\"\n\n    @staticmethod\n    def _vis(info, n):\n        \"\"\"Robustly derive visibility from radii of any layout:\n        [C,N], [N], [N,1|2], [C,N,1|2]. Returns (sel [C',N] bool,\n        gs_ids [M] gaussian indices, rflat [C',N] float max-radius).\"\"\"\n        r = info[\"radii\"].float()\n        if r.dim() >= 2 and r.shape[-1] <= 2 and r.shape[-2] == n:\n            r = r.amax(dim=-1)\n        if r.numel() % n == 0:\n            r = r.reshape(-1, n)\n        else:\n            r = r.reshape(1, -1)\n        sel = r > 0.0\n        gs_ids = torch.where(sel)[1]\n        return sel, gs_ids, r\n\n    def step_pre_backward(self, params, optimizers, state, step, info):\n        info[\"means2d\"].retain_grad()\n        # Per-Gaussian local fidelity proxy computed BEFORE backward:\n        # accumulated apparent screen-size fraction of each visible Gaussian.\n        n = len(params[\"means\"])\n        sel, gs_ids, rflat = self._vis(info, n)\n        if state[\"size\"] is None or state[\"size\"].shape[0] != n:\n            state[\"size\"] = torch.zeros(n, device=rflat.device)\n        if gs_ids.numel() > 0 and int(gs_ids.max()) < n:\n            size_frac = rflat[sel] / float(max(info[\"width\"], info[\"height\"]))\n            state[\"size\"].index_add_(0, gs_ids, size_frac)\n\n    def step_post_backward(self, params, optimizers, state, step, info,\n                           packed=False):\n        if step >= self.refine_stop_iter:\n            return\n\n        m2d = info[\"means2d\"]\n        ag = getattr(m2d, \"absgrad\", None)\n        if ag is not None and tuple(ag.shape) == tuple(m2d.shape):\n            grads = ag.clone()\n        else:\n            grads = m2d.grad.abs().clone()\n        grads[..., 0] *= info[\"width\"] / 2.0 * info[\"n_cameras\"]\n        grads[..., 1] *= info[\"height\"] / 2.0 * info[\"n_cameras\"]\n\n        n = len(params[\"means\"])\n        if state[\"grad2d\"] is None or state[\"grad2d\"].shape[0] != n:\n            state[\"grad2d\"] = torch.zeros(n, device=grads.device)\n            state[\"count\"] = torch.zeros(n, device=grads.device)\n        if state[\"size\"] is None or state[\"size\"].shape[0] != n:\n            state[\"size\"] = torch.zeros(n, device=grads.device)\n\n        sel, gs_ids, _ = self._vis(info, n)\n        norms = grads.reshape(-1, grads.shape[-1]).norm(dim=-1)  # [K]\n        if norms.numel() == sel.numel():\n            grad_norms = norms.reshape(sel.shape)[sel]           # [M]\n        elif norms.numel() == n:\n            grad_norms = norms[gs_ids]\n        else:\n            grad_norms = torch.zeros(gs_ids.numel(), device=grads.device)\n        if gs_ids.numel() > 0 and int(gs_ids.max()) < n:\n            state[\"grad2d\"].index_add_(0, gs_ids, grad_norms)\n            state[\"count\"].index_add_(\n                0, gs_ids, torch.ones_like(gs_ids, dtype=torch.float32))\n\n        if step > self.refine_start_iter and step % self.refine_every == 0:\n            cnt = state[\"count\"].clamp_min(1)\n            avg_grads = state[\"grad2d\"] / cnt\n            # Per-Gaussian relative metric: gradient / local apparent size.\n            avg_size = (state[\"size\"] / cnt).clamp(self.size_floor,\n                                                   self.size_cap)\n            rel = avg_grads / avg_size\n            opa = torch.sigmoid(params[\"opacities\"].flatten())\n            # Opacity floor: low-alpha Gaussians cannot trigger densification.\n            is_grad_high = (rel > self.rel_thresh) & (opa > self.opa_floor)\n\n            scale_max = torch.exp(params[\"scales\"]).max(dim=-1).values\n            is_small = scale_max <= self.grow_scale3d * state[\"scene_scale\"]\n\n            is_dupli = is_grad_high & is_small\n            if is_dupli.sum() > 0:\n                duplicate(params=params, optimizers=optimizers, state=state,\n                          mask=is_dupli)\n\n            is_split = is_grad_high & ~is_small\n            is_split = torch.cat([\n                is_split,\n                torch.zeros(int(is_dupli.sum()), dtype=torch.bool,\n                            device=is_split.device)])\n            if is_split.sum() > 0:\n                split(params=params, optimizers=optimizers, state=state,\n                      mask=is_split)\n\n            is_prune = torch.sigmoid(params[\"opacities\"].flatten()) < self.prune_opa\n            if step > self.reset_every:\n                scale_max = torch.exp(params[\"scales\"]).max(dim=-1).values\n                is_prune = is_prune | (\n                    scale_max > self.prune_scale3d * state[\"scene_scale\"])\n            if is_prune.sum() > 0:\n                remove(params=params, optimizers=optimizers, state=state,\n                       mask=is_prune)\n\n            state[\"grad2d\"].zero_()\n            state[\"count\"].zero_()\n            state[\"size\"].zero_()\n            torch.cuda.empty_cache()\n\n        if step % self.reset_every == 0 and step > 0:\n            reset_opa(params=params, optimizers=optimizers, state=state,\n                      value=self.prune_opa * 2.0)\n"
    },
    "summary": {
     "steps": 8,
@@ -172,10 +271,10 @@
     "max_steps": 20,
     "tokens": {
      "prompt_tokens": 18,
-     "completion_tokens": 29711,
-     "total_tokens": 29729,
-     "cached_tokens": 160159,
-     "cache_creation_tokens": 150331,
+     "completion_tokens": 42310,
+     "total_tokens": 42328,
+     "cached_tokens": 243388,
+     "cache_creation_tokens": 119502,
      "calls": 9
     }
    }
@@ -188,7 +287,7 @@
      "step": 1,
      "tool": "edit",
      "file": "gsplat/custom_strategy.py",
-     "preview": "@dataclass\nclass CustomStrategy(Strategy):\n    \"\"\"Relative densification: per-Gaussian grad / local-quality criterion.\n\n    Densify when a Gaussian's accumulated screen-space gradient is large\n    *relative to its own current reconstruction quality* (normalized screen\n    footprint x opacity, accumulated at forward time in step_pre_backward).\n    Paired with an absolute opacity floor (low-opacity "
+     "preview": "# Densification Strategy (EDITABLE REGION)\n# ============================================================================\n\n@dataclass\nclass CustomStrategy(Strategy):\n    \"\"\"Per-Gaussian RELATIVE densification: local grad / local quality + opacity floor.\"\"\"\n\n    prune_opa: float = 0.005\n    rel_grad2d: float = 0.0006      # threshold on relative metric (grad / quality)\n    opa_floor: float = 0.15  "
     },
     {
      "step": 2,
@@ -199,56 +298,45 @@
      "step": 3,
      "tool": "edit",
      "file": "gsplat/custom_strategy.py",
-     "preview": "        if step > self.refine_start_iter and step % self.refine_every == 0:\n            cnt = state[\"count\"].clamp_min(1)\n            avg_grads = state[\"grad2d\"] / cnt\n            avg_quality = (state[\"quality\"] / cnt).clamp_min(1e-8)\n            # Per-Gaussian relative metric: local gradient / local quality\n            rel = avg_grads / avg_quality\n            opa_now = torch.sigmoid(params[\"opac"
+     "preview": "        radii = info[\"radii\"]\n        sel = (radii > 0.0) if radii.dim() == 2 else (radii > 0.0).all(dim=-1)\n        gs_ids = torch.where(sel)[1]\n"
     },
     {
      "step": 4,
-     "tool": "edit",
-     "file": "gsplat/custom_strategy.py",
-     "preview": "    # Relative criterion\n    rel_thresh: float = 0.05         # grad / local-quality ratio trigger\n    densify_opa_floor: float = 0.05  # absolute opacity floor for densification\n    footprint_floor: float = 0.02    # r0: normalized-radius floor in quality\n    grow_frac: float = 0.05          # max fraction of N densified per refine\n    max_gaussians: int = 4_200_000   # safety cap (memory / time)"
-    },
-    {
-     "step": 5,
      "tool": "test",
      "file": null
     },
     {
-     "step": 6,
+     "step": 5,
      "tool": "edit",
+     "file": "gsplat/custom_strategy.py",
+     "preview": "        if grads.dim() == 2:  # packed mode: [nnz, 2] with gaussian_ids\n            gs_ids = info[\"gaussian_ids\"]\n            grad_norms = grads.norm(dim=-1)\n        else:  # unpacked: [C, N, 2]\n            radii = info[\"radii\"]\n            sel = (radii > 0.0) if radii.dim() == 2 else (radii > 0.0).all(dim=-1)\n            gs_ids = torch.where(sel)[1]\n            grad_norms = grads[sel].norm(dim=-1"
+    },
+    {
+     "step": 6,
+     "tool": "test",
      "file": null
     },
     {
      "step": 7,
-     "tool": "edit",
-     "file": "gsplat/custom_strategy.py",
-     "preview": "@dataclass\nclass CustomStrategy(Strategy):\n    \"\"\"Relative densification: per-Gaussian grad / local-quality criterion.\n\n    Densify when a Gaussian's accumulated screen-space gradient is large\n    *relative to its own current reconstruction quality* (normalized screen\n    footprint x opacity, accumulated at forward time in step_pre_backward).\n    Paired with an absolute opacity floor (low-opacity "
-    },
-    {
-     "step": 8,
-     "tool": "test",
-     "file": null
-    },
-    {
-     "step": 9,
      "tool": "submit",
      "file": null
     }
    ],
    "final_code": {
-    "gsplat_custom_strategy.py (step 7)": "\"\"\"Custom densification strategy for 3D Gaussian Splatting.\n\nThis file defines the CustomStrategy class that controls how Gaussians\nare added, split, and pruned during per-scene optimization.\n\"\"\"\n\nfrom dataclasses import dataclass\nfrom typing import Any, Dict, Tuple, Union\n\nimport math\nimport torch\nfrom gsplat.strategy.base import Strategy\nfrom gsplat.strategy.ops import (\n    duplicate, split, remove, reset_opa,\n    relocate, sample_add, inject_noise_to_position,\n)\n\n\n# ============================================================================\n# Densification Strategy (EDITABLE REGION: lines 20-90)\n# ============================================================================\n\n@dataclass\nclass CustomStrategy(Strategy):\n    \"\"\"Relative densification: per-Gaussian grad / local-quality criterion.\n\n    Densify when a Gaussian's accumulated screen-space gradient is large\n    *relative to its own current reconstruction quality* (normalized screen\n    footprint x opacity, accumulated at forward time in step_pre_backward).\n    Paired with an absolute opacity floor (low-opacity Gaussians cannot game\n    the ratio) and the standard reset-opacities schedule. No per-scene\n    gradient threshold: the criterion adapts to scale and fidelity.\n    \"\"\"\n\n    prune_opa: float = 0.005\n    grow_scale3d: float = 0.01\n    prune_scale3d: float = 0.1\n    refine_start_iter: int = 500\n    refine_stop_iter: int = 20_000\n    reset_every: int = 3000\n    refine_every: int = 100\n    # Relative criterion\n    rel_thresh: float = 0.014        # grad / local-quality ratio trigger\n    densify_opa_floor: float = 0.05  # absolute opacity floor for densification\n    footprint_floor: float = 0.04    # r0: normalized-radius floor in quality\n    grow_frac: float = 0.10          # max fraction of N densified per refine\n    max_gaussians: int = 5_000_000   # safety cap (memory / time)\n\n    def initialize_state(self, scene_scale: float = 1.0) -> Dict[str, Any]:\n        return {\"grad2d\": None, \"count\": None, \"quality\": None,\n                \"scene_scale\": scene_scale}\n\n    def check_sanity(self, params, optimizers):\n        super().check_sanity(params, optimizers)\n        for key in [\"means\", \"scales\", \"quats\", \"opacities\"]:\n            assert key in params, f\"{key} is required in params but missing.\"\n\n    def _lazy_init(self, state, n, device):\n        if state[\"grad2d\"] is None:\n            state[\"grad2d\"] = torch.zeros(n, device=device)\n            state[\"count\"] = torch.zeros(n, device=device)\n            state[\"quality\"] = torch.zeros(n, device=device)\n\n    def step_pre_backward(self, params, optimizers, state, step, info):\n        info[\"means2d\"].retain_grad()\n        # Per-Gaussian local reconstruction quality, computed at FORWARD time\n        # (before backward), then stored: normalized screen footprint x\n        # current opacity. Opacity is clamped from below by the floor so the\n        # ratio cannot be inflated by near-transparent Gaussians.\n        n = len(params[\"means\"])\n        self._lazy_init(state, n, params[\"means\"].device)\n        try:\n            radii = info[\"radii\"]\n            if info[\"means2d\"].dim() == 2:  # packed layout\n                gs_ids = info[\"gaussian_ids\"]\n                r_pix = radii.float()\n                if r_pix.dim() > 1:\n                    r_pix = r_pix.max(dim=-1).values\n            else:\n                sel = (radii > 0.0).all(dim=-1) if radii.dim() == 3 \\\n                    else (radii > 0.0)\n                gs_ids = torch.where(sel)[1]\n                r_pix = radii[sel].float()\n                if r_pix.dim() > 1:\n                    r_pix = r_pix.max(dim=-1).values\n            r_norm = r_pix / (0.5 * max(info[\"width\"], info[\"height\"]))\n            opa = torch.sigmoid(params[\"opacities\"].detach().flatten())[gs_ids]\n            q = opa.clamp_min(self.densify_opa_floor) * \\\n                (r_norm + self.footprint_floor)\n            state[\"quality\"].index_add_(0, gs_ids, q)\n        except Exception:\n            pass  # fall back: refine uses the clamped quality floor\n\n    def step_post_backward(self, params, optimizers, state, step, info,\n                           packed=False):\n        if step >= self.refine_stop_iter:\n            return\n\n        if hasattr(info[\"means2d\"], \"absgrad\"):\n            grads = info[\"means2d\"].absgrad.clone()\n        else:\n            grads = info[\"means2d\"].grad.abs().clone()\n        grads[..., 0] *= info[\"width\"] / 2.0 * info[\"n_cameras\"]\n        grads[..., 1] *= info[\"height\"] / 2.0 * info[\"n_cameras\"]\n\n        n = len(params[\"means\"])\n        self._lazy_init(state, n, grads.device)\n        if packed:\n            gs_ids = info[\"gaussian_ids\"]\n            grad_norms = grads.norm(dim=-1)\n        else:\n            sel = (info[\"radii\"] > 0.0).all(dim=-1)\n            gs_ids = torch.where(sel)[1]\n            grad_norms = grads[sel].norm(dim=-1)\n        state[\"grad2d\"].index_add_(0, gs_ids, grad_norms)\n        state[\"count\"].index_add_(0, gs_ids,\n                                  torch.ones_like(gs_ids, dtype=torch.float32))\n\n        if step > self.refine_start_iter and step % self.refine_every == 0:\n            cnt = state[\"count\"].clamp_min(1)\n            avg_grads = state[\"grad2d\"] / cnt\n            # Local quality floor: min opacity x min footprint (stability)\n            avg_quality = (state[\"quality\"] / cnt).clamp_min(\n                self.densify_opa_floor * self.footprint_floor)\n            # Per-Gaussian relative metric: local gradient / local quality\n            rel = avg_grads / avg_quality\n            opa_now = torch.sigmoid(params[\"opacities\"].flatten())\n            is_grad_high = (rel > self.rel_thresh) & \\\n                           (opa_now > self.densify_opa_floor)\n            # Pace growth: densify at most grow_frac of N per refine step,\n            # taking the highest relative-metric Gaussians first.\n            budget = int(self.grow_frac * n)\n            if n >= self.max_gaussians:\n                budget = 0\n            if int(is_grad_high.sum()) > budget:\n                if budget > 0:\n                    score = torch.where(is_grad_high, rel,\n                                        torch.full_like(rel, -1.0))\n                    keep = torch.topk(score, budget).indices\n                    is_grad_high = torch.zeros_like(is_grad_high)\n                    is_grad_high[keep] = True\n                else:\n                    is_grad_high = torch.zeros_like(is_grad_high)\n            scene_scale = state[\"scene_scale\"]\n            scale_max = torch.exp(params[\"scales\"]).max(dim=-1).values\n            is_small = scale_max <= self.grow_scale3d * scene_scale\n\n            is_dupli = is_grad_high & is_small\n            if is_dupli.sum() > 0:\n                duplicate(params=params, optimizers=optimizers, state=state,\n                          mask=is_dupli)\n\n            is_split = is_grad_high & ~is_small\n            is_split = torch.cat([is_split,\n                                  torch.zeros(int(is_dupli.sum()),\n                                              dtype=torch.bool,\n                                              device=is_split.device)])\n            if is_split.sum() > 0:\n                split(params=params, optimizers=optimizers, state=state,\n                      mask=is_split, revised_opacity=True)\n\n            is_prune = torch.sigmoid(params[\"opacities\"].flatten()) < self.prune_opa\n            if step > self.reset_every:\n                scale_max = torch.exp(params[\"scales\"]).max(dim=-1).values\n                is_prune = is_prune | (scale_max > self.prune_scale3d * scene_scale)\n            if is_prune.sum() > 0:\n                remove(params=params, optimizers=optimizers, state=state,\n                       mask=is_prune)\n\n            state[\"grad2d\"].zero_()\n            state[\"count\"].zero_()\n            state[\"quality\"].zero_()\n            torch.cuda.empty_cache()\n\n        # Reset-opacities schedule (required companion of the opacity floor)\n        if step % self.reset_every == 0 and step > 0:\n            reset_opa(params=params, optimizers=optimizers, state=state,\n                      value=self.prune_opa * 2.0)\n"
+    "gsplat_custom_strategy.py (step 5)": "\"\"\"Custom densification strategy for 3D Gaussian Splatting.\n\nThis file defines the CustomStrategy class that controls how Gaussians\nare added, split, and pruned during per-scene optimization.\n\"\"\"\n\nfrom dataclasses import dataclass\nfrom typing import Any, Dict, Tuple, Union\n\nimport math\nimport torch\nfrom gsplat.strategy.base import Strategy\nfrom gsplat.strategy.ops import (\n    duplicate, split, remove, reset_opa,\n    relocate, sample_add, inject_noise_to_position,\n)\n\n\n# ============================================================================\n# Densification Strategy (EDITABLE REGION)\n# ============================================================================\n\n@dataclass\nclass CustomStrategy(Strategy):\n    \"\"\"Per-Gaussian RELATIVE densification: local grad / local quality + opacity floor.\"\"\"\n\n    prune_opa: float = 0.005\n    rel_grad2d: float = 0.0006      # threshold on relative metric (grad / quality)\n    opa_floor: float = 0.15         # absolute opacity floor (anti low-opacity gaming)\n    grow_scale3d: float = 0.01\n    prune_scale3d: float = 0.1\n    refine_start_iter: int = 500\n    refine_stop_iter: int = 20_000\n    reset_every: int = 3000\n    refine_every: int = 100\n    recovery_offset: int = 300      # prune this many iters after each opacity reset\n    recovery_opa: float = 0.05\n\n    def initialize_state(self, scene_scale: float = 1.0) -> Dict[str, Any]:\n        return {\"grad2d\": None, \"count\": None, \"qual\": None, \"scene_scale\": scene_scale}\n\n    def check_sanity(self, params, optimizers):\n        super().check_sanity(params, optimizers)\n        for key in [\"means\", \"scales\", \"quats\", \"opacities\"]:\n            assert key in params, f\"{key} is required in params but missing.\"\n\n    def step_pre_backward(self, params, optimizers, state, step, info):\n        info[\"means2d\"].retain_grad()\n        # Snapshot per-Gaussian local quality BEFORE backward (must match render state)\n        state[\"opa_snap\"] = torch.sigmoid(params[\"opacities\"].detach().flatten()).clone()\n\n    def step_post_backward(self, params, optimizers, state, step, info, packed=False):\n        if step >= self.refine_stop_iter:\n            return\n        if hasattr(info[\"means2d\"], \"absgrad\"):\n            grads = info[\"means2d\"].absgrad.clone()\n        else:\n            grads = info[\"means2d\"].grad.abs().clone()\n        grads[..., 0] *= info[\"width\"] / 2.0 * info[\"n_cameras\"]\n        grads[..., 1] *= info[\"height\"] / 2.0 * info[\"n_cameras\"]\n\n        n = len(list(params.values())[0])\n        if state[\"grad2d\"] is None or len(state[\"grad2d\"]) != n:\n            state[\"grad2d\"] = torch.zeros(n, device=grads.device)\n            state[\"count\"] = torch.zeros(n, device=grads.device)\n            state[\"qual\"] = torch.zeros(n, device=grads.device)\n\n        if grads.dim() == 2:  # packed mode: [nnz, 2] with gaussian_ids\n            gs_ids = info[\"gaussian_ids\"]\n            grad_norms = grads.norm(dim=-1)\n        else:  # unpacked: [C, N, 2]\n            radii = info[\"radii\"]\n            sel = (radii > 0.0) if radii.dim() == 2 else (radii > 0.0).all(dim=-1)\n            gs_ids = torch.where(sel)[1]\n            grad_norms = grads[sel].norm(dim=-1)\n        state[\"grad2d\"].index_add_(0, gs_ids, grad_norms)\n        state[\"count\"].index_add_(0, gs_ids, torch.ones_like(gs_ids, dtype=torch.float32))\n        state[\"qual\"].index_add_(0, gs_ids, state[\"opa_snap\"][gs_ids])\n\n        # Recovery-timed prune shortly after each opacity reset (keeps count stable)\n        if step > self.reset_every and (step - self.recovery_offset) % self.reset_every == 0:\n            is_rec = torch.sigmoid(params[\"opacities\"].flatten()) < self.recovery_opa\n            if is_rec.sum() > 0:\n                remove(params=params, optimizers=optimizers, state=state, mask=is_rec)\n\n        if step > self.refine_start_iter and step % self.refine_every == 0:\n            cnt = state[\"count\"].clamp_min(1)\n            avg_grads = state[\"grad2d\"] / cnt\n            avg_qual = (state[\"qual\"] / cnt).clamp(self.opa_floor, 1.0)\n            rel = avg_grads / avg_qual  # per-Gaussian relative criterion\n            opa = torch.sigmoid(params[\"opacities\"].flatten())\n            is_grad_high = (rel > self.rel_grad2d) & (opa > self.opa_floor)\n            scale_max = torch.exp(params[\"scales\"]).max(dim=-1).values\n            is_small = scale_max <= self.grow_scale3d * state[\"scene_scale\"]\n\n            is_dupli = is_grad_high & is_small\n            if is_dupli.sum() > 0:\n                duplicate(params=params, optimizers=optimizers, state=state, mask=is_dupli)\n            is_split = is_grad_high & ~is_small\n            is_split = torch.cat([is_split, torch.zeros(is_dupli.sum(), dtype=torch.bool, device=is_split.device)])\n            if is_split.sum() > 0:\n                split(params=params, optimizers=optimizers, state=state, mask=is_split, revised_opacity=True)\n\n            is_prune = torch.sigmoid(params[\"opacities\"].flatten()) < self.prune_opa\n            if step > self.reset_every:\n                scale_max = torch.exp(params[\"scales\"]).max(dim=-1).values\n                is_prune = is_prune | (scale_max > self.prune_scale3d * state[\"scene_scale\"])\n            if is_prune.sum() > 0:\n                remove(params=params, optimizers=optimizers, state=state, mask=is_prune)\n\n            state[\"grad2d\"].zero_()\n            state[\"count\"].zero_()\n            state[\"qual\"].zero_()\n            torch.cuda.empty_cache()\n\n        if step % self.reset_every == 0 and step > 0:\n            reset_opa(params=params, optimizers=optimizers, state=state,\n                      value=self.prune_opa * 2.0)\n"
    },
    "summary": {
-    "steps": 8,
+    "steps": 6,
     "tests": 3,
     "done": true,
     "max_steps": 20,
     "tokens": {
-     "prompt_tokens": 18,
-     "completion_tokens": 40144,
-     "total_tokens": 40162,
-     "cached_tokens": 182469,
-     "cache_creation_tokens": 154516,
-     "calls": 9
+     "prompt_tokens": 16,
+     "completion_tokens": 34769,
+     "total_tokens": 34785,
+     "cached_tokens": 169227,
+     "cache_creation_tokens": 45276,
+     "calls": 8
     }
    }
   },
@@ -259,57 +347,62 @@
     {
      "step": 1,
      "tool": "edit",
-     "file": "gsplat/custom_strategy.py",
-     "preview": "# Densification Strategy (EDITABLE REGION)\n# ============================================================================\n\n@dataclass\nclass CustomStrategy(Strategy):\n    \"\"\"Relative-gradient densification (per-Gaussian, scale-free).\n\n    Replaces the fixed global gradient threshold by a *per-Gaussian relative*\n    criterion: the local screen-space gradient magnitude divided by a local\n    reconstr"
+     "file": "gsplat/custom_strategy.py"
     },
     {
      "step": 2,
-     "tool": "test",
-     "file": null
+     "tool": "edit",
+     "file": "gsplat/custom_strategy.py",
+     "preview": "# Densification Strategy (EDITABLE REGION)\n# ============================================================================\n@dataclass\nclass CustomStrategy(Strategy):\n    \"\"\"Per-Gaussian RELATIVE densification: local gradient divided by local\n    reconstruction quality (opacity x screen coverage), snapshotted in\n    step_pre_backward so it aligns with this step's gradients. Growth is\n    gated by an"
     },
     {
      "step": 3,
-     "tool": "edit",
-     "file": "gsplat/custom_strategy.py",
-     "preview": "    prune_opa: float = 0.005\n    rel_grow_grad2d: float = 0.0009   # threshold on grad / quality\n    qual_min: float = 0.4             # lower clamp of the quality proxy\n    opa_floor: float = 0.15           # absolute eligibility floor (anti-gaming)\n    grow_scale3d: float = 0.01\n    prune_scale3d: float = 0.1\n    refine_start_iter: int = 500\n    refine_stop_iter: int = 18_000\n"
+     "tool": "test",
+     "file": null
     },
     {
      "step": 4,
-     "tool": "test",
-     "file": null
+     "tool": "edit",
+     "file": "gsplat/custom_strategy.py",
+     "preview": "# Densification Strategy (EDITABLE REGION)\n# ============================================================================\n@dataclass\nclass CustomStrategy(Strategy):\n    \"\"\"Per-Gaussian RELATIVE densification: local gradient divided by local\n    reconstruction quality (opacity x screen coverage), snapshotted in\n    step_pre_backward so it aligns with this step's gradients. Growth is\n    gated by an"
     },
     {
      "step": 5,
-     "tool": "edit",
-     "file": "gsplat/custom_strategy.py",
-     "preview": "    prune_opa: float = 0.005\n    rel_grow_grad2d: float = 0.0006   # threshold on grad / quality\n    qual_min: float = 0.5             # lower clamp of the quality proxy\n    opa_floor: float = 0.15           # absolute eligibility floor (anti-gaming)\n    grow_scale3d: float = 0.01\n    prune_scale3d: float = 0.1\n    refine_start_iter: int = 500\n    refine_stop_iter: int = 18_000\n"
-    },
-    {
-     "step": 6,
      "tool": "test",
      "file": null
     },
     {
+     "step": 6,
+     "tool": "edit",
+     "file": "gsplat/custom_strategy.py",
+     "preview": "# Densification Strategy (EDITABLE REGION)\n# ============================================================================\n@dataclass\nclass CustomStrategy(Strategy):\n    \"\"\"Per-Gaussian RELATIVE densification: local gradient divided by local\n    reconstruction quality (opacity x screen coverage), snapshotted in\n    step_pre_backward so it aligns with this step's gradients. Growth is\n    gated by an"
+    },
+    {
      "step": 7,
+     "tool": "test",
+     "file": null
+    },
+    {
+     "step": 8,
      "tool": "submit",
      "file": null
     }
    ],
    "final_code": {
-    "gsplat_custom_strategy.py (step 5)": "\"\"\"Custom densification strategy for 3D Gaussian Splatting.\n\nThis file defines the CustomStrategy class that controls how Gaussians\nare added, split, and pruned during per-scene optimization.\n\"\"\"\n\nfrom dataclasses import dataclass\nfrom typing import Any, Dict, Tuple, Union\n\nimport math\nimport torch\nfrom gsplat.strategy.base import Strategy\nfrom gsplat.strategy.ops import (\n    duplicate, split, remove, reset_opa,\n    relocate, sample_add, inject_noise_to_position,\n)\n\n\n# ============================================================================\n# Densification Strategy (EDITABLE REGION)\n# ============================================================================\n\n@dataclass\nclass CustomStrategy(Strategy):\n    \"\"\"Relative-gradient densification (per-Gaussian, scale-free).\n\n    Replaces the fixed global gradient threshold by a *per-Gaussian relative*\n    criterion: the local screen-space gradient magnitude divided by a local\n    reconstruction-quality proxy q_i (the Gaussian's own blending opacity),\n    i.e. densify Gaussian i when\n\n        E_views[ ||dL/dmu_i^2D|| ] / q_i  >  rel_grow_grad2d ,\n        q_i = clamp(sigmoid(opacity_i), qual_min, 1).\n\n    q_i is snapshotted in step_pre_backward (before backward/optimizer step of\n    the same iteration) so the metric is per-Gaussian and not corrupted by the\n    current step's update. To prevent nearly-transparent Gaussians from gaming\n    the ratio, densification requires an absolute opacity floor, and the usual\n    periodic opacity-reset schedule is kept.\n    \"\"\"\n\n    prune_opa: float = 0.005\n    rel_grow_grad2d: float = 0.0006   # threshold on grad / quality\n    qual_min: float = 0.5             # lower clamp of the quality proxy\n    opa_floor: float = 0.15           # absolute eligibility floor (anti-gaming)\n    grow_scale3d: float = 0.01\n    prune_scale3d: float = 0.1\n    refine_start_iter: int = 500\n    refine_stop_iter: int = 18_000\n    reset_every: int = 3000\n    refine_every: int = 100\n\n    def initialize_state(self, scene_scale: float = 1.0) -> Dict[str, Any]:\n        return {\"relgrad\": None, \"count\": None, \"qual\": None,\n                \"scene_scale\": scene_scale}\n\n    def check_sanity(self, params, optimizers):\n        \"\"\"Sanity check for required parameters.\"\"\"\n        super().check_sanity(params, optimizers)\n        for key in [\"means\", \"scales\", \"quats\", \"opacities\"]:\n            assert key in params, f\"{key} is required in params but missing.\"\n\n    def step_pre_backward(self, params, optimizers, state, step, info):\n        info[\"means2d\"].retain_grad()\n        # Snapshot the per-Gaussian local quality proxy BEFORE backward /\n        # optimizer step (computing it later would use already-updated\n        # opacities and bias the relative metric).\n        state[\"qual\"] = torch.sigmoid(\n            params[\"opacities\"].detach().flatten()\n        ).clamp(self.qual_min, 1.0)\n\n    def step_post_backward(self, params, optimizers, state, step, info,\n                           packed=False):\n        if step >= self.refine_stop_iter:\n            return\n\n        if hasattr(info[\"means2d\"], \"absgrad\"):\n            grads = info[\"means2d\"].absgrad.clone()\n        else:\n            grads = info[\"means2d\"].grad.abs().clone()\n        grads[..., 0] *= info[\"width\"] / 2.0 * info[\"n_cameras\"]\n        grads[..., 1] *= info[\"height\"] / 2.0 * info[\"n_cameras\"]\n\n        n = len(list(params.values())[0])\n        if state[\"relgrad\"] is None:\n            state[\"relgrad\"] = torch.zeros(n, device=grads.device)\n            state[\"count\"] = torch.zeros(n, device=grads.device)\n\n        sel = (info[\"radii\"] > 0.0).all(dim=-1)\n        gs_ids = torch.where(sel)[1]\n        # Per-Gaussian relative signal: local gradient / local quality.\n        rel = grads[sel].norm(dim=-1) / state[\"qual\"][gs_ids]\n        state[\"relgrad\"].index_add_(0, gs_ids, rel)\n        state[\"count\"].index_add_(0, gs_ids,\n                                  torch.ones_like(gs_ids, dtype=torch.float32))\n\n        if step > self.refine_start_iter and step % self.refine_every == 0:\n            avg_rel = state[\"relgrad\"] / state[\"count\"].clamp_min(1)\n            scene_scale = state[\"scene_scale\"]\n\n            opa = torch.sigmoid(params[\"opacities\"].flatten())\n            # Relative criterion + absolute opacity floor.\n            is_grad_high = (avg_rel > self.rel_grow_grad2d) & (opa >= self.opa_floor)\n            scale_max = torch.exp(params[\"scales\"]).max(dim=-1).values\n            is_small = scale_max <= self.grow_scale3d * scene_scale\n\n            is_dupli = is_grad_high & is_small\n            if is_dupli.sum() > 0:\n                duplicate(params=params, optimizers=optimizers, state=state,\n                          mask=is_dupli)\n\n            is_split = is_grad_high & ~is_small\n            is_split = torch.cat([is_split, torch.zeros(\n                is_dupli.sum(), dtype=torch.bool, device=is_split.device)])\n            if is_split.sum() > 0:\n                split(params=params, optimizers=optimizers, state=state,\n                      mask=is_split)\n\n            is_prune = torch.sigmoid(params[\"opacities\"].flatten()) < self.prune_opa\n            if step > self.reset_every:\n                scale_max = torch.exp(params[\"scales\"]).max(dim=-1).values\n                is_prune = is_prune | (scale_max > self.prune_scale3d * scene_scale)\n            if is_prune.sum() > 0:\n                remove(params=params, optimizers=optimizers, state=state,\n                       mask=is_prune)\n\n            state[\"relgrad\"].zero_()\n            state[\"count\"].zero_()\n            torch.cuda.empty_cache()\n\n        # Reset-opacities schedule (required companion of the relative metric).\n        if step % self.reset_every == 0 and step > 0:\n            reset_opa(params=params, optimizers=optimizers, state=state,\n                      value=self.prune_opa * 2.0)\n"
+    "gsplat_custom_strategy.py (step 6)": "\"\"\"Custom densification strategy for 3D Gaussian Splatting.\n\nThis file defines the CustomStrategy class that controls how Gaussians\nare added, split, and pruned during per-scene optimization.\n\"\"\"\n\nfrom dataclasses import dataclass\nfrom typing import Any, Dict, Tuple, Union\n\nimport math\nimport torch\nfrom gsplat.strategy.base import Strategy\nfrom gsplat.strategy.ops import (\n    duplicate, split, remove, reset_opa,\n    relocate, sample_add, inject_noise_to_position,\n)\n\n\n# ============================================================================\n# Densification Strategy (EDITABLE REGION)\n# ============================================================================\n@dataclass\nclass CustomStrategy(Strategy):\n    \"\"\"Per-Gaussian RELATIVE densification: local gradient divided by local\n    reconstruction quality (opacity x screen coverage), snapshotted in\n    step_pre_backward so it aligns with this step's gradients. Growth is\n    gated by an absolute opacity floor; opacities are reset periodically.\"\"\"\n    prune_opa: float = 0.005\n    rel_grow: float = 0.10          # relative growth threshold (scale-free)\n    opa_floor: float = 0.10         # absolute opacity floor for growth\n    grow_scale3d: float = 0.01\n    prune_scale3d: float = 0.1\n    refine_start_iter: int = 500\n    refine_stop_iter: int = 15_000\n    reset_every: int = 3000\n    refine_every: int = 100\n    cover_min: float = 4e-3         # clamp range for screen coverage proxy\n    cover_max: float = 2e-2\n    opa_min_in_denom: float = 0.15  # numerical floor inside quality denom\n    max_gaussians: int = 4_500_000  # absolute budget guard\n    max_grow_frac: float = 0.05     # per-refine-round growth budget guard\n    absgrad: bool = True\n\n    def initialize_state(self, scene_scale: float = 1.0) -> Dict[str, Any]:\n        return {\"relgrad\": None, \"count\": None, \"denom\": None,\n                \"scene_scale\": scene_scale}\n\n    def check_sanity(self, params, optimizers):\n        super().check_sanity(params, optimizers)\n        for key in [\"means\", \"scales\", \"quats\", \"opacities\"]:\n            assert key in params, f\"{key} is required in params but missing.\"\n\n    def step_pre_backward(self, params, optimizers, state, step, info):\n        info[\"means2d\"].retain_grad()\n        # Snapshot per-Gaussian local quality BEFORE backward (crux: must be\n        # aligned with this step's gradients, and per-Gaussian, not global).\n        with torch.no_grad():\n            opa = torch.sigmoid(params[\"opacities\"].detach().flatten())\n            n = opa.shape[0]\n            r = info[\"radii\"].detach().float()\n            if r.dim() == 3:                      # [C, N, k]\n                r = r.amax(dim=-1).amax(dim=0)\n            elif r.dim() == 2 and info[\"means2d\"].dim() == 2:\n                r = r.amax(dim=-1)                # packed [nnz, k]\n            elif r.dim() == 2:\n                r = r.amax(dim=0)                 # [C, N]\n            if r.shape[0] != n:                   # scatter visible -> full\n                gid = info.get(\"gaussian_ids\", None)\n                full = torch.zeros(n, device=r.device)\n                if gid is not None and gid.numel() == r.shape[0]:\n                    full.scatter_reduce_(0, gid.flatten().long(), r,\n                                         reduce=\"amax\", include_self=True)\n                else:\n                    full.fill_(0.01 * 0.5 * (info[\"width\"] + info[\"height\"]))\n                r = full\n            cover = r / (0.5 * (info[\"width\"] + info[\"height\"]))\n            cover = cover.clamp(self.cover_min, self.cover_max)\n            state[\"denom\"] = (opa.clamp_min(self.opa_min_in_denom) * cover).clamp_min(1e-5)\n\n    def step_post_backward(self, params, optimizers, state, step, info,\n                           packed=False):\n        if step >= self.refine_stop_iter:\n            return\n        if getattr(info[\"means2d\"], \"absgrad\", None) is not None:\n            grads = info[\"means2d\"].absgrad.clone()\n        else:\n            grads = info[\"means2d\"].grad.clone()\n        grads[..., 0] *= info[\"width\"] / 2.0 * info[\"n_cameras\"]\n        grads[..., 1] *= info[\"height\"] / 2.0 * info[\"n_cameras\"]\n        n = len(list(params.values())[0])\n        if state[\"relgrad\"] is None or state[\"relgrad\"].shape[0] != n:\n            state[\"relgrad\"] = torch.zeros(n, device=grads.device)\n            state[\"count\"] = torch.zeros(n, device=grads.device)\n        denom, state[\"denom\"] = state[\"denom\"], None\n        sel = (info[\"radii\"] > 0.0).all(dim=-1)   # [C, N] or packed [nnz]\n        gs_ids = torch.where(sel)[-1]\n        gid = info.get(\"gaussian_ids\", None)\n        if sel.shape[-1] != n and gid is not None and gid.numel() == sel.shape[-1]:\n            gs_ids = gid.flatten().long()[gs_ids]  # local -> global ids\n        state[\"relgrad\"].index_add_(0, gs_ids, grads[sel].norm(dim=-1) / denom[gs_ids])\n        state[\"count\"].index_add_(0, gs_ids, torch.ones_like(gs_ids, dtype=torch.float32))\n\n        if step > self.refine_start_iter and step % self.refine_every == 0:\n            avg_rel = state[\"relgrad\"] / state[\"count\"].clamp_min(1)\n            scene_scale = state[\"scene_scale\"]\n            opa = torch.sigmoid(params[\"opacities\"].flatten())\n            is_grad_high = (avg_rel > self.rel_grow) & (opa > self.opa_floor)\n            # growth budget guards (keep runtime/memory bounded)\n            budget = max(int(self.max_grow_frac * n), 1)\n            if n >= self.max_gaussians:\n                is_grad_high &= False\n            elif int(is_grad_high.sum()) > budget:\n                kth = torch.topk(avg_rel[is_grad_high], budget).values[-1]\n                is_grad_high &= avg_rel >= kth\n            is_small = torch.exp(params[\"scales\"]).max(dim=-1).values <= self.grow_scale3d * scene_scale\n            is_dupli = is_grad_high & is_small\n            if is_dupli.sum() > 0:\n                duplicate(params=params, optimizers=optimizers, state=state, mask=is_dupli)\n            is_split = torch.cat([is_grad_high & ~is_small,\n                                  torch.zeros(is_dupli.sum(), dtype=torch.bool, device=opa.device)])\n            if is_split.sum() > 0:\n                split(params=params, optimizers=optimizers, state=state, mask=is_split, revised_opacity=True)\n            is_prune = torch.sigmoid(params[\"opacities\"].flatten()) < self.prune_opa\n            if step > self.reset_every:\n                is_prune |= torch.exp(params[\"scales\"]).max(dim=-1).values > self.prune_scale3d * scene_scale\n            if is_prune.sum() > 0:\n                remove(params=params, optimizers=optimizers, state=state, mask=is_prune)\n            state[\"relgrad\"].zero_()\n            state[\"count\"].zero_()\n            torch.cuda.empty_cache()\n\n        if step % self.reset_every == 0 and step > 0:\n            reset_opa(params=params, optimizers=optimizers, state=state,\n                      value=self.prune_opa * 2.0)\n"
    },
    "summary": {
-    "steps": 6,
+    "steps": 7,
     "tests": 3,
     "done": true,
     "max_steps": 20,
     "tokens": {
-     "prompt_tokens": 14,
-     "completion_tokens": 18110,
-     "total_tokens": 18124,
-     "cached_tokens": 109490,
-     "cache_creation_tokens": 81310,
-     "calls": 7
+     "prompt_tokens": 16,
+     "completion_tokens": 39542,
+     "total_tokens": 39558,
+     "cached_tokens": 214649,
+     "cache_creation_tokens": 97030,
+     "calls": 8
     }
    }
   }

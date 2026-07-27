@@ -2,15 +2,24 @@
  "task": "llm-rl-importance-sampling",
  "arm": "qwen3-32b-rl",
  "arm_label": "Qwen3-32B RL",
- "status": "failed",
- "score": null,
+ "status": "scored",
+ "score": 0.0,
+ "worker": "claude-fable-5",
+ "caveat": null,
  "master_output": {
   "idea": "Core idea: Apply **token-level IS and clipping but only on a prefix of the response** — the first $ k $ tokens — and **detach the ratio beyond that cutoff**, so late tokens contribute gradient via the unclipped, unweighted log-prob — effectively a `stop_grad` that recovers REINFORCE-style learning on the trailing tokens.\n\nNon-trivial crux: The cutoff must be **chosen per sample** rather than fixed — the log-ratio's magnitude grows with generation length due to compounding drift, so the point at which it exceeds clipping bounds varies per sequence; a fixed cutoff would either be too conservative (wasting capacity on tokens that stay within bounds) or too aggressive (letting a few large-ratio tokens dominate).\n\n**Derivation path:** I start from the observation that the vanilla token-level IS has *two* sources of variance: (1) noisy per-token ratios and (2) the compounding log-ratio over long sequences, which blows up late-token IS weights and causes gradient explosions. Sequence-level IS fixes (1) by collapsing to a single ratio, but loses per-token correction — precisely the kind of correction math reasoning may need on the *first few steps* that determine correctness. So instead of collapsing everything, I ask: *Where* does the noise actually matter? If I can identify a per-sample threshold beyond which the ratio is reliably clipped and contributes no useful correction, I can keep the token-level ratio only up to that point and let the unclipped trailing tokens contribute their *unweighted* gradient — this is exactly the `stop_grad` mechanism from CISPO, recast as a *per-sample, per-token* dynamic cutoff. The decision rule is: for each token in a sequence, compute the log-ratio; stop the IS and clipping at the first token where the ratio's magnitude would have been clipped — the rest contribute unweighted. I expect this to reduce variance on long responses while preserving correction on the tokens that matter most.",
   "proposal": "<think>\n\n</think>\n\nCore idea: Apply **token-level IS and clipping but only on a prefix of the response** — the first $ k $ tokens — and **detach the ratio beyond that cutoff**, so late tokens contribute gradient via the unclipped, unweighted log-prob — effectively a `stop_grad` that recovers REINFORCE-style learning on the trailing tokens.\n\nNon-trivial crux: The cutoff must be **chosen per sample** rather than fixed — the log-ratio's magnitude grows with generation length due to compounding drift, so the point at which it exceeds clipping bounds varies per sequence; a fixed cutoff would either be too conservative (wasting capacity on tokens that stay within bounds) or too aggressive (letting a few large-ratio tokens dominate).\n\n**Derivation path:** I start from the observation that the vanilla token-level IS has *two* sources of variance: (1) noisy per-token ratios and (2) the compounding log-ratio over long sequences, which blows up late-token IS weights and causes gradient explosions. Sequence-level IS fixes (1) by collapsing to a single ratio, but loses per-token correction — precisely the kind of correction math reasoning may need on the *first few steps* that determine correctness. So instead of collapsing everything, I ask: *Where* does the noise actually matter? If I can identify a per-sample threshold beyond which the ratio is reliably clipped and contributes no useful correction, I can keep the token-level ratio only up to that point and let the unclipped trailing tokens contribute their *unweighted* gradient — this is exactly the `stop_grad` mechanism from CISPO, recast as a *per-sample, per-token* dynamic cutoff. The decision rule is: for each token in a sequence, compute the log-ratio; stop the IS and clipping at the first token where the ratio's magnitude would have been clipped — the rest contribute unweighted. I expect this to reduce variance on long responses while preserving correction on the tokens that matter most.",
   "valid": true,
   "n_attempts": 1
  },
- "per_run_scores": [],
+ "per_run_scores": [
+  {
+   "seed": "42",
+   "timestamp": "2026-07-25T02:15:04.080451+00:00",
+   "has_metric": false,
+   "metrics": {}
+  }
+ ],
  "workers": [
   {
    "log_dir": "logs/llm-rl-importance-sampling/claude-fable-5__qwen3-32b-rl__qwen3-32b-rl_llm-rl-importance-sampling_s1",
@@ -26,17 +35,51 @@
      "step": 2,
      "tool": "test",
      "file": null
+    },
+    {
+     "step": 3,
+     "tool": "edit",
+     "file": "verl/verl/trainer/ppo/custom_policy_loss.py",
+     "preview": "\n\n@register_policy_loss(\"custom\")\ndef compute_custom_policy_loss(\n    old_log_prob: torch.Tensor,\n    log_prob: torch.Tensor,\n    advantages: torch.Tensor,\n    response_mask: torch.Tensor,\n    loss_agg_mode: str = \"token-mean\",\n    config: Optional[ActorConfig] = None,\n    rollout_is_weights: torch.Tensor | None = None,\n) -> tuple[torch.Tensor, dict[str, Any]]:\n    \"\"\"Per-sample dynamic-prefix tru"
+    },
+    {
+     "step": 4,
+     "tool": "test",
+     "file": null
+    },
+    {
+     "step": 5,
+     "tool": "edit",
+     "file": "verl/verl/trainer/ppo/custom_policy_loss.py",
+     "preview": "\n\n@register_policy_loss(\"custom\")\ndef compute_custom_policy_loss(\n    old_log_prob: torch.Tensor,\n    log_prob: torch.Tensor,\n    advantages: torch.Tensor,\n    response_mask: torch.Tensor,\n    loss_agg_mode: str = \"token-mean\",\n    config: Optional[ActorConfig] = None,\n    rollout_is_weights: torch.Tensor | None = None,\n) -> tuple[torch.Tensor, dict[str, Any]]:\n    \"\"\"Per-sample dynamic-prefix tru"
+    },
+    {
+     "step": 6,
+     "tool": "test",
+     "file": null
+    },
+    {
+     "step": 7,
+     "tool": "submit",
+     "file": null
     }
    ],
    "final_code": {
-    "verl_verl_trainer_ppo_custom_policy_loss.py (step 1)": "# Copyright 2024 Bytedance Ltd. and/or its affiliates\n# Licensed under the Apache License, Version 2.0\n\"\"\"Custom policy loss / importance-sampling strategy for verl PPO training.\"\"\"\n\nfrom typing import Any, Optional\n\nimport torch\n\nimport verl.utils.torch_functional as verl_F\nfrom verl.workers.config import ActorConfig\nfrom verl.trainer.ppo.core_algos import agg_loss, register_policy_loss\n\n# =====================================================================\n# EDITABLE: Implement your custom importance-sampling policy loss below.\n# =====================================================================\n\n\n\n@register_policy_loss(\"custom\")\ndef compute_custom_policy_loss(\n    old_log_prob: torch.Tensor,\n    log_prob: torch.Tensor,\n    advantages: torch.Tensor,\n    response_mask: torch.Tensor,\n    loss_agg_mode: str = \"token-mean\",\n    config: Optional[ActorConfig] = None,\n    rollout_is_weights: torch.Tensor | None = None,\n) -> tuple[torch.Tensor, dict[str, Any]]:\n    \"\"\"Per-sample dynamic-prefix truncated importance sampling.\n\n    Token-level IS + PPO clipping is applied only on a *per-sample* prefix:\n    all response tokens strictly before the first token whose ratio would be\n    clipped (i.e. falls outside [1 - eps_low, 1 + eps_high]).  From that\n    token onward, the ratio is detached and the tokens contribute an\n    unclipped, unweighted log-prob gradient (REINFORCE-style stop-grad\n    tail), which curbs the compounding late-token ratio variance while\n    keeping full per-token correction where ratios remain in-bounds.\n    \"\"\"\n    assert config is not None\n    clip_ratio = config.clip_ratio\n    clip_ratio_low = config.clip_ratio_low if config.clip_ratio_low is not None else clip_ratio\n    clip_ratio_high = config.clip_ratio_high if config.clip_ratio_high is not None else clip_ratio\n\n    negative_approx_kl = log_prob - old_log_prob\n    negative_approx_kl = torch.clamp(negative_approx_kl, min=-20.0, max=20.0)\n    ratio = torch.exp(negative_approx_kl)\n    ppo_kl = verl_F.masked_mean(-negative_approx_kl, response_mask)\n\n    # ---- per-sample cutoff: first valid token whose ratio would be clipped ----\n    would_clip = ((ratio > 1.0 + clip_ratio_high) | (ratio < 1.0 - clip_ratio_low)).to(ratio.dtype)\n    would_clip = would_clip * response_mask\n    cum_clip = torch.cumsum(would_clip, dim=-1)\n    # prefix_mask = 1 for tokens strictly before the first would-be-clipped token\n    prefix_mask = (cum_clip < 0.5).to(ratio.dtype)\n\n    # ---- prefix: standard token-level clipped PPO objective ----\n    pg_losses1 = -advantages * ratio\n    pg_losses2 = -advantages * torch.clamp(ratio, 1.0 - clip_ratio_low, 1.0 + clip_ratio_high)\n    prefix_losses = torch.maximum(pg_losses1, pg_losses2)\n\n    # ---- tail: stop-grad on the ratio -> unweighted, unclipped log-prob grad ----\n    # exp(x - sg(x)) evaluates to 1 in the forward pass; its gradient is\n    # exactly d log_pi, i.e. REINFORCE with weight 1 (no IS, no clip).\n    tail_losses = -advantages * torch.exp(negative_approx_kl - negative_approx_kl.detach())\n\n    pg_losses = prefix_mask * prefix_losses + (1.0 - prefix_mask) * tail_losses\n\n    if rollout_is_weights is not None:\n        pg_losses = pg_losses * rollout_is_weights\n\n    pg_loss = agg_loss(\n        loss_mat=pg_losses,\n        loss_mask=response_mask,\n        loss_agg_mode=loss_agg_mode,\n        **config.global_batch_info,\n    )\n\n    pg_clipfrac = verl_F.masked_mean(\n        torch.gt(pg_losses2, pg_losses1).float() * prefix_mask, response_mask\n    )\n    tail_frac = verl_F.masked_mean(1.0 - prefix_mask, response_mask)\n    return pg_loss, {\n        \"actor/pg_clipfrac\": pg_clipfrac.detach().item(),\n        \"actor/ppo_kl\": ppo_kl.detach().item(),\n        \"actor/pg_clipfrac_lower\": 0.0,\n        \"actor/tail_frac\": tail_frac.detach().item(),\n    }\n"
+    "verl_verl_trainer_ppo_custom_policy_loss.py (step 5)": "# Copyright 2024 Bytedance Ltd. and/or its affiliates\n# Licensed under the Apache License, Version 2.0\n\"\"\"Custom policy loss / importance-sampling strategy for verl PPO training.\"\"\"\n\nfrom typing import Any, Optional\n\nimport torch\n\nimport verl.utils.torch_functional as verl_F\nfrom verl.workers.config import ActorConfig\nfrom verl.trainer.ppo.core_algos import agg_loss, register_policy_loss\n\n# =====================================================================\n# EDITABLE: Implement your custom importance-sampling policy loss below.\n# =====================================================================\n\n\n\n@register_policy_loss(\"custom\")\ndef compute_custom_policy_loss(\n    old_log_prob: torch.Tensor,\n    log_prob: torch.Tensor,\n    advantages: torch.Tensor,\n    response_mask: torch.Tensor,\n    loss_agg_mode: str = \"token-mean\",\n    config: Optional[ActorConfig] = None,\n    rollout_is_weights: torch.Tensor | None = None,\n) -> tuple[torch.Tensor, dict[str, Any]]:\n    \"\"\"Per-sample dynamic-prefix truncated importance sampling.\n\n    Token-level IS + PPO clipping is applied only on a *per-sample* prefix:\n    all response tokens strictly before the first token whose ratio would\n    be clipped (i.e. falls outside [1 - eps_low, 1 + eps_high]).  From that\n    token onward, the ratio is detached (stop-grad) and the tokens\n    contribute an unweighted log-prob gradient (REINFORCE-style tail),\n    which curbs compounding late-token ratio variance while keeping full\n    per-token correction where ratios remain in-bounds.\n\n    Stability engineering:\n      * prefix uses the vanilla dual-clip objective (bounded at c for A<0);\n      * the tail REINFORCE gradient is only active while the token's own\n        ratio remains within the clip bounds [1 - eps_low, 1 + eps_high];\n        tokens whose ratio has drifted outside are fully detached (zero\n        gradient), mirroring vanilla clipping's zero-gradient behaviour so\n        every tail update is no larger than the vanilla counterpart.\n    \"\"\"\n    assert config is not None\n    clip_ratio = config.clip_ratio\n    clip_ratio_low = config.clip_ratio_low if config.clip_ratio_low is not None else clip_ratio\n    clip_ratio_high = config.clip_ratio_high if config.clip_ratio_high is not None else clip_ratio\n    clip_ratio_c = config.get(\"clip_ratio_c\", 3.0)\n    assert clip_ratio_c > 1.0\n\n    negative_approx_kl = log_prob - old_log_prob\n    negative_approx_kl = torch.clamp(negative_approx_kl, min=-20.0, max=20.0)\n    ratio = torch.exp(negative_approx_kl)\n    ppo_kl = verl_F.masked_mean(-negative_approx_kl, response_mask)\n\n    # ---- per-sample cutoff: first valid token whose ratio would be clipped ----\n    out_of_bounds = (ratio > 1.0 + clip_ratio_high) | (ratio < 1.0 - clip_ratio_low)\n    would_clip = out_of_bounds.to(ratio.dtype) * response_mask\n    cum_clip = torch.cumsum(would_clip, dim=-1)\n    # prefix_mask = 1 for tokens strictly before the first would-be-clipped token\n    prefix_mask = (cum_clip < 0.5).to(ratio.dtype)\n\n    # ---- prefix: vanilla token-level clipped PPO objective (with dual clip) ----\n    pg_losses1 = -advantages * ratio\n    pg_losses2 = -advantages * torch.clamp(ratio, 1.0 - clip_ratio_low, 1.0 + clip_ratio_high)\n    clip_pg_losses1 = torch.maximum(pg_losses1, pg_losses2)\n    pg_losses3 = -advantages * clip_ratio_c\n    clip_pg_losses2 = torch.min(pg_losses3, clip_pg_losses1)\n    prefix_losses = torch.where(advantages < 0, clip_pg_losses2, clip_pg_losses1)\n\n    # ---- tail: stop-grad on the ratio -> unweighted log-prob gradient ----\n    # exp(x - sg(x)) evaluates to 1 in the forward pass; its gradient is\n    # exactly d log_pi, i.e. REINFORCE with weight 1 (no IS weighting).\n    # Numerical-stability trust clamp: keep the tail gradient only while the\n    # token's own ratio stays inside the clip bounds; otherwise fully detach.\n    trust_mask = (~out_of_bounds).to(ratio.dtype)\n    reinforce_term = torch.exp(negative_approx_kl - negative_approx_kl.detach())\n    tail_losses = -advantages * (trust_mask * reinforce_term + (1.0 - trust_mask))\n\n    pg_losses = prefix_mask * prefix_losses + (1.0 - prefix_mask) * tail_losses\n\n    if rollout_is_weights is not None:\n        pg_losses = pg_losses * rollout_is_weights\n\n    pg_loss = agg_loss(\n        loss_mat=pg_losses,\n        loss_mask=response_mask,\n        loss_agg_mode=loss_agg_mode,\n        **config.global_batch_info,\n    )\n\n    pg_clipfrac = verl_F.masked_mean(\n        torch.gt(pg_losses2, pg_losses1).float() * prefix_mask, response_mask\n    )\n    pg_clipfrac_lower = verl_F.masked_mean(\n        torch.gt(clip_pg_losses1, pg_losses3) * (advantages < 0).float() * prefix_mask,\n        response_mask,\n    )\n    tail_frac = verl_F.masked_mean(1.0 - prefix_mask, response_mask)\n    return pg_loss, {\n        \"actor/pg_clipfrac\": pg_clipfrac.detach().item(),\n        \"actor/ppo_kl\": ppo_kl.detach().item(),\n        \"actor/pg_clipfrac_lower\": pg_clipfrac_lower.detach().item(),\n        \"actor/tail_frac\": tail_frac.detach().item(),\n    }\n"
    },
    "summary": {
-    "steps": null,
-    "tests": null,
-    "done": null,
-    "max_steps": null,
-    "tokens": null
+    "steps": 6,
+    "tests": 3,
+    "done": true,
+    "max_steps": 20,
+    "tokens": {
+     "prompt_tokens": 14,
+     "completion_tokens": 19044,
+     "total_tokens": 19058,
+     "cached_tokens": 52515,
+     "cache_creation_tokens": 102754,
+     "calls": 7
+    }
    }
   }
  ]

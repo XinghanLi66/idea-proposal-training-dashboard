@@ -1,0 +1,35 @@
+{
+ "task": "ogbn-arxiv",
+ "arm": "qwen25sft",
+ "arm_label": "Qwen2.5-32B SFT",
+ "metric": "test_acc",
+ "baseline": 0.31559,
+ "lower_is_better": false,
+ "metric_mean": 0.197649,
+ "delta_pct": -37.372,
+ "ci_pct": 70.502,
+ "success": false,
+ "per_seed": [
+  {
+   "seed": "1",
+   "metric": 0.05861778079542415,
+   "delta_pct": -81.426
+  },
+  {
+   "seed": "2",
+   "metric": 0.4757113758409975,
+   "delta_pct": 50.737
+  },
+  {
+   "seed": "3",
+   "metric": 0.05861778079542415,
+   "delta_pct": -81.426
+  }
+ ],
+ "master_output": {
+  "idea": "**Mocking:** Leike\n\nLet me start from what actually matters: the metric I'm optimizing. In this case, it's the model's generalization ability, measured by validation accuracy. My first instinct is to ask what's broken about the current training process — and the most common failure mode for deep learning is overfitting. So let me reason through whether that's likely here.\n\nIf I look at the training curve (which I'd plot immediately if I were running the code), I'd expect to see two telltale signs of overfitting: training loss dropping sharply while validation loss stops improving or even starts rising. If that's the pattern, then my diagnosis is confirmed: the model is memorizing the training set rather than learning a robust representation.\n\nNow, the standard hammer for overfitting is regularization. But let me not reach for L2/L1 right away — I want to think about why they work and whether there's something more effective. Regularization works by adding a penalty that discourages large weights, which is one way to reduce capacity. A deeper question is: why do large weights correlate with overfitting? Because they allow the network to fit noise, essentially fitting a very high-degree polynomial. So the root problem isn't the weight size per se; it's the model's freedom to fit arbitrary functions.\n\nThis reframing suggests a different knob: instead of penalizing the weights, can I directly limit the function class the model is allowed to represent? That's exactly what dropout does — it stochastically zeroes out units during training, effectively training an ensemble of smaller networks. Each forward pass sees a different subnetwork, so the final model is a kind of average of many low-capacity models. And because each unit has a probability of being dropped, no single unit can become too important, reducing the chance of fitting noise.\n\nBut dropout has its own tradeoff: it introduces randomness, which can make training noisier and harder to converge. So I have to be careful with the dropout rate — too high and the signal gets lost; too low and the effect is minimal. A rule of thumb is to start around 0.5 and adjust based on validation performance.\n\nHere's where I'd resist the temptation to keep tuning: once I've added dropout, I should run the full training cycle before deciding whether it helped, rather than tweaking the rate in small increments. Decision rule: compare the new validation accuracy against the baseline, and only keep dropout if it clearly improves it. If it doesn't help much, I'll remove it rather than clutter the architecture.\n\n**Core idea:** Replace pure weight regularization with dropout to directly limit the model's representational capacity, training an implicit ensemble of smaller networks that reduces overfitting.\n\n**Non-trivial crux:** Dropout introduces randomness, so the key is choosing the right dropout rate (around 0.5) and validating that it actually improves generalization before keeping it, rather than tuning it endlessly.",
+  "proposal": "**Mocking:** Leike\n\nLet me start from what actually matters: the metric I'm optimizing. In this case, it's the model's generalization ability, measured by validation accuracy. My first instinct is to ask what's broken about the current training process — and the most common failure mode for deep learning is overfitting. So let me reason through whether that's likely here.\n\nIf I look at the training curve (which I'd plot immediately if I were running the code), I'd expect to see two telltale signs of overfitting: training loss dropping sharply while validation loss stops improving or even starts rising. If that's the pattern, then my diagnosis is confirmed: the model is memorizing the training set rather than learning a robust representation.\n\nNow, the standard hammer for overfitting is regularization. But let me not reach for L2/L1 right away — I want to think about why they work and whether there's something more effective. Regularization works by adding a penalty that discourages large weights, which is one way to reduce capacity. A deeper question is: why do large weights correlate with overfitting? Because they allow the network to fit noise, essentially fitting a very high-degree polynomial. So the root problem isn't the weight size per se; it's the model's freedom to fit arbitrary functions.\n\nThis reframing suggests a different knob: instead of penalizing the weights, can I directly limit the function class the model is allowed to represent? That's exactly what dropout does — it stochastically zeroes out units during training, effectively training an ensemble of smaller networks. Each forward pass sees a different subnetwork, so the final model is a kind of average of many low-capacity models. And because each unit has a probability of being dropped, no single unit can become too important, reducing the chance of fitting noise.\n\nBut dropout has its own tradeoff: it introduces randomness, which can make training noisier and harder to converge. So I have to be careful with the dropout rate — too high and the signal gets lost; too low and the effect is minimal. A rule of thumb is to start around 0.5 and adjust based on validation performance.\n\nHere's where I'd resist the temptation to keep tuning: once I've added dropout, I should run the full training cycle before deciding whether it helped, rather than tweaking the rate in small increments. Decision rule: compare the new validation accuracy against the baseline, and only keep dropout if it clearly improves it. If it doesn't help much, I'll remove it rather than clutter the architecture.\n\n**Core idea:** Replace pure weight regularization with dropout to directly limit the model's representational capacity, training an implicit ensemble of smaller networks that reduces overfitting.\n\n**Non-trivial crux:** Dropout introduces randomness, so the key is choosing the right dropout rate (around 0.5) and validating that it actually improves generalization before keeping it, rather than tuning it endlessly.",
+  "valid": true,
+  "n_attempts": 1
+ }
+}

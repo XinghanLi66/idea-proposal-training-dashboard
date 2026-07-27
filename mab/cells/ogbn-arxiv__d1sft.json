@@ -1,0 +1,35 @@
+{
+ "task": "ogbn-arxiv",
+ "arm": "d1sft",
+ "arm_label": "DeepSeek-R1-Qwen3-8B SFT",
+ "metric": "test_acc",
+ "baseline": 0.31559,
+ "lower_is_better": false,
+ "metric_mean": 0.527395,
+ "delta_pct": 67.114,
+ "ci_pct": 2.599,
+ "success": true,
+ "per_seed": [
+  {
+   "seed": "1",
+   "metric": 0.5364895171079974,
+   "delta_pct": 69.996
+  },
+  {
+   "seed": "3",
+   "metric": 0.5269427813097957,
+   "delta_pct": 66.971
+  },
+  {
+   "seed": "2",
+   "metric": 0.5187539863794416,
+   "delta_pct": 64.376
+  }
+ ],
+ "master_output": {
+  "idea": "**Mocking:** World-class AI researcher\n\nLet me start from what MUST be true, not from what I'd like to be true. The current model is trained to convergence in a fixed number of epochs, and it's not reaching target accuracy. What MUST be the case if it isn't converging? Either the loss is stuck in a plateau, or the gradient is vanishing and the model is no longer learning — meaning the training dynamics are stuck. That's the invariant I want to exploit. In a plateau, the loss stops decreasing and the gradient is near zero. In a vanishing regime, it's the same: essentially no signal is passing through.\n\nNow the leap. If the gradient is near zero, then the loss has nowhere to go — and the only way *to* make progress is to *reinforce the gradients that are still non-zero*. That sounds like a search: I should be able to improve a model that already exists by looking at which gradients are non-zero and then intensifying the signal along those. That's the seeding intuition: start from a model with a non-zero gradient and amplify its active gradients. That's exactly the same mechanism that makes evolutionary algorithms and reinforcement learning work — but applied here as a one-shot, gradient-based objective that I can train in just a few epochs.\n\nWhy is this non-trivial? Because the naive move — 'train longer' — won't help if the dynamics are stuck; I'm stuck in a plateaus the model can't climb out of. The crux is that the mechanism that makes it work is the gradient-only signal, not the gradient's sign — the model should be retrained, not frozen. If I kept the frozen model's weights as the target, I'd be stuck because the frozen model has near-zero gradients and I can't amplify them. So the frozen model must *only* provide the training signal — what the autoregressor learns is the difference between the frozen model's prediction and the true next token, which is exactly the gradient of the frozen model. That's the subtle part I have to fix.\n\nHow do I keep myself honest? I won't claim a number upfront — the decision rule is: retrain with the new seed on a held-out validation set, and keep this if it improves over the current setup while staying within the epoch budget. If it doesn't clearly help the metric, I'd fall back to a simpler mechanism. The control variable is deliberate: freeze the model but make it *only* the seed — that's the crux, and I should expect the improvement to depend on which frozen model I choose (e.g., one trained for 1M steps vs one for 100k steps).\n\n**Core idea:** Re-train a frozen model — using it only as a gradient-only seed — to amplify the gradients of the current model, thus climbing out of a plateau or vanishing regime.\n\n**Non-trivial crux:** The frozen model must *only* provide the training signal (difference between its prediction and the true next token), not the frozen weights themselves — otherwise the frozen model's near-zero gradients can never be amplified.",
+  "proposal": "**Mocking:** World-class AI researcher\n\nLet me start from what MUST be true, not from what I'd like to be true. The current model is trained to convergence in a fixed number of epochs, and it's not reaching target accuracy. What MUST be the case if it isn't converging? Either the loss is stuck in a plateau, or the gradient is vanishing and the model is no longer learning — meaning the training dynamics are stuck. That's the invariant I want to exploit. In a plateau, the loss stops decreasing and the gradient is near zero. In a vanishing regime, it's the same: essentially no signal is passing through.\n\nNow the leap. If the gradient is near zero, then the loss has nowhere to go — and the only way *to* make progress is to *reinforce the gradients that are still non-zero*. That sounds like a search: I should be able to improve a model that already exists by looking at which gradients are non-zero and then intensifying the signal along those. That's the seeding intuition: start from a model with a non-zero gradient and amplify its active gradients. That's exactly the same mechanism that makes evolutionary algorithms and reinforcement learning work — but applied here as a one-shot, gradient-based objective that I can train in just a few epochs.\n\nWhy is this non-trivial? Because the naive move — 'train longer' — won't help if the dynamics are stuck; I'm stuck in a plateaus the model can't climb out of. The crux is that the mechanism that makes it work is the gradient-only signal, not the gradient's sign — the model should be retrained, not frozen. If I kept the frozen model's weights as the target, I'd be stuck because the frozen model has near-zero gradients and I can't amplify them. So the frozen model must *only* provide the training signal — what the autoregressor learns is the difference between the frozen model's prediction and the true next token, which is exactly the gradient of the frozen model. That's the subtle part I have to fix.\n\nHow do I keep myself honest? I won't claim a number upfront — the decision rule is: retrain with the new seed on a held-out validation set, and keep this if it improves over the current setup while staying within the epoch budget. If it doesn't clearly help the metric, I'd fall back to a simpler mechanism. The control variable is deliberate: freeze the model but make it *only* the seed — that's the crux, and I should expect the improvement to depend on which frozen model I choose (e.g., one trained for 1M steps vs one for 100k steps).\n\n**Core idea:** Re-train a frozen model — using it only as a gradient-only seed — to amplify the gradients of the current model, thus climbing out of a plateau or vanishing regime.\n\n**Non-trivial crux:** The frozen model must *only* provide the training signal (difference between its prediction and the true next token), not the frozen weights themselves — otherwise the frozen model's near-zero gradients can never be amplified.",
+  "valid": true,
+  "n_attempts": 1
+ }
+}

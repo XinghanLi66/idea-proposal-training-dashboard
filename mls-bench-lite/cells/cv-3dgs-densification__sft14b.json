@@ -2,8 +2,10 @@
  "task": "cv-3dgs-densification",
  "arm": "sft14b",
  "arm_label": "Qwen3-14B SFT",
- "status": "ok",
- "score": 0.0,
+ "status": "scored",
+ "score": 5.6,
+ "worker": "claude-fable-5",
+ "caveat": null,
  "master_output": {
   "idea": null,
   "proposal": "<think>\n\n</think>\n\n**Mocking:** World-class AI researcher\n\nLet me start from the thing that bugs me. Everyone is optimizing the same objective and trying to tweak the same handful of knobs — clone ratio, split threshold, prune threshold. But when I look at the real behavior of 3DGS, it's not that the knobs are wrong; it's that the whole premise of optimizing the same objective for every Gaussian is fundamentally the wrong abstraction. I want to reason about this at a higher level.\n\nWhy do clone/split/prune exist at all? Because the optimization is implicitly doing *discovery* — learning where Gaussians should be, and where they shouldn't be. But in the standard formulation, every Gaussian is treated as a separate, equally-weighted variable. That's a modeling artifact, not a law of nature. The true object of optimization is not a set of Gaussians but a *density field*: where is the scene, and how dense is it? Once I reframe it that way, the whole strategy should fall out.\n\nSo I ask myself: if I were to design an algorithm from first principles, what would it do? I'd want to be able to *add* Gaussians where the current density is sparse (under-reconstructed), and *remove* Gaussians where the density is already saturated. That's a natural, self-consistent story — a density-driven, self-regulating system. And I don't need to invent the mechanism; I have the operations from the GSPLAT paper already.\n\nHere's the leap: instead of running a fixed schedule, let me let the *density field itself* decide the schedule. I'll define a target density at every point, and at every step I'll compare the current density to the target. Where the current density is below target → inject new Gaussians. Where it's above → prune. And I'll let the target density evolve over time — start with a low target and raise it as training progresses. That's exactly the kind of *curriculum* I've seen work in many domains, and it has a clean physical intuition: early on I'm building the skeleton of the scene, later I'm filling in the details.\n\nNow I have to be honest about what breaks and what I need to fix. Two things are non-trivial. First, a naive density field can't just be a raw count — it would be dominated by the Gaussians we've already injected, and I'd never get past the initial sparse stage. The fix is to build the density field from the *log opacity* of *every* Gaussian, including the ones I'm about to prune. Log opacity is the right quantity because it's a *probability* and it naturally accumulates. Second, I can't just inject new Gaussians in every sparse spot — that would over-fit and destroy the scene. I need a principled way to decide *where* to inject them: draw positions from a density field that includes the live Gaussians, and only inject where the current density is below target. This is not just tuning; it's a new, density-aware sampling rule that the whole framework was missing.\n\nHow do I keep myself honest? I won't just claim it's better. I'll run a direct comparison against the best published methods: AbsGS, Mini-Splatting, MCMC, and the New Split. I'll evaluate on a held-out set of real-world scenes and measure perceptual quality and efficiency. And I'll check whether my density field actually evolves as expected — does it start low and rise over time? — rather than just trusting the final result.\n\nCore idea: Reframe densification as a self-regulating density field: inject Gaussians where the scene is sparse and prune where it's saturated, with the target density gradually increasing over training — turning discovery into a principled, density-driven curriculum.\n\nNon-trivial crux: The density field must be built from log opacity (a probability) and must include all Gaussians including those to be pruned, or the sparse-injection mechanism won't converge; and injection must be guided by a density field that already includes the live Gaussians, not by the current sparse regions alone.",
@@ -174,6 +176,123 @@
     "num_gs": "5800000",
     "best_psnr": "26.139"
    }
+  },
+  {
+   "seed": "42",
+   "timestamp": "2026-07-25T04:44:28.286362+00:00",
+   "has_metric": true,
+   "metrics": {
+    "best_psnr_garden": "29.862",
+    "best_psnr_bicycle": "26.452",
+    "best_psnr_stump": "26.139",
+    "elapsed_garden": "867.0",
+    "elapsed_bicycle": "821.7",
+    "elapsed_bonsai": "19.8",
+    "elapsed_stump": "810.3",
+    "psnr": "26.139",
+    "ssim": "0.7688",
+    "lpips": "0.129",
+    "num_gs": "5800000.0",
+    "best_psnr": "26.139"
+   }
+  },
+  {
+   "seed": "42",
+   "timestamp": "2026-07-25T05:47:20.660199+00:00",
+   "has_metric": true,
+   "metrics": {
+    "best_psnr_garden": "29.678",
+    "best_psnr_bicycle": "26.487",
+    "best_psnr_stump": "26.048",
+    "elapsed_garden": "736.6",
+    "elapsed_bicycle": "670.8",
+    "elapsed_bonsai": "19.4",
+    "elapsed_stump": "681.1",
+    "psnr": "26.048",
+    "ssim": "0.7632",
+    "lpips": "0.139",
+    "num_gs": "4000000",
+    "best_psnr": "26.048"
+   }
+  },
+  {
+   "seed": "42",
+   "timestamp": "2026-07-25T05:52:21.891800+00:00",
+   "has_metric": true,
+   "metrics": {
+    "best_psnr_garden": "29.851",
+    "best_psnr_bicycle": "26.382",
+    "best_psnr_stump": "26.223",
+    "elapsed_garden": "860.3",
+    "elapsed_bicycle": "776.7",
+    "elapsed_bonsai": "19.4",
+    "elapsed_stump": "788.7",
+    "psnr": "26.223",
+    "ssim": "0.7695",
+    "lpips": "0.131",
+    "num_gs": "5000000",
+    "best_psnr": "26.223"
+   }
+  },
+  {
+   "seed": "42",
+   "timestamp": "2026-07-26T04:27:03.161440+00:00",
+   "has_metric": true,
+   "metrics": {
+    "best_psnr_garden": "29.396",
+    "best_psnr_bicycle": "26.319",
+    "best_psnr_bonsai": "33.225",
+    "best_psnr_stump": "25.911",
+    "elapsed_garden": "478.0",
+    "elapsed_bicycle": "452.2",
+    "elapsed_bonsai": "676.8",
+    "elapsed_stump": "468.1",
+    "psnr": "25.911",
+    "ssim": "0.7554",
+    "lpips": "0.152",
+    "num_gs": "1800000",
+    "best_psnr": "25.911"
+   }
+  },
+  {
+   "seed": "42",
+   "timestamp": "2026-07-26T05:15:14.579764+00:00",
+   "has_metric": true,
+   "metrics": {
+    "best_psnr_garden": "29.638",
+    "best_psnr_bicycle": "26.453",
+    "best_psnr_bonsai": "33.462",
+    "best_psnr_stump": "26.0",
+    "elapsed_garden": "751.7",
+    "elapsed_bicycle": "681.8",
+    "elapsed_bonsai": "1128.0",
+    "elapsed_stump": "701.4",
+    "psnr": "26.0",
+    "ssim": "0.7613",
+    "lpips": "0.14",
+    "num_gs": "4000000",
+    "best_psnr": "26.0"
+   }
+  },
+  {
+   "seed": "42",
+   "timestamp": "2026-07-26T06:45:17.484681+00:00",
+   "has_metric": true,
+   "metrics": {
+    "best_psnr_garden": "29.921",
+    "best_psnr_bicycle": "26.64",
+    "best_psnr_bonsai": "33.262",
+    "best_psnr_stump": "26.118",
+    "elapsed_garden": "1284.7",
+    "elapsed_bicycle": "1148.5",
+    "elapsed_bonsai": "1975.0",
+    "elapsed_stump": "1144.3",
+    "psnr": "26.118",
+    "ssim": "0.7699",
+    "lpips": "0.127",
+    "num_gs": "8000000",
+    "best_psnr": "26.118"
+   }
   }
  ],
  "workers": [
@@ -185,7 +304,7 @@
      "step": 1,
      "tool": "edit",
      "file": "gsplat/custom_strategy.py",
-     "preview": "@dataclass\nclass CustomStrategy(Strategy):\n    \"\"\"Self-regulating density-field densification (density curriculum).\n\n    The scene is a density field built from Gaussian opacities (probabilities).\n    Saturated / exhausted Gaussians are teleported to positions drawn from the\n    live opacity field; new Gaussians are injected at positions sampled from\n    the full current density field (including s"
+     "preview": "# Densification Strategy (EDITABLE REGION: lines 20-90)\n# ============================================================================\n\n@dataclass\nclass CustomStrategy(Strategy):\n    \"\"\"Self-regulating density-field densification with a rising target curriculum.\n\n    The scene is treated as a density field built from the opacities of ALL\n    live Gaussians. Every refine step we:\n      (a) relocate"
     },
     {
      "step": 2,
@@ -196,7 +315,7 @@
      "step": 3,
      "tool": "edit",
      "file": "gsplat/custom_strategy.py",
-     "preview": "    def initialize_state(self, scene_scale: float = 1.0) -> Dict[str, Any]:\n        # NOTE: relocate/sample_add reindex every entry in `state`, so keep\n        # only per-Gaussian tensors there; stash scalars on the strategy.\n        self._scene_scale = float(scene_scale)\n        return {}\n"
+     "preview": "    cap_max: int = 4_000_000          # final target density (upper bound on count)\n    min_opacity: float = 0.01         # density-collapse threshold for relocation\n"
     },
     {
      "step": 4,
@@ -207,7 +326,7 @@
      "step": 5,
      "tool": "edit",
      "file": "gsplat/custom_strategy.py",
-     "preview": "@dataclass\nclass CustomStrategy(Strategy):\n    \"\"\"Self-regulating density-field densification (density curriculum).\n\n    The scene is a density field built from Gaussian opacities (probabilities).\n    Saturated / exhausted Gaussians are teleported to positions drawn from the\n    live opacity field; new Gaussians are injected at positions sampled from\n    the full current density field (including s"
+     "preview": "    cap_max: int = 8_000_000          # final target density (upper bound on count)\n"
     },
     {
      "step": 6,
@@ -221,7 +340,7 @@
     }
    ],
    "final_code": {
-    "gsplat_custom_strategy.py (step 5)": "\"\"\"Custom densification strategy for 3D Gaussian Splatting.\n\nThis file defines the CustomStrategy class that controls how Gaussians\nare added, split, and pruned during per-scene optimization.\n\"\"\"\n\nfrom dataclasses import dataclass\nfrom typing import Any, Dict, Tuple, Union\n\nimport math\nimport torch\nfrom gsplat.strategy.base import Strategy\nfrom gsplat.strategy.ops import (\n    duplicate, split, remove, reset_opa,\n    relocate, sample_add, inject_noise_to_position,\n)\n\n\n# ============================================================================\n# Densification Strategy (EDITABLE REGION: lines 20-90)\n# ============================================================================\n\n@dataclass\nclass CustomStrategy(Strategy):\n    \"\"\"Self-regulating density-field densification (density curriculum).\n\n    The scene is a density field built from Gaussian opacities (probabilities).\n    Saturated / exhausted Gaussians are teleported to positions drawn from the\n    live opacity field; new Gaussians are injected at positions sampled from\n    the full current density field (including soon-to-be-recycled ones), with\n    the target density raised by 5% at every refinement step until a cap —\n    a low-to-high density curriculum. Opacity-scaled positional noise keeps\n    exploring under-reconstructed (sparse) regions.\n    \"\"\"\n\n    cap_max_outdoor: int = 5_800_000   # factor-4 outdoor scenes (~1250px wide)\n    cap_max_indoor: int = 2_000_000    # factor-2 indoor scenes (>=1400px wide)\n    growth_rate: float = 0.05\n    min_opacity: float = 0.005\n    refine_start_iter: int = 500\n    refine_stop_iter: int = 25_000\n    refine_every: int = 100\n    noise_lr: float = 5e5\n\n    def initialize_state(self, scene_scale: float = 1.0) -> Dict[str, Any]:\n        # NOTE: relocate/sample_add reindex every entry in `state`, so keep\n        # only per-Gaussian tensors there; stash scalars on the strategy.\n        self._scene_scale = float(scene_scale)\n        return {}\n\n    def check_sanity(self, params, optimizers):\n        super().check_sanity(params, optimizers)\n        for key in [\"means\", \"scales\", \"quats\", \"opacities\"]:\n            assert key in params, f\"{key} is required in params but missing.\"\n\n    def _get_binoms(self, device):\n        binoms = getattr(self, \"_binoms\", None)\n        if binoms is None or binoms.device != device:\n            n_max = 51\n            binoms = torch.zeros((n_max, n_max), device=device)\n            for n in range(n_max):\n                for k in range(n + 1):\n                    binoms[n, k] = math.comb(n, k)\n            self._binoms = binoms\n        return binoms\n\n    def step_pre_backward(self, params, optimizers, state, step, info):\n        # No gradient statistics needed: densification is density-driven.\n        pass\n\n    def step_post_backward(self, params, optimizers, state, step, info,\n                           packed=False):\n        if step >= self.refine_stop_iter:\n            return\n        binoms = self._get_binoms(params[\"means\"].device)\n\n        cap_max = getattr(self, \"_cap_max\", None)\n        if cap_max is None:\n            long_side = max(int(info[\"width\"]), int(info[\"height\"]))\n            cap_max = (self.cap_max_indoor if long_side >= 1400\n                       else self.cap_max_outdoor)\n            self._cap_max = cap_max\n\n        if step > self.refine_start_iter and step % self.refine_every == 0:\n            # (1) Saturated regions: recycle dead Gaussians by teleporting\n            # them to positions sampled from the live opacity/density field.\n            dead = torch.sigmoid(params[\"opacities\"].flatten()) <= self.min_opacity\n            n_dead = int(dead.sum().item())\n            if 0 < n_dead < dead.numel():\n                relocate(params=params, optimizers=optimizers, state=state,\n                         mask=dead, binoms=binoms, min_opacity=self.min_opacity)\n            # (2) Density curriculum: raise the target density and inject new\n            # Gaussians sampled from the full current density field.\n            n_now = params[\"means\"].shape[0]\n            n_target = min(cap_max, int((1.0 + self.growth_rate) * n_now))\n            n_new = max(0, n_target - n_now)\n            if n_new > 0:\n                sample_add(params=params, optimizers=optimizers, state=state,\n                           n=n_new, binoms=binoms, min_opacity=self.min_opacity)\n            torch.cuda.empty_cache()\n\n        # (3) Exploration noise scaled by the current means learning rate so\n        # it anneals automatically as the optimization converges.\n        lr = optimizers[\"means\"].param_groups[0][\"lr\"]\n        inject_noise_to_position(params=params, optimizers=optimizers,\n                                 state=state, scaler=lr * self.noise_lr)\n"
+    "gsplat_custom_strategy.py (step 5)": "\"\"\"Custom densification strategy for 3D Gaussian Splatting.\n\nThis file defines the CustomStrategy class that controls how Gaussians\nare added, split, and pruned during per-scene optimization.\n\"\"\"\n\nfrom dataclasses import dataclass\nfrom typing import Any, Dict, Tuple, Union\n\nimport math\nimport torch\nfrom gsplat.strategy.base import Strategy\nfrom gsplat.strategy.ops import (\n    duplicate, split, remove, reset_opa,\n    relocate, sample_add, inject_noise_to_position,\n)\n\n\n# ============================================================================\n# Densification Strategy (EDITABLE REGION: lines 20-90)\n# ============================================================================\n\n@dataclass\nclass CustomStrategy(Strategy):\n    \"\"\"Self-regulating density-field densification with a rising target curriculum.\n\n    The scene is treated as a density field built from the opacities of ALL\n    live Gaussians. Every refine step we:\n      (a) relocate Gaussians whose density contribution has collapsed\n          (opacity below threshold, i.e. saturated/useless regions) onto\n          positions sampled from the live density field, and\n      (b) inject new Gaussians sampled from the same opacity/density field\n          until the count reaches a target that rises geometrically over\n          training (low target early = scene skeleton, high late = details).\n    Position noise scaled by the current means LR keeps exploration alive.\n    \"\"\"\n\n    cap_max: int = 8_000_000          # final target density (upper bound on count)\n    min_opacity: float = 0.01         # density-collapse threshold for relocation\n    growth_factor: float = 1.05       # target density curriculum: +5% per refine\n    refine_start_iter: int = 500\n    refine_stop_iter: int = 25_000\n    refine_every: int = 100\n    noise_lr: float = 5e5             # noise scale multiplier on means LR\n\n    def initialize_state(self, scene_scale: float = 1.0) -> Dict[str, Any]:\n        n_max = 51\n        binoms = torch.zeros((n_max, n_max))\n        for n in range(n_max):\n            for k in range(n + 1):\n                binoms[n, k] = math.comb(n, k)\n        return {\"scene_scale\": scene_scale, \"binoms\": binoms}\n\n    def check_sanity(self, params, optimizers):\n        super().check_sanity(params, optimizers)\n        for key in [\"means\", \"scales\", \"quats\", \"opacities\"]:\n            assert key in params, f\"{key} is required in params but missing.\"\n\n    def step_pre_backward(self, params, optimizers, state, step, info):\n        # No gradient statistics needed: the density field itself drives growth.\n        pass\n\n    def step_post_backward(self, params, optimizers, state, step, info,\n                           packed=False):\n        device = params[\"means\"].device\n        if state[\"binoms\"].device != device:\n            state[\"binoms\"] = state[\"binoms\"].to(device)\n        binoms = state[\"binoms\"]\n        # No per-Gaussian running stats to maintain -> pass a throwaway state\n        # to ops so they never touch (and resize) the binomial table.\n        ops_state: Dict[str, Any] = {}\n\n        if (self.refine_start_iter < step < self.refine_stop_iter\n                and step % self.refine_every == 0):\n            # (a) saturated regions: teleport dead mass onto the density field\n            dead = torch.sigmoid(params[\"opacities\"].flatten()) <= self.min_opacity\n            if dead.any():\n                relocate(params=params, optimizers=optimizers, state=ops_state,\n                         mask=dead, binoms=binoms, min_opacity=self.min_opacity)\n            # (b) rising target density: inject where the field is under target,\n            # sampling positions from the opacity field of the live Gaussians.\n            n_cur = params[\"means\"].shape[0]\n            n_target = min(self.cap_max, int(self.growth_factor * n_cur))\n            n_add = max(0, n_target - n_cur)\n            if n_add > 0:\n                sample_add(params=params, optimizers=optimizers, state=ops_state,\n                           n=n_add, binoms=binoms, min_opacity=self.min_opacity)\n            torch.cuda.empty_cache()\n\n        # Exploration noise scaled by the current means learning rate.\n        last_lr = optimizers[\"means\"].param_groups[0][\"lr\"]\n        inject_noise_to_position(params=params, optimizers=optimizers,\n                                 state=ops_state, scaler=last_lr * self.noise_lr)\n"
    },
    "summary": {
     "steps": 6,
@@ -230,10 +349,10 @@
     "max_steps": 20,
     "tokens": {
      "prompt_tokens": 14,
-     "completion_tokens": 21144,
-     "total_tokens": 21158,
-     "cached_tokens": 119320,
-     "cache_creation_tokens": 90426,
+     "completion_tokens": 17503,
+     "total_tokens": 17517,
+     "cached_tokens": 83008,
+     "cache_creation_tokens": 125930,
      "calls": 7
     }
    }
@@ -246,7 +365,7 @@
      "step": 1,
      "tool": "edit",
      "file": "gsplat/custom_strategy.py",
-     "preview": "# Densification Strategy (EDITABLE REGION)\n# ============================================================================\n\n@dataclass\nclass CustomStrategy(Strategy):\n    \"\"\"Self-regulating density-field densification with a growing target.\n\n    The scene is treated as a density field built from the opacity of ALL\n    Gaussians (a probability that naturally accumulates). Every refine step:\n      * "
+     "preview": "@dataclass\nclass CustomStrategy(Strategy):\n    \"\"\"Self-regulating density-field densification (density-driven curriculum).\n\n    The scene is treated as a density field built from the opacity\n    (a probability) of ALL Gaussians. Every refine step:\n      1) Gaussians whose contribution to the density field has collapsed\n         (opacity <= min_opacity) are recycled: pruned from saturated/dead\n    "
     },
     {
      "step": 2,
@@ -257,7 +376,7 @@
      "step": 3,
      "tool": "edit",
      "file": "gsplat/custom_strategy.py",
-     "preview": "    cap_max: int = 3_000_000\n"
+     "preview": "    def initialize_state(self, scene_scale: float = 1.0) -> Dict[str, Any]:\n        # Keep state EMPTY: gsplat ops (sample_add/relocate) iterate over all\n        # state entries assuming per-Gaussian tensors, so scalars/tables are\n        # cached on the strategy object instead.\n        self._binoms = None\n        self._scene_scale = float(scene_scale)\n        return {}\n"
     },
     {
      "step": 4,
@@ -268,7 +387,7 @@
      "step": 5,
      "tool": "edit",
      "file": "gsplat/custom_strategy.py",
-     "preview": "    cap_max: int = 3_000_000\n    growth_factor: float = 1.05\n"
+     "preview": "    cap_max: int = 4_000_000\n    noise_lr: float = 5e5\n    refine_start_iter: int = 500\n    refine_stop_iter: int = 25_000\n    refine_every: int = 100\n    min_opacity: float = 0.01\n    grow_factor: float = 1.07\n"
     },
     {
      "step": 6,
@@ -282,7 +401,7 @@
     }
    ],
    "final_code": {
-    "gsplat_custom_strategy.py (step 5)": "\"\"\"Custom densification strategy for 3D Gaussian Splatting.\n\nThis file defines the CustomStrategy class that controls how Gaussians\nare added, split, and pruned during per-scene optimization.\n\"\"\"\n\nfrom dataclasses import dataclass\nfrom typing import Any, Dict, Tuple, Union\n\nimport math\nimport torch\nfrom gsplat.strategy.base import Strategy\nfrom gsplat.strategy.ops import (\n    duplicate, split, remove, reset_opa,\n    relocate, sample_add, inject_noise_to_position,\n)\n\n\n# ============================================================================\n# Densification Strategy (EDITABLE REGION)\n# ============================================================================\n\n@dataclass\nclass CustomStrategy(Strategy):\n    \"\"\"Self-regulating density-field densification with a growing target.\n\n    The scene is treated as a density field built from the opacity of ALL\n    Gaussians (a probability that naturally accumulates). Every refine step:\n      * Saturated/negligible-density regions (opacity <= `min_opacity`) are\n        recycled: those Gaussians are teleported to positions sampled from\n        the full density field (mass conserved by the relocation rule).\n      * Sparse regions are filled by injecting new Gaussians drawn from the\n        live density field (`sample_add`), with a target density that grows\n        by `growth_factor` per refine step up to `cap_max` — a curriculum\n        that builds the scene skeleton first, then fills in detail.\n    Opacity-gated exploration noise (annealed with the means LR) keeps\n    low-density Gaussians drifting toward under-reconstructed regions.\n    \"\"\"\n\n    cap_max: int = 3_000_000\n    growth_factor: float = 1.05\n    min_opacity: float = 0.005\n    noise_lr: float = 5e5\n    refine_start_iter: int = 500\n    refine_stop_iter: int = 25_000\n    refine_every: int = 100\n\n    def initialize_state(self, scene_scale: float = 1.0) -> Dict[str, Any]:\n        n_max = 51\n        binoms = torch.zeros((n_max, n_max))\n        for n in range(n_max):\n            for k in range(n + 1):\n                binoms[n, k] = math.comb(n, k)\n        return {\"binoms\": binoms, \"scene_scale\": scene_scale}\n\n    def check_sanity(self, params, optimizers):\n        \"\"\"Sanity check for required parameters.\"\"\"\n        super().check_sanity(params, optimizers)\n        for key in [\"means\", \"scales\", \"quats\", \"opacities\"]:\n            assert key in params, f\"{key} is required in params but missing.\"\n\n    def step_pre_backward(self, params, optimizers, state, step, info):\n        \"\"\"No gradient statistics needed — density field drives everything.\"\"\"\n        pass\n\n    def step_post_backward(self, params, optimizers, state, step, info,\n                           packed=False):\n        binoms = state[\"binoms\"]\n        if binoms.device != params[\"means\"].device:\n            binoms = binoms.to(params[\"means\"].device)\n            state[\"binoms\"] = binoms\n\n        if (self.refine_start_iter < step < self.refine_stop_iter\n                and step % self.refine_every == 0):\n            # (1) Saturated field: recycle negligible-density Gaussians by\n            # teleporting them to samples from the density field (which\n            # includes them until relocation — mass is conserved).\n            dead = torch.sigmoid(params[\"opacities\"].flatten()) <= self.min_opacity\n            if int(dead.sum().item()) > 0:\n                relocate(params=params, optimizers=optimizers, state={},\n                         mask=dead, binoms=binoms,\n                         min_opacity=self.min_opacity)\n\n            # (2) Sparse field: inject new Gaussians up to the growing\n            # target density; positions drawn from the live density field.\n            n_cur = params[\"means\"].shape[0]\n            n_target = min(self.cap_max, int(self.growth_factor * n_cur))\n            n_add = max(0, n_target - n_cur)\n            if n_add > 0:\n                sample_add(params=params, optimizers=optimizers, state={},\n                           n=n_add, binoms=binoms,\n                           min_opacity=self.min_opacity)\n            torch.cuda.empty_cache()\n\n        # Opacity-gated exploration noise, annealed with the means LR.\n        last_lr = optimizers[\"means\"].param_groups[0][\"lr\"]\n        inject_noise_to_position(params=params, optimizers=optimizers,\n                                 state={}, scaler=last_lr * self.noise_lr)\n"
+    "gsplat_custom_strategy.py (step 5)": "\"\"\"Custom densification strategy for 3D Gaussian Splatting.\n\nThis file defines the CustomStrategy class that controls how Gaussians\nare added, split, and pruned during per-scene optimization.\n\"\"\"\n\nfrom dataclasses import dataclass\nfrom typing import Any, Dict, Tuple, Union\n\nimport math\nimport torch\nfrom gsplat.strategy.base import Strategy\nfrom gsplat.strategy.ops import (\n    duplicate, split, remove, reset_opa,\n    relocate, sample_add, inject_noise_to_position,\n)\n\n\n# ============================================================================\n# Densification Strategy (EDITABLE REGION: lines 20-90)\n# ============================================================================\n\n@dataclass\nclass CustomStrategy(Strategy):\n    \"\"\"Self-regulating density-field densification (density-driven curriculum).\n\n    The scene is treated as a density field built from the opacity\n    (a probability) of ALL Gaussians. Every refine step:\n      1) Gaussians whose contribution to the density field has collapsed\n         (opacity <= min_opacity) are recycled: pruned from saturated/dead\n         regions and re-injected at positions sampled from the density field\n         of the live Gaussians (relocate).\n      2) The target density follows a curriculum: it rises by `grow_factor`\n         every `refine_every` steps until `cap_max`. The gap between current\n         and target density is filled by injecting new Gaussians sampled\n         from the current density field (sample_add).\n    Exploration noise (scaled by the scheduled means LR) perturbs\n    low-density Gaussians so they can escape saturated regions.\n    \"\"\"\n    cap_max: int = 4_000_000\n    noise_lr: float = 5e5\n    refine_start_iter: int = 500\n    refine_stop_iter: int = 25_000\n    refine_every: int = 100\n    min_opacity: float = 0.01\n    grow_factor: float = 1.07\n    grow_factor: float = 1.05\n    def initialize_state(self, scene_scale: float = 1.0) -> Dict[str, Any]:\n        # Keep state EMPTY: gsplat ops (sample_add/relocate) iterate over all\n        # state entries assuming per-Gaussian tensors, so scalars/tables are\n        # cached on the strategy object instead.\n        self._binoms = None\n        self._scene_scale = float(scene_scale)\n        return {}\n\n    def check_sanity(self, params, optimizers):\n        \"\"\"Sanity check for required parameters.\"\"\"\n        super().check_sanity(params, optimizers)\n        for key in [\"means\", \"scales\", \"quats\", \"opacities\"]:\n            assert key in params, f\"{key} is required in params but missing.\"\n\n    def step_pre_backward(self, params, optimizers, state, step, info):\n        \"\"\"No gradient statistics needed: the density field drives everything.\"\"\"\n        pass\n\n    def step_post_backward(self, params, optimizers, state, step, info,\n                           packed=False):\n        device = params[\"means\"].device\n        if getattr(self, \"_binoms\", None) is None:\n            n_max = 51\n            binoms = torch.zeros((n_max, n_max), device=device)\n            for n in range(n_max):\n                for k in range(n + 1):\n                    binoms[n, k] = math.comb(n, k)\n            self._binoms = binoms\n        binoms = self._binoms\n\n        if (self.refine_start_iter < step < self.refine_stop_iter\n                and step % self.refine_every == 0):\n            # (1) Recycle dead / saturated-region Gaussians: prune where the\n            # density field is above target (their opacity collapsed) and\n            # re-inject at positions drawn from the full density field.\n            opas = torch.sigmoid(params[\"opacities\"].flatten())\n            dead = opas <= self.min_opacity\n            if dead.any():\n                relocate(params=params, optimizers=optimizers, state=state,\n                         mask=dead, binoms=binoms,\n                         min_opacity=self.min_opacity)\n\n            # (2) Density curriculum: raise the target density and inject the\n            # deficit, sampling positions from the live-Gaussian density field.\n            n_cur = params[\"means\"].shape[0]\n            n_target = min(self.cap_max,\n                           max(n_cur + 1, int(self.grow_factor * n_cur)))\n            n_add = n_target - n_cur\n            if n_cur < self.cap_max and n_add > 0:\n                sample_add(params=params, optimizers=optimizers, state=state,\n                           n=n_add, binoms=binoms,\n                           min_opacity=self.min_opacity)\n            torch.cuda.empty_cache()\n\n        # Exploration noise on low-density Gaussians, scaled by the\n        # (scheduled) means learning rate for stability late in training.\n        if step < self.refine_stop_iter:\n            lr = optimizers[\"means\"].param_groups[0][\"lr\"]\n            inject_noise_to_position(params=params, optimizers=optimizers,\n                                     state=state, scaler=lr * self.noise_lr)\n"
    },
    "summary": {
     "steps": 6,
@@ -291,10 +410,10 @@
     "max_steps": 20,
     "tokens": {
      "prompt_tokens": 14,
-     "completion_tokens": 16024,
-     "total_tokens": 16038,
-     "cached_tokens": 107299,
-     "cache_creation_tokens": 90302,
+     "completion_tokens": 14984,
+     "total_tokens": 14998,
+     "cached_tokens": 145893,
+     "cache_creation_tokens": 55112,
      "calls": 7
     }
    }
@@ -307,7 +426,7 @@
      "step": 1,
      "tool": "edit",
      "file": "gsplat/custom_strategy.py",
-     "preview": "@dataclass\nclass CustomStrategy(Strategy):\n    \"\"\"Self-regulating density-field densification.\n\n    The scene is treated as a density field built from Gaussian opacities\n    (probabilities). Every refine step:\n      - Dead / saturated mass (opacity below threshold) is teleported to\n        locations drawn from the opacity density field of ALL Gaussians\n        (including the ones being pruned) via"
+     "preview": "@dataclass\nclass CustomStrategy(Strategy):\n    \"\"\"Self-regulating density-field densification (density-driven curriculum).\n\n    The scene is treated as a density field built from the opacities of ALL\n    Gaussians. Where the field is saturated-but-dead (opacity below floor) we\n    relocate mass; where the current density is below a rising target we\n    inject new Gaussians sampled from the live de"
     },
     {
      "step": 2,
@@ -318,24 +437,24 @@
      "step": 3,
      "tool": "edit",
      "file": "gsplat/custom_strategy.py",
-     "preview": "    def initialize_state(self, scene_scale: float = 1.0) -> Dict[str, Any]:\n        # NOTE: binoms is kept on the strategy object (NOT in state), because\n        # gsplat ops index every tensor in state by per-Gaussian ids.\n        n_max = 51\n        binoms = torch.zeros((n_max, n_max))\n        for n in range(n_max):\n            for k in range(n + 1):\n                binoms[n, k] = math.comb(n, k)"
+     "preview": "        if self._binoms.device != params[\"means\"].device:\n            self._binoms = self._binoms.to(params[\"means\"].device)\n        binoms = self._binoms\n"
     },
     {
      "step": 4,
-     "tool": "test",
-     "file": null
+     "tool": "edit",
+     "file": "gsplat/custom_strategy.py",
+     "preview": "        self._binoms = binoms\n        return {\"scene_scale\": scene_scale}\n"
     },
     {
      "step": 5,
-     "tool": "edit",
-     "file": "gsplat/custom_strategy.py",
-     "preview": "        binoms = self._binoms\n"
+     "tool": "test",
+     "file": null
     },
     {
      "step": 6,
      "tool": "edit",
      "file": "gsplat/custom_strategy.py",
-     "preview": "    growth_factor: float = 1.05    # curriculum: +5% target per refine step\n    noise_lr: float = 5e5          # exploration noise scale (x means-LR)\n    refine_start_iter: int = 500\n    refine_stop_iter: int = 25_000\n    refine_every: int = 100\n    min_opacity: float = 0.005     # below this, mass counts as \"dead\"\n"
+     "preview": "        self._binoms = binoms\n        self._scene_scale = float(scene_scale)\n        return {}\n"
     },
     {
      "step": 7,
@@ -344,31 +463,25 @@
     },
     {
      "step": 8,
-     "tool": "edit",
-     "file": "gsplat/custom_strategy.py",
-     "preview": "        # State must contain ONLY per-Gaussian tensors: sample_add/relocate\n        # iterate over every state entry, so scalars must not be stored here.\n        return {}\n"
-    },
-    {
-     "step": 9,
      "tool": "submit",
      "file": null
     }
    ],
    "final_code": {
-    "gsplat_custom_strategy.py (step 8)": "\"\"\"Custom densification strategy for 3D Gaussian Splatting.\n\nThis file defines the CustomStrategy class that controls how Gaussians\nare added, split, and pruned during per-scene optimization.\n\"\"\"\n\nfrom dataclasses import dataclass\nfrom typing import Any, Dict, Tuple, Union\n\nimport math\nimport torch\nfrom gsplat.strategy.base import Strategy\nfrom gsplat.strategy.ops import (\n    duplicate, split, remove, reset_opa,\n    relocate, sample_add, inject_noise_to_position,\n)\n\n\n# ============================================================================\n# Densification Strategy (EDITABLE REGION: lines 20-90)\n# ============================================================================\n\n@dataclass\nclass CustomStrategy(Strategy):\n    \"\"\"Self-regulating density-field densification.\n\n    The scene is treated as a density field built from Gaussian opacities\n    (probabilities). Every refine step:\n      - Dead / saturated mass (opacity below threshold) is teleported to\n        locations drawn from the opacity density field of ALL Gaussians\n        (including the ones being pruned) via `relocate`.\n      - Where the field is below the current target density, new Gaussians\n        are injected at positions sampled from the live density field via\n        `sample_add` (never at arbitrary sparse spots).\n      - The target density follows a curriculum: it grows multiplicatively\n        each refine step until reaching a cap (skeleton first, detail later).\n    Exploration noise, gated by opacity and scaled by the decaying means-LR,\n    keeps low-confidence Gaussians mobile.\n    \"\"\"\n\n    cap_max: int = 1_300_000       # final target density (Gaussian budget)\n    growth_factor: float = 1.05    # curriculum: +5% target per refine step\n    noise_lr: float = 5e5          # exploration noise scale (x means-LR)\n    refine_start_iter: int = 500\n    refine_stop_iter: int = 25_000\n    refine_every: int = 100\n    min_opacity: float = 0.005     # below this, mass counts as \"dead\"\n    def initialize_state(self, scene_scale: float = 1.0) -> Dict[str, Any]:\n        # NOTE: binoms is kept on the strategy object (NOT in state), because\n        # gsplat ops index every tensor in state by per-Gaussian ids.\n        n_max = 51\n        binoms = torch.zeros((n_max, n_max))\n        for n in range(n_max):\n            for k in range(n + 1):\n                binoms[n, k] = math.comb(n, k)\n        object.__setattr__(self, \"_binoms\", binoms)\n        # State must contain ONLY per-Gaussian tensors: sample_add/relocate\n        # iterate over every state entry, so scalars must not be stored here.\n        return {}\n\n    def check_sanity(self, params, optimizers):\n        \"\"\"Sanity check for required parameters.\"\"\"\n        super().check_sanity(params, optimizers)\n        for key in [\"means\", \"scales\", \"quats\", \"opacities\"]:\n            assert key in params, f\"{key} is required in params but missing.\"\n\n    def step_pre_backward(self, params, optimizers, state, step, info):\n        # No gradient statistics needed: the density field drives everything.\n        pass\n\n    def step_post_backward(self, params, optimizers, state, step, info,\n                           packed=False):\n        device = params[\"means\"].device\n        if self._binoms.device != device:\n            object.__setattr__(self, \"_binoms\", self._binoms.to(device))\n        binoms = self._binoms\n\n        if (self.refine_start_iter < step < self.refine_stop_iter\n                and step % self.refine_every == 0):\n            # 1) Teleport dead mass: destinations sampled from the opacity\n            #    density field that still includes the dying Gaussians.\n            dead = torch.sigmoid(params[\"opacities\"].flatten()) <= self.min_opacity\n            if int(dead.sum().item()) > 0:\n                relocate(params=params, optimizers=optimizers, state=state,\n                         mask=dead, binoms=binoms, min_opacity=self.min_opacity)\n\n            # 2) Curriculum injection: raise the target density gradually and\n            #    inject new Gaussians sampled from the live density field.\n            n_cur = params[\"means\"].shape[0]\n            n_target = min(self.cap_max, int(self.growth_factor * n_cur))\n            n_add = max(0, n_target - n_cur)\n            if n_add > 0:\n                sample_add(params=params, optimizers=optimizers, state=state,\n                           n=n_add, binoms=binoms, min_opacity=self.min_opacity)\n            torch.cuda.empty_cache()\n\n        # 3) Opacity-gated exploration noise, annealed with the means-LR.\n        lr = optimizers[\"means\"].param_groups[0][\"lr\"]\n        inject_noise_to_position(params=params, optimizers=optimizers,\n                                 state=state, scaler=lr * self.noise_lr)\n"
+    "gsplat_custom_strategy.py (step 6)": "\"\"\"Custom densification strategy for 3D Gaussian Splatting.\n\nThis file defines the CustomStrategy class that controls how Gaussians\nare added, split, and pruned during per-scene optimization.\n\"\"\"\n\nfrom dataclasses import dataclass\nfrom typing import Any, Dict, Tuple, Union\n\nimport math\nimport torch\nfrom gsplat.strategy.base import Strategy\nfrom gsplat.strategy.ops import (\n    duplicate, split, remove, reset_opa,\n    relocate, sample_add, inject_noise_to_position,\n)\n\n\n# ============================================================================\n# Densification Strategy (EDITABLE REGION: lines 20-90)\n# ============================================================================\n\n@dataclass\nclass CustomStrategy(Strategy):\n    \"\"\"Self-regulating density-field densification (density-driven curriculum).\n\n    The scene is treated as a density field built from the opacities of ALL\n    Gaussians. Where the field is saturated-but-dead (opacity below floor) we\n    relocate mass; where the current density is below a rising target we\n    inject new Gaussians sampled from the live density field. The target\n    density (total count) follows a curriculum: low early (scene skeleton),\n    rising toward a cap (details). Position noise, annealed by the means\n    learning rate, keeps the field exploring sparse regions.\n    \"\"\"\n\n    cap_max: int = 1_800_000       # final target density (count cap)\n    grow_factor: float = 1.05      # target density curriculum: +5% per interval\n    noise_lr: float = 5e5          # exploration noise multiplier on means LR\n    min_opacity: float = 0.005     # density floor: below this = saturated/dead\n    refine_start_iter: int = 500\n    refine_stop_iter: int = 25_000\n    refine_every: int = 100\n\n    def initialize_state(self, scene_scale: float = 1.0) -> Dict[str, Any]:\n        n_max = 51\n        binoms = torch.zeros((n_max, n_max))\n        for n in range(n_max):\n            for k in range(n + 1):\n                binoms[n, k] = math.comb(n, k)\n        self._binoms = binoms\n        self._scene_scale = float(scene_scale)\n        return {}\n\n    def check_sanity(self, params, optimizers):\n        super().check_sanity(params, optimizers)\n        for key in [\"means\", \"scales\", \"quats\", \"opacities\"]:\n            assert key in params, f\"{key} is required in params but missing.\"\n\n    def step_pre_backward(self, params, optimizers, state, step, info):\n        # Density-driven: no gradient statistics needed.\n        pass\n\n    def step_post_backward(self, params, optimizers, state, step, info,\n                           packed=False):\n        if self._binoms.device != params[\"means\"].device:\n            self._binoms = self._binoms.to(params[\"means\"].device)\n        binoms = self._binoms\n\n        if (self.refine_start_iter < step < self.refine_stop_iter\n                and step % self.refine_every == 0):\n            # 1) Density above target / dead mass -> relocate into the live\n            #    density field (sampled by opacity, includes all Gaussians).\n            dead = torch.sigmoid(params[\"opacities\"].flatten()) <= self.min_opacity\n            if dead.sum() > 0:\n                relocate(params=params, optimizers=optimizers, state=state,\n                         mask=dead, binoms=binoms, min_opacity=self.min_opacity)\n            # 2) Current density below the (rising) target -> inject new\n            #    Gaussians drawn from the density field of live Gaussians.\n            n_cur = len(params[\"means\"])\n            n_target = min(self.cap_max, int(n_cur * self.grow_factor))\n            n_add = max(0, n_target - n_cur)\n            if n_add > 0:\n                sample_add(params=params, optimizers=optimizers, state=state,\n                           n=n_add, binoms=binoms, min_opacity=self.min_opacity)\n            torch.cuda.empty_cache()\n\n        # Exploration noise on positions, annealed with the means LR schedule.\n        lr = optimizers[\"means\"].param_groups[0][\"lr\"]\n        inject_noise_to_position(params=params, optimizers=optimizers,\n                                 state=state, scaler=lr * self.noise_lr)\n"
    },
    "summary": {
-    "steps": 8,
+    "steps": 7,
     "tests": 3,
     "done": true,
     "max_steps": 20,
     "tokens": {
-     "prompt_tokens": 18,
-     "completion_tokens": 16607,
-     "total_tokens": 16625,
-     "cached_tokens": 227533,
-     "cache_creation_tokens": 22443,
-     "calls": 9
+     "prompt_tokens": 16,
+     "completion_tokens": 20007,
+     "total_tokens": 20023,
+     "cached_tokens": 190010,
+     "cache_creation_tokens": 64199,
+     "calls": 8
     }
    }
   }

@@ -1,0 +1,12 @@
+{
+ "slug": "ogbn-arxiv",
+ "name": "OGBN-arxiv node classification",
+ "domain": "Graph",
+ "metric": "test_acc",
+ "lower_is_better": false,
+ "baseline": 0.31559,
+ "master_prompt": {
+  "system": "You are a world-class AI researcher. You are given a machine-learning task with a specific editable code component. Reason step by step in your own distinctive style toward ONE genuinely novel, non-obvious idea to improve that component. Make the creative core unmistakably clear and explain how you arrived at it. Focus on ideas and mechanisms, not full implementation code.",
+  "user": "Given a training script on a dataset train.py, improve upon the current model performance (trained with current hyperparmeters in train.py). The training epochs should be within 10 to save time.\n\nThe editable component is `train.py`. Propose ONE concrete, novel idea to improve it. Conclude with two lines: 'Core idea:' and 'Non-trivial crux:'. \n\nIMPORTANT: Respond with ONLY the concise technical idea and a brief implementation sketch. Do NOT roleplay or adopt a persona, do NOT include a reasoning monologue or self-narration, do NOT mention any researcher by name. Output plain technical prose ending with a line \"Core idea:\"."
+ }
+}

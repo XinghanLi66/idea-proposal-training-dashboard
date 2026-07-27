@@ -1,0 +1,35 @@
+{
+ "task": "cifar10",
+ "arm": "qwen3-32b-rl",
+ "arm_label": "Qwen3-32B RL",
+ "metric": "accuracy",
+ "baseline": 0.51237,
+ "lower_is_better": false,
+ "metric_mean": 0.511067,
+ "delta_pct": -0.254,
+ "ci_pct": 3.215,
+ "success": false,
+ "per_seed": [
+  {
+   "seed": "1",
+   "metric": 0.5147,
+   "delta_pct": 0.455
+  },
+  {
+   "seed": "3",
+   "metric": 0.5268,
+   "delta_pct": 2.816
+  },
+  {
+   "seed": "2",
+   "metric": 0.4917,
+   "delta_pct": -4.034
+  }
+ ],
+ "master_output": {
+  "idea": "**Core idea:** Introduce a curriculum learning schedule where the model is first trained on the easiest-to-classify examples (lowest loss) and gradually incorporates harder ones over epochs, with an epoch-wise ramping of the hardest 10% into the batch mix, to improve convergence speed and final accuracy.\n\n**Non-trivial crux:** The hardest examples must be injected only after the model has some signal, since feeding them too early (before the easy set is somewhat solved) actively degrades learning and accuracy — so the schedule must be carefully phased with a warmup on the easy set before any hard examples enter the loss, and a small fraction of the hardest should be sampled per epoch rather than full inclusion.",
+  "proposal": "<think>\n\n</think>\n\n**Core idea:** Introduce a curriculum learning schedule where the model is first trained on the easiest-to-classify examples (lowest loss) and gradually incorporates harder ones over epochs, with an epoch-wise ramping of the hardest 10% into the batch mix, to improve convergence speed and final accuracy.\n\n**Non-trivial crux:** The hardest examples must be injected only after the model has some signal, since feeding them too early (before the easy set is somewhat solved) actively degrades learning and accuracy — so the schedule must be carefully phased with a warmup on the easy set before any hard examples enter the loss, and a small fraction of the hardest should be sampled per epoch rather than full inclusion.",
+  "valid": true,
+  "n_attempts": 1
+ }
+}

@@ -1,0 +1,35 @@
+{
+ "task": "ogbn-arxiv",
+ "arm": "m2sft",
+ "arm_label": "Qwen3-235B-A22B SFT",
+ "metric": "test_acc",
+ "baseline": 0.31559,
+ "lower_is_better": false,
+ "metric_mean": 0.50979,
+ "delta_pct": 61.536,
+ "ci_pct": 1.536,
+ "success": true,
+ "per_seed": [
+  {
+   "seed": "2",
+   "metric": 0.5129107256753699,
+   "delta_pct": 62.524
+  },
+  {
+   "seed": "3",
+   "metric": 0.5127255519206634,
+   "delta_pct": 62.466
+  },
+  {
+   "seed": "1",
+   "metric": 0.503734337386581,
+   "delta_pct": 59.617
+  }
+ ],
+ "master_output": {
+  "idea": "Core idea: Structure hyperparameter search as a coarse-to-fine sequential-halving sweep — sweep large batch sizes first, keep the top fraction (not absolute number) of survivors, then fine-tune learning rate and weight decay only on those survivors, and finally a few learning rate schedules — so the expensive fine-grained search only runs on a small surviving candidate set.\n\nNon-trivial crux: The early pruning must keep a fixed fraction of top candidates across stages with equal epochs, because pruning on early, unstable epochs risks discarding candidates that would later win — and the total cost must be budgeted up front to avoid over- or under-spending.",
+  "proposal": "<think>\nOkay, so I'm a researcher looking at the training script. The problem as stated is to improve model performance within 10 epochs, and the editable thing is train.py itself. Let me start from what I actually observe.\n\nFirst, the default setup probably runs a single training run with one set of hyperparameters. That's fine, but if I want to beat it, I need to ask: what's the limiting factor that a single run can't touch? Well, a single run has a fixed batch size, learning rate, weight decay, etc. There's no reason to believe the default values are optimal. So the obvious move is hyperparameter search. But here's the thing I keep coming back to: if I just run a grid search over a few values, I'm going to burn a lot of compute for little insight. Grid search is expensive and doesn't scale — and I only have 10 epochs. So the default fix is not the right one here.\n\nWhy not? Because grid search treats each hyperparameter independently. It can't exploit the fact that some hyperparameters are cheap to evaluate and coarse-grained, while others are expensive and fine-grained. That's the mechanism I want to lean on: not search everything uniformly, but organize the search so that the coarse, cheap parameters get swept first, and only the promising regions get the expensive, fine-grained parameters. That's the intuition from sequential halving — keep the top candidates after each cheap round, then spend more on the survivors.\n\nSo let me map that onto the problem. The coarsest, cheapest knob is batch size: large batches run faster per epoch. I can sweep a few large batch sizes first, keep the top few. Then, for each surviving batch size, sweep learning rate and weight decay — still relatively cheap, a few values each. Finally, for the best batch/learning-rate/weight-decay triplet, do a fine-grained sweep of a few learning rate schedules. That way the expensive, fine-grained search only runs on a small number of candidates, not the whole space. The cost should scale roughly with the number of survivors at each stage rather than the full product — a big win if the early pruning is aggressive.\n\nBut I have to be honest about what could go wrong, because this is the part everyone forgets. The whole thing hinges on the early pruning step being reliable. If I prune based on early epochs — which the model is still adapting to — I risk throwing out a candidate that would have been the winner later. So the decision rule must be: only keep the top fraction of the candidates at each stage, and keep the same number of epochs across stages so the comparison is fair. I don't want the decision rule to be 'keep the top K' where K is arbitrary; it should be a fraction so it's invariant to how many candidates I start with.\n\nAnd there's a second crux: I shouldn't over-spend the budget. My intuition is that a coarse sweep of 3-5 candidates per stage, then halving the survivors each stage, should fit inside a fixed compute budget — but that's exactly what I'd have to verify empirically, not assume. If I guess the number of stages wrong, I either under-spend (waste budget) or over-spend (run out before finishing). The honest way is to estimate the total cost up front given the chosen number of candidates per stage and the pruning fraction, and then trim or expand the budget to fit.\n\nNow, how do I keep myself honest that this actually helps? I refuse to trust a single run. I'll run the whole search with different random seeds and report the mean and standard deviation of the best final validation accuracy across those seeds. Decision rule: if the best-pruned candidate's mean is not clearly better than the baseline (within a small margin), I do not claim victory — I'd prefer to say 'no improvement' than to overstate. That's the discipline, not the cleverness.\n\nCore idea: structure hyperparameter search as a coarse-to-fine sequential-halving sweep — sweep large batch sizes first, keep the top fraction of survivors, then fine-tune learning rate and weight decay only on those, and finally a few learning rate schedules — so the expensive fine-grained search only runs on a small surviving candidate set.\nNon-trivial crux: the early pruning must keep a fixed fraction (not absolute number) of top candidates across stages with equal epochs, because pruning on early, unstable epochs risks discarding future winners — and the total cost must be budgeted up front to avoid over- or under-spending.\n</think>\n\nCore idea: Structure hyperparameter search as a coarse-to-fine sequential-halving sweep — sweep large batch sizes first, keep the top fraction (not absolute number) of survivors, then fine-tune learning rate and weight decay only on those survivors, and finally a few learning rate schedules — so the expensive fine-grained search only runs on a small surviving candidate set.\n\nNon-trivial crux: The early pruning must keep a fixed fraction of top candidates across stages with equal epochs, because pruning on early, unstable epochs risks discarding candidates that would later win — and the total cost must be budgeted up front to avoid over- or under-spending.",
+  "valid": true,
+  "n_attempts": 1
+ }
+}

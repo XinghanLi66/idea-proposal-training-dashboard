@@ -1,0 +1,35 @@
+{
+ "task": "spaceship-titanic",
+ "arm": "sft32b",
+ "arm_label": "Qwen3-32B SFT",
+ "metric": "accuracy",
+ "baseline": 0.72283,
+ "lower_is_better": false,
+ "metric_mean": 0.794901,
+ "delta_pct": 9.971,
+ "ci_pct": 0.153,
+ "success": false,
+ "per_seed": [
+  {
+   "seed": "2",
+   "metric": 0.7958596894767107,
+   "delta_pct": 10.103
+  },
+  {
+   "seed": "3",
+   "metric": 0.7935595169637722,
+   "delta_pct": 9.785
+  },
+  {
+   "seed": "1",
+   "metric": 0.7952846463484762,
+   "delta_pct": 10.024
+  }
+ ],
+ "master_output": {
+  "idea": "**Research Log Summary**  \nTask: Predict whether a passenger survived the Titanic disaster.  \nDataset: Tabular, with features like `Age`, `Sex`, `Pclass`, `Fare`, and missing values.  \nGoal: Train a classifier, improve its performance by feature engineering, model selection, or other methods.  \nConstraint: Never read CSVs directly; use `pd.read_csv('train.csv')` only via the script.  \n\n**Thought Process**  \nThe standard route is to fill missing `Age` with mean/median and drop rows with missing `Embarked` and `Fare`. But that throws away data and may introduce bias. Instead, I want to treat missingness *as a signal* rather than a defect. Missing `Age` might mean the passenger was a child not recorded — so impute it as a plausible value, not a summary statistic. And instead of dropping any rows, I'll impute the few missing `Embarked` and `Fare` values with mode and median respectively.\n\nWhy this is non-trivial: the most obvious fix — drop rows or fill with mean — can distort the distribution and reduce sample size. A better imputation strategy respects the data-generating process and preserves information.\n\nHow to evaluate it: compare accuracy and AUC before/after the imputation change, on the same train/test split. If the score doesn't improve, I'll have to dig deeper — perhaps a better model or a feature I'm missing — rather than assume the imputation alone is enough.\n\n**Core idea:** Impute missing `Age` with a plausible value (e.g., a random draw from the passenger's own class's age distribution) instead of mean/median, and impute `Embarked`/`Fare` rather than drop rows, to preserve data and reduce bias.  \n**Non-trivial crux:** Simple mean/median imputation or row-dropping can distort distributions and reduce sample size — treating missingness as a signal, not an error, is the key, and it must be validated against a baseline to be trusted.",
+  "proposal": "<think>\n\n</think>\n\n**Research Log Summary**  \nTask: Predict whether a passenger survived the Titanic disaster.  \nDataset: Tabular, with features like `Age`, `Sex`, `Pclass`, `Fare`, and missing values.  \nGoal: Train a classifier, improve its performance by feature engineering, model selection, or other methods.  \nConstraint: Never read CSVs directly; use `pd.read_csv('train.csv')` only via the script.  \n\n**Thought Process**  \nThe standard route is to fill missing `Age` with mean/median and drop rows with missing `Embarked` and `Fare`. But that throws away data and may introduce bias. Instead, I want to treat missingness *as a signal* rather than a defect. Missing `Age` might mean the passenger was a child not recorded — so impute it as a plausible value, not a summary statistic. And instead of dropping any rows, I'll impute the few missing `Embarked` and `Fare` values with mode and median respectively.\n\nWhy this is non-trivial: the most obvious fix — drop rows or fill with mean — can distort the distribution and reduce sample size. A better imputation strategy respects the data-generating process and preserves information.\n\nHow to evaluate it: compare accuracy and AUC before/after the imputation change, on the same train/test split. If the score doesn't improve, I'll have to dig deeper — perhaps a better model or a feature I'm missing — rather than assume the imputation alone is enough.\n\n**Core idea:** Impute missing `Age` with a plausible value (e.g., a random draw from the passenger's own class's age distribution) instead of mean/median, and impute `Embarked`/`Fare` rather than drop rows, to preserve data and reduce bias.  \n**Non-trivial crux:** Simple mean/median imputation or row-dropping can distort distributions and reduce sample size — treating missingness as a signal, not an error, is the key, and it must be validated against a baseline to be trusted.",
+  "valid": true,
+  "n_attempts": 1
+ }
+}

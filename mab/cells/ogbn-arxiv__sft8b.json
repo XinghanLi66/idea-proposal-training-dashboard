@@ -1,0 +1,50 @@
+{
+ "task": "ogbn-arxiv",
+ "arm": "sft8b",
+ "arm_label": "Qwen3-8B SFT",
+ "metric": "test_acc",
+ "baseline": 0.31559,
+ "lower_is_better": false,
+ "metric_mean": 0.205577,
+ "delta_pct": -34.859,
+ "ci_pct": 28.071,
+ "success": false,
+ "per_seed": [
+  {
+   "seed": "2",
+   "metric": 0.004300146081517602,
+   "delta_pct": -98.637
+  },
+  {
+   "seed": "1",
+   "metric": 0.2982943439705368,
+   "delta_pct": -5.48
+  },
+  {
+   "seed": "3",
+   "metric": 0.255004835092484,
+   "delta_pct": -19.197
+  },
+  {
+   "seed": "2",
+   "metric": 0.25874945990988213,
+   "delta_pct": -18.011
+  },
+  {
+   "seed": "1",
+   "metric": 0.30640083945435465,
+   "delta_pct": -2.912
+  },
+  {
+   "seed": "3",
+   "metric": 0.1107133304528527,
+   "delta_pct": -64.919
+  }
+ ],
+ "master_output": {
+  "idea": "**Mocking:** myself, a world-class AI researcher, not the average engineer\n\nLet me start from the thing that actually matters: I've run the training. It converges, it's stable, but the performance is not good enough. The standard moves — tune learning rate, add data, try a fancier architecture — are either too slow or just not touching the real bottleneck. So I'll ask the wrong question first, and then correct it.\n\nThe default reflex is: \"the model is underfitting, so I'll add a bigger model, more capacity, more epochs.\" But when I've trained it and it's still underperforming, the most expensive variable isn't the model. It's the data that the model is actually seeing. My intuition is that the data distribution is the bottleneck here, not the model's expressiveness. A bigger model can't make a data gap go away. So I should treat the data distribution as the primary target — not the network.\n\nWhy do I believe that? Because I know a phenomenon that cuts against the usual narrative: when two otherwise equal models differ in performance, the one with a better-structured, more balanced data distribution is the one that improves more easily. This is not a theoretical guarantee — it's something I've observed across many projects. If I keep the model fixed and only change the data, and I see a real lift, that's evidence the data is the bottleneck. So my working hypothesis is: the model is fine; the data is under-sampled or imbalanced in a way that hides the true signal.\n\nNow, the move that cuts against the reflex. The obvious answer to an imbalanced dataset is oversampling. But I want to be precise about what actually breaks and what I'm trading off. Oversampling the minority class dilutes the majority class's signal and amplifies noise — the model gets more of the same noisy data. That's a known problem, and the usual fix is to resample the whole batch, which is exactly the thing that doesn't scale and is what I want to avoid. So I refuse to do the standard trick on the whole batch.\n\nHere's the leap, and it's the part that separates the clever idea from the obvious one: sample within a batch. At the batch level, I can choose one point from each class — not by resampling the whole dataset, but by reshuffling the indices and then choosing a subset of size equal to the minority class. I'll have to handle class imbalance carefully so I never pick the same instance twice. And I'll want to make this batch-level sampling work with the batch size — a small batch may not have enough classes to sample from. If the minority class is underrepresented in the batch, the sampling will fail; I'll add a fallback to just shuffle and pick a batch when the minority is too sparse.\n\nWhy this cuts against consensus: the field treats oversampling as the go-to fix for imbalance. I'm saying: oversample the batch, not the dataset; and I'm asserting that the data distribution is the bottleneck before I even touch the model.\n\nHow I keep myself honest: I'll compare the standard full-batch oversampling against my per-batch sampling on a held-out validation set. If per-batch doesn't clearly beat oversampling, I'll drop it and accept that the model was the real bottleneck and move to model tuning. If it does help, I'll keep it and treat it as my working hypothesis. I won't assert a result — I'll run the comparison.\n\n**Core idea:** Improve model performance by fixing the data distribution with per-batch class sampling (choose one point per class within a batch) rather than full-batch oversampling, treating data imbalance as the bottleneck before touching the model.\n\n**Non-trivial crux:** Oversampling the minority class dilutes majority-class signal and noise; per-batch sampling avoids this but must be paired with a fallback (just shuffle) when the minority class is too sparse in the batch — the fix scales but only works if the minority class is represented within each batch.",
+  "proposal": "<think>\n\n</think>\n\n**Mocking:** myself, a world-class AI researcher, not the average engineer\n\nLet me start from the thing that actually matters: I've run the training. It converges, it's stable, but the performance is not good enough. The standard moves — tune learning rate, add data, try a fancier architecture — are either too slow or just not touching the real bottleneck. So I'll ask the wrong question first, and then correct it.\n\nThe default reflex is: \"the model is underfitting, so I'll add a bigger model, more capacity, more epochs.\" But when I've trained it and it's still underperforming, the most expensive variable isn't the model. It's the data that the model is actually seeing. My intuition is that the data distribution is the bottleneck here, not the model's expressiveness. A bigger model can't make a data gap go away. So I should treat the data distribution as the primary target — not the network.\n\nWhy do I believe that? Because I know a phenomenon that cuts against the usual narrative: when two otherwise equal models differ in performance, the one with a better-structured, more balanced data distribution is the one that improves more easily. This is not a theoretical guarantee — it's something I've observed across many projects. If I keep the model fixed and only change the data, and I see a real lift, that's evidence the data is the bottleneck. So my working hypothesis is: the model is fine; the data is under-sampled or imbalanced in a way that hides the true signal.\n\nNow, the move that cuts against the reflex. The obvious answer to an imbalanced dataset is oversampling. But I want to be precise about what actually breaks and what I'm trading off. Oversampling the minority class dilutes the majority class's signal and amplifies noise — the model gets more of the same noisy data. That's a known problem, and the usual fix is to resample the whole batch, which is exactly the thing that doesn't scale and is what I want to avoid. So I refuse to do the standard trick on the whole batch.\n\nHere's the leap, and it's the part that separates the clever idea from the obvious one: sample within a batch. At the batch level, I can choose one point from each class — not by resampling the whole dataset, but by reshuffling the indices and then choosing a subset of size equal to the minority class. I'll have to handle class imbalance carefully so I never pick the same instance twice. And I'll want to make this batch-level sampling work with the batch size — a small batch may not have enough classes to sample from. If the minority class is underrepresented in the batch, the sampling will fail; I'll add a fallback to just shuffle and pick a batch when the minority is too sparse.\n\nWhy this cuts against consensus: the field treats oversampling as the go-to fix for imbalance. I'm saying: oversample the batch, not the dataset; and I'm asserting that the data distribution is the bottleneck before I even touch the model.\n\nHow I keep myself honest: I'll compare the standard full-batch oversampling against my per-batch sampling on a held-out validation set. If per-batch doesn't clearly beat oversampling, I'll drop it and accept that the model was the real bottleneck and move to model tuning. If it does help, I'll keep it and treat it as my working hypothesis. I won't assert a result — I'll run the comparison.\n\n**Core idea:** Improve model performance by fixing the data distribution with per-batch class sampling (choose one point per class within a batch) rather than full-batch oversampling, treating data imbalance as the bottleneck before touching the model.\n\n**Non-trivial crux:** Oversampling the minority class dilutes majority-class signal and noise; per-batch sampling avoids this but must be paired with a fallback (just shuffle) when the minority class is too sparse in the batch — the fix scales but only works if the minority class is represented within each batch.",
+  "valid": true,
+  "n_attempts": 1
+ }
+}

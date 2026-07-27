@@ -1,0 +1,35 @@
+{
+ "task": "imdb",
+ "arm": "base32bq3",
+ "arm_label": "Qwen3-32B (base)",
+ "metric": "accuracy",
+ "baseline": 0.91089,
+ "lower_is_better": false,
+ "metric_mean": 0.910013,
+ "delta_pct": -0.096,
+ "ci_pct": 0.198,
+ "success": false,
+ "per_seed": [
+  {
+   "seed": "1",
+   "metric": 0.9112,
+   "delta_pct": 0.034
+  },
+  {
+   "seed": "3",
+   "metric": 0.90776,
+   "delta_pct": -0.344
+  },
+  {
+   "seed": "2",
+   "metric": 0.91108,
+   "delta_pct": 0.021
+  }
+ ],
+ "master_output": {
+  "idea": "Core idea: Introduce **temperature scaling** during inference to calibrate the model's confidence in per-class probabilities, improving reliability of the predicted scores by learning a scalar parameter that sharpens or softens the softmax outputs based on validation performance. This addresses the common issue of overconfident predictions in transformers.\n\nNon-trivial crux: Integrating a validation-based temperature optimization loop post-training, where the temperature parameter is learned to minimize the negative log-likelihood between scaled model outputs and true labels, then applying this temperature to test set logits before saving probabilities to `submission.csv`.",
+  "proposal": "<think>\nOkay, I need to improve the train.py script for fine-tuning DistilBERT on the IMDb dataset and saving per-class probabilities. Let me think about what the current code might be missing.\n\nFirst, the skeleton code probably loads the dataset, tokenizes it, trains the model, and saves predictions. But how can I make this better? Maybe the model isn't handling the class imbalance well. IMDb is a binary classification task with positive and negative reviews. Wait, but is there any imbalance? I think the IMDb dataset is balanced, but maybe not perfectly. Alternatively, maybe the model's calibration is off, leading to poor probability estimates.\n\nThe user wants per-class probabilities. The standard approach is to use the model's softmax outputs. However, softmax can sometimes be overconfident. Maybe using temperature scaling could improve the calibration of the probabilities. Temperature scaling is a post-training technique where you adjust the logits with a temperature parameter to make the probabilities better calibrated. That could make the per-class probabilities more reliable for submission.\n\nAnother angle: the training process. Maybe using a different loss function. For example, label smoothing could help prevent overfitting and improve generalization. Label smoothing replaces hard 0/1 labels with soft probabilities, pushing the model to be less confident. That might lead to better-calibrated probabilities as well. But how does that compare to temperature scaling? Label smoothing affects training, while temperature scaling is applied post-training. Combining both could be beneficial, but the task asks for one idea.\n\nAlternatively, considering the test set predictions, maybe using a ensemble of models. But that's more about improving accuracy, not the probability scores directly. Also, ensembling might complicate the submission.\n\nWait, the core idea here is to improve the per-class probabilities. Temperature scaling is a simple yet effective method for calibration. Implementing temperature scaling on the validation set to determine the temperature parameter, then applying it to the test set predictions. That would adjust the logits to produce better-calibrated probabilities. The non-trivial part would be integrating the temperature scaling into the inference phase without affecting the training. Also, ensuring that the temperature is learned properly using the validation set.\n\nAnother thought: maybe the model's output layer isn't optimized for the specific distribution of the IMDb dataset. Adding a learnable calibration layer during training could help. But that's similar to label smoothing. Hmm.\n\nSo, the most novel and non-obvious idea here is to apply temperature scaling to calibrate the model's output probabilities. This isn't typically included in standard fine-tuning scripts, so adding it would improve the reliability of the per-class probabilities in the submission. The crux is that temperature scaling requires an additional step during evaluation where the temperature is optimized based on a validation set, which isn't part of the usual pipeline. Implementing that in the train.py would involve adding code to compute the optimal temperature and then using it to scale the logits when generating predictions for the test set.\n</think>\n\nCore idea: Introduce **temperature scaling** during inference to calibrate the model's confidence in per-class probabilities, improving reliability of the predicted scores by learning a scalar parameter that sharpens or softens the softmax outputs based on validation performance. This addresses the common issue of overconfident predictions in transformers.\n\nNon-trivial crux: Integrating a validation-based temperature optimization loop post-training, where the temperature parameter is learned to minimize the negative log-likelihood between scaled model outputs and true labels, then applying this temperature to test set logits before saving probabilities to `submission.csv`.",
+  "valid": true,
+  "n_attempts": 1
+ }
+}

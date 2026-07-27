@@ -2,8 +2,10 @@
  "task": "causal-discovery-discrete",
  "arm": "qwen3-32b-rl",
  "arm_label": "Qwen3-32B RL",
- "status": "ok",
+ "status": "scored",
  "score": 30.0,
+ "worker": "claude-fable-5",
+ "caveat": null,
  "master_output": {
   "idea": "**Core idea:** Instead of running a single constraint-based algorithm on the full dataset, first **estimate and remove a soft latent variable** via an auxiliary encoder trained to predict the latent as a hidden layer, then run the constraint-based method on the augmented latent+data space — this exploits the discrete nature of the data to regularize the search.\n\n**Non-trivial crux:** The latent must be treated as an auxiliary hidden layer rather than an explicitly estimated variable, and its cardinality must be set to match the highest variable in the dataset — a discrete latent of too low cardinality introduces spurious edges, while a continuous latent breaks faithfulness.",
   "proposal": "<think>\n\n</think>\n\n**Core idea:** Instead of running a single constraint-based algorithm on the full dataset, first **estimate and remove a soft latent variable** via an auxiliary encoder trained to predict the latent as a hidden layer, then run the constraint-based method on the augmented latent+data space — this exploits the discrete nature of the data to regularize the search.\n\n**Non-trivial crux:** The latent must be treated as an auxiliary hidden layer rather than an explicitly estimated variable, and its cardinality must be set to match the highest variable in the dataset — a discrete latent of too low cardinality introduces spurious edges, while a continuous latent breaks faithfulness.",

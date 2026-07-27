@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>MLAgentBench (MAB) — Results Dashboard (5 tasks × 20 arms)</title>
+<style>
+  :root{--bg:#0f1216;--panel:#161b22;--panel2:#1c232d;--border:#2b333d;--text:#e6edf3;--muted:#8b98a5;--accent:#58a6ff;--green:#3fb950;--rose:#f7768e}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);font:14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+  header{padding:14px 20px;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--bg);z-index:20}
+  header h1{margin:0;font-size:17px;font-weight:650}
+  header .sub{color:var(--muted);font-size:12.5px;margin-top:3px}
+  header a.back{color:var(--muted);text-decoration:none;font-size:12.5px}
+  header a.back:hover{color:var(--text)}
+  .legend{display:flex;gap:14px;flex-wrap:wrap;margin-top:9px;font-size:12px;align-items:center}
+  .chip{width:14px;height:14px;border-radius:3px;display:inline-block;border:1px solid var(--border)}
+  .wrap{padding:14px 20px 60px}
+  .tablescroll{overflow:auto;max-height:calc(100vh - 200px);border:1px solid var(--border);border-radius:8px}
+  table{border-collapse:separate;border-spacing:0;font-size:12px}
+  th,td{white-space:nowrap}
+  thead th{position:sticky;top:0;background:var(--panel);z-index:10;border-bottom:1px solid var(--border);padding:6px 7px;font-weight:600}
+  thead th.fam{font-size:10.5px;color:var(--muted);text-align:center;border-left:1px solid var(--border)}
+  thead th.arm{font-size:10.5px;text-align:center;min-width:54px}
+  thead th.arm .k{color:var(--muted);font-weight:400;font-size:9.5px;display:block}
+  th.rowh{position:sticky;left:0;z-index:11;background:var(--panel);text-align:left;padding:6px 10px;border-right:1px solid var(--border);min-width:210px}
+  td.rowh{position:sticky;left:0;z-index:5;background:var(--panel);text-align:left;padding:5px 10px;border-right:1px solid var(--border)}
+  td.rowh .dom{color:var(--muted);font-size:10px;display:block}
+  td.cell{text-align:center;padding:0;border-bottom:1px solid #10141a;border-left:1px solid #10141a}
+  td.cell .c{display:block;padding:6px 4px;min-width:54px;cursor:pointer;font-variant-numeric:tabular-nums;font-weight:600}
+  td.cell .c.nolink{cursor:default}
+  td.cell .c:hover{outline:2px solid var(--accent);outline-offset:-2px}
+  .famsep{border-left:2px solid var(--border)!important}
+  tr.meanrow td .c,tr.meanrow td.rowh{font-weight:700;border-top:2px solid var(--border)}
+  .ok✓{}
+  .overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;z-index:50}
+  .overlay.on{display:block}
+  .modal{position:fixed;top:0;right:0;height:100%;width:min(880px,94vw);background:var(--panel);border-left:1px solid var(--border);z-index:51;transform:translateX(100%);transition:transform .18s;display:flex;flex-direction:column}
+  .modal.on{transform:none}
+  .mh{padding:14px 18px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
+  .mh h2{margin:0;font-size:15px}.mh .meta{color:var(--muted);font-size:12px;margin-top:4px}
+  .mb{overflow:auto;padding:6px 18px 40px}
+  .x{cursor:pointer;color:var(--muted);font-size:22px;border:none;background:none}.x:hover{color:var(--text)}
+  details{border:1px solid var(--border);border-radius:7px;margin:10px 0;background:var(--panel2)}
+  summary{cursor:pointer;padding:9px 12px;font-weight:600;list-style:none}summary::-webkit-details-marker{display:none}
+  summary:before{content:"▸ ";color:var(--muted)}details[open]>summary:before{content:"▾ "}
+  .body{padding:2px 12px 12px}
+  pre{background:#0b0e12;border:1px solid var(--border);border-radius:6px;padding:10px;overflow:auto;font:11.5px/1.5 ui-monospace,Menlo,monospace;white-space:pre-wrap;word-break:break-word;max-height:460px}
+  .kv{display:grid;grid-template-columns:auto 1fr;gap:2px 14px;font-size:12.5px;margin:8px 0}.kv .k{color:var(--muted)}
+  .pill{display:inline-block;padding:1px 8px;border-radius:20px;font-size:11px;font-weight:600;border:1px solid var(--border)}
+  .runrow{display:flex;gap:12px;padding:5px 0;border-bottom:1px solid var(--border);font-size:12px}
+  .tag{font-size:10.5px;color:var(--muted);background:#0b0e12;border:1px solid var(--border);border-radius:4px;padding:1px 6px}
+  .loading{color:var(--muted);padding:30px;text-align:center}
+</style>
+</head>
+<body>
+<header>
+  <a class="back" href="../index.html">← project home</a>
+  <h1>MLAgentBench (MAB) — Results Dashboard</h1>
+  <div class="sub" id="sub">5 tasks × 20 arms · Δ% over strong baseline (direction-corrected; + = better). Click any cell for details.</div>
+  <div class="legend" id="legend"></div>
+</header>
+<div class="wrap"><div class="tablescroll"><table id="grid"></table></div></div>
+<div class="overlay" id="overlay"></div>
+<aside class="modal" id="modal">
+  <div class="mh"><div><h2 id="m-title">—</h2><div class="meta" id="m-meta"></div></div><button class="x" id="m-close">×</button></div>
+  <div class="mb" id="m-body"><div class="loading">Loading…</div></div>
+</aside>
+<script>
+const BASE="."; let IDX=null;
+function esc(s){return (s==null?"":String(s)).replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));}
+// diverging color: negative=rose, 0=neutral, positive=green (saturating ~+30%)
+function dColor(v){
+  if(v==null) return "#20262e";
+  if(v>=0){const u=Math.min(1,v/30); const r=Math.round(40-10*u),g=Math.round(70+115*u),b=Math.round(55-5*u); return `rgb(${r},${g},${b})`;}
+  const u=Math.min(1,-v/20); const r=Math.round(80+130*u),g=Math.round(50-10*u),b=Math.round(60-10*u); return `rgb(${r},${g},${b})`;
+}
+function dFg(v){ if(v==null) return "#e6edf3"; return (v>=15||v<=-8)?"#0b140b":"#dfe7ee"; }
+
+function renderLegend(){
+  const el=document.getElementById("legend");
+  el.innerHTML=`<span><span class="chip" style="width:70px;background:linear-gradient(90deg,${dColor(-20)},${dColor(0)},${dColor(30)})"></span> Δ%  −20 · 0 · +30</span>`+
+    `<span>✓ = success (Δ ≥ +${IDX.success_threshold_pct}%)</span>`+
+    `<span style="color:var(--muted)">— baseline row = strong baseline (Δ=0 by definition)</span>`;
+}
+function buildGrid(){
+  const arms=IDX.arms, tasks=IDX.tasks;
+  const fams=[]; arms.forEach(a=>{const l=fams[fams.length-1]; if(l&&l.name===a.family) l.span++; else fams.push({name:a.family,span:1});});
+  const fs=new Set(); {let s=0; fams.forEach(f=>{fs.add(s); s+=f.span;});}
+  let h="<thead><tr><th class='rowh' rowspan='2'>Task <span style='color:var(--muted);font-weight:400'>(metric)</span></th>";
+  fams.forEach(f=>h+=`<th class='fam' colspan='${f.span}'>${esc(f.name)}</th>`);
+  h+="</tr><tr>";
+  arms.forEach((a,i)=>h+=`<th class='arm ${fs.has(i)?'famsep':''}' title='${esc(a.label)}'>${esc(a.kind)}<span class='k'>${esc(a.key)}</span></th>`);
+  h+="</tr></thead><tbody>";
+  tasks.forEach(t=>{
+    h+=`<tr><td class='rowh' title='${esc(t.slug)}'>${esc(t.name)}<span class='dom'>${esc(t.metric)}${t.lower_is_better?" ↓":""} · base ${esc(t.baseline)}</span></td>`;
+    arms.forEach((a,i)=>{
+      const c=IDX.cells[t.slug][a.key], v=c.delta_pct;
+      const txt=(v==null?"·":(v>0?"+":"")+v.toFixed(1))+(c.success?" ✓":"");
+      const title=`${t.slug} · ${a.key}: Δ=${v==null?"NA":v+"%"}${c.ci_pct?" ±"+c.ci_pct:""} (mean ${c.metric_mean}, n=${c.n_seeds})`;
+      h+=`<td class='cell ${fs.has(i)?'famsep':''}'><span class='c' style='background:${dColor(v)};color:${dFg(v)}' title='${esc(title)}' data-t='${esc(t.slug)}' data-a='${esc(a.key)}'>${txt}</span></td>`;
+    });
+    h+="</tr>";
+  });
+  // arm-mean footer
+  const m=IDX.arm_means||{}, sc=IDX.arm_success||{};
+  h+="<tr class='meanrow'><td class='rowh'>mean Δ% (5 tasks)</td>";
+  arms.forEach((a,i)=>{const v=m[a.key]; h+=`<td class='cell ${fs.has(i)?'famsep':''}'><span class='c nolink' style='background:${dColor(v)};color:${dFg(v)}' title='${sc[a.key]||0}/5 success'>${v==null?"·":(v>0?"+":"")+v.toFixed(1)}</span></td>`;});
+  h+="</tr></tbody>";
+  document.getElementById("grid").innerHTML=h;
+  document.querySelectorAll("#grid .c[data-t]").forEach(el=>el.addEventListener("click",()=>openCell(el.dataset.t,el.dataset.a)));
+}
+const overlay=document.getElementById("overlay"),modal=document.getElementById("modal");
+function close(){overlay.classList.remove("on");modal.classList.remove("on");}
+overlay.onclick=close; document.getElementById("m-close").onclick=close;
+document.addEventListener("keydown",e=>{if(e.key==="Escape")close();});
+async function fj(p){const r=await fetch(p); if(!r.ok) throw new Error(p+" "+r.status); return r.json();}
+function sec(t,o,inner){return `<details ${o?"open":""}><summary>${esc(t)}</summary><div class='body'>${inner}</div></details>`;}
+function pre(s){return `<pre>${esc(s)}</pre>`;}
+async function openCell(slug,arm){
+  overlay.classList.add("on");modal.classList.add("on");
+  const body=document.getElementById("m-body"); body.innerHTML="<div class='loading'>Loading…</div>";
+  const cm=IDX.cells[slug][arm], a=IDX.arms.find(x=>x.key===arm);
+  document.getElementById("m-title").textContent=`${IDX.tasks.find(t=>t.slug===slug).name}  ×  ${a.label}`;
+  document.getElementById("m-meta").innerHTML=`<span class='tag'>${esc(slug)}</span> <span class='tag'>${esc(arm)}</span> <span class='pill' style='background:${dColor(cm.delta_pct)};color:${dFg(cm.delta_pct)};border:none'>Δ ${cm.delta_pct==null?"NA":cm.delta_pct+"%"}${cm.success?" ✓":""}</span>`;
+  let task,cell;
+  try{ [task,cell]=await Promise.all([fj(`${BASE}/tasks/${slug}.json`),fj(`${BASE}/cells/${slug}__${arm}.json`)]); }
+  catch(e){ body.innerHTML=`<div class='loading'>No detail (${esc(e.message)})</div>`; return; }
+  let h=`<div class='kv'>`+
+    `<span class='k'>Δ over baseline</span><span>${cell.delta_pct==null?"—":(cell.delta_pct+"%"+(cell.ci_pct?" ± "+cell.ci_pct:""))}  ${cell.success?"— <b style='color:var(--green)'>success</b>":""}</span>`+
+    `<span class='k'>Metric (${esc(cell.metric)}${cell.lower_is_better?" ↓":""})</span><span>mean ${esc(cell.metric_mean)} vs baseline ${esc(cell.baseline)}</span>`+
+    `<span class='k'>Seeds</span><span>${cell.per_seed?cell.per_seed.length:0}</span></div>`;
+  let rr=(cell.per_seed||[]).map(s=>`<div class='runrow'><span class='tag'>seed ${esc(s.seed)}</span> metric=<b>${esc(s.metric)}</b> · Δ=${s.delta_pct==null?"NA":s.delta_pct+"%"}</div>`).join("")||"<em>none</em>";
+  h+=sec("Per-seed results",true,rr);
+  const mp=task.master_prompt||{}; let mph="";
+  if(mp.system) mph+=sec("system",false,pre(mp.system));
+  if(mp.user) mph+=sec("user",true,pre(mp.user));
+  h+=sec("Master (proposer) prompt",false,mph||"<em>not available</em>");
+  const mo=cell.master_output||{}; let moh="";
+  if(mo.idea) moh+=sec("idea",true,pre(mo.idea));
+  if(mo.proposal) moh+=sec("full proposal",false,pre(mo.proposal));
+  h+=sec("Master output — researcher proposal",true,moh||"<em>not available</em>");
+  body.innerHTML=h; body.scrollTop=0;
+}
+(async function(){ try{ IDX=await fj(`${BASE}/index.json`); renderLegend(); buildGrid(); }
+  catch(e){ document.body.innerHTML=`<div class='loading'>Failed to load index.json — serve over HTTP.<br>${esc(e.message)}</div>`; } })();
+</script>
+</body>
+</html>

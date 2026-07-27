@@ -1,0 +1,50 @@
+{
+ "task": "imdb",
+ "arm": "base8b",
+ "arm_label": "Qwen3-8B (base)",
+ "metric": "accuracy",
+ "baseline": 0.91089,
+ "lower_is_better": false,
+ "metric_mean": 0.908673,
+ "delta_pct": -0.243,
+ "ci_pct": 0.108,
+ "success": false,
+ "per_seed": [
+  {
+   "seed": "1",
+   "metric": 0.90776,
+   "delta_pct": -0.344
+  },
+  {
+   "seed": "2",
+   "metric": 0.90776,
+   "delta_pct": -0.344
+  },
+  {
+   "seed": "3",
+   "metric": 0.91132,
+   "delta_pct": 0.047
+  },
+  {
+   "seed": "3",
+   "metric": 0.90872,
+   "delta_pct": -0.238
+  },
+  {
+   "seed": "2",
+   "metric": 0.90824,
+   "delta_pct": -0.291
+  },
+  {
+   "seed": "1",
+   "metric": 0.90824,
+   "delta_pct": -0.291
+  }
+ ],
+ "master_output": {
+  "idea": "Core idea: Introduce a temperature scaling calibration layer during inference to refine the model's output probabilities, ensuring they better reflect true class likelihoods by adjusting the softmax temperatures based on validation set statistics.  \nNon-trivial crux: Dynamically computing the optimal temperature parameter requires a validation set pass to estimate calibration, balancing the risk of overfitting while maintaining computational efficiency.",
+  "proposal": "<think>\nOkay, let's see. The user wants me to improve the train.py file for finetuning DistilBERT on the IMDb dataset. The main tasks are to do the finetuning and save per-class probabilities for the test set into submission.csv. The editable component is the train.py, so I need to think about a novel idea to enhance it.\n\nFirst, I need to understand the current setup. The skeleton code probably loads the dataset using HuggingFace's datasets library, sets up the model, tokenizer, and training loop. Then, after training, it evaluates on the test set and saves the probabilities. The challenge is to come up with a non-obvious improvement.\n\nHmm. What's a common issue with finetuning? Maybe overfitting? Or maybe the model isn't capturing certain nuances in the data. Wait, the IMDb dataset is pretty balanced, but maybe the model could benefit from some form of regularization or data augmentation. But data augmentation for text is tricky. Alternatively, maybe the model's attention mechanism isn't fully utilized. Or perhaps the way the model is being evaluated isn't capturing the uncertainty in predictions, leading to less accurate probabilities.\n\nWait, the user wants per-class probabilities for the test set. If the model is just outputting the predicted class, that's not helpful. But if we get the probabilities, maybe we can do something more with them. But the problem is, the current setup might not be capturing the model's confidence in each class. So, maybe a better approach is to use temperature scaling or some form of calibration to make the probabilities more reliable. However, that's more about post-processing than improving the model itself.\n\nAlternatively, maybe during training, the model could be encouraged to learn more discriminative features by using a different loss function. For example, instead of cross-entropy, using focal loss to handle class imbalance, but IMDb is balanced. Or maybe using a different architecture, but the user is using DistilBERT, which is a pre-trained model. So maybe modifying the training loop to include some form of dynamic learning rate scheduling, but that's a common technique.\n\nWait, another angle: the test set's per-class probabilities might be more accurate if the model is better calibrated. So, during training, maybe we can incorporate a calibration step. But how? Maybe using a validation set to adjust the model's output probabilities. However, that's a bit involved.\n\nWait, here's an idea: during training, the model might be too confident in its predictions, leading to overfitting. To counteract this, we can introduce a regularization term that encourages the model to have more balanced probabilities. For example, adding a term to the loss function that penalizes the model for being too certain in its predictions. But how to implement that?\n\nAlternatively, using a Bayesian approach where the model's parameters are treated as distributions rather than fixed values. But that would require a more complex setup, like using a Bayesian neural network, which might be too much for a simple finetuning task.\n\nWait, another thought: the current setup might not be using the full potential of the pre-trained model. Maybe incorporating some form of feature extraction from the DistilBERT model and then using a custom head with more parameters. But that's similar to standard fine-tuning.\n\nWait, perhaps the model isn't being trained long enough. Maybe adjusting the training duration or the learning rate could help. But that's more of a standard hyperparameter tuning, not a novel idea.\n\nWait, what about using a different tokenizer? The default tokenizer might not be optimal. Maybe using a custom tokenizer with subword tokenization adjustments. But again, that's more of a standard practice.\n\nWait, the core idea here is about the per-class probabilities. The user wants to save them for submission. If the model isn't calibrated, the probabilities might not reflect the true likelihood. So, maybe during training, we can use a technique like temperature scaling or isotonic regression to calibrate the model's outputs. However, temperature scaling requires a validation set to find the optimal temperature parameter. But integrating that into the training loop could be a novel idea.\n\nAlternatively, during training, we can use a method called \"knowledge distillation\" where the model learns to mimic a more complex teacher model's outputs. But that might be overkill for this task.\n\nWait, here's a better idea: when saving the probabilities, instead of just using the model's raw output, we can apply a post-processing step that adjusts the probabilities based on the class distribution in the test set. For example, if the test set has a certain distribution, we can normalize the probabilities accordingly. But that's more of a data-driven adjustment.\n\nAlternatively, during training, we can use a loss function that encourages the model to output probabilities that are more aligned with the true class distribution. For instance, using a loss that combines cross-entropy with a term that penalizes the model for not matching the expected class probabilities. But how to compute that?\n\nWait, maybe using a different evaluation metric during training. For example, instead of just accuracy, using log loss or Brier score to encourage the model to output more accurate probabilities. That could lead to better calibrated probabilities on the test set. However, the standard training for classification tasks uses cross-entropy loss, which already encourages the model to output probabilities that are close to the true labels. But maybe using a different optimizer or learning rate schedule could help in this regard.\n\nWait, but the user's task is to save per-class probabilities. So perhaps the main issue is that the model's output probabilities are not well-calibrated. To address this, during training, we can incorporate a calibration technique like temperature scaling. However, this usually requires a validation set to find the optimal temperature. So, integrating that into the training loop would involve using a validation set to adjust the temperature parameter and then applying it during inference.\n\nBut how to implement that in the train.py? The idea would be to train the model as usual, then during validation, compute the temperature parameter that best calibrates the model's outputs. Then, when making predictions on the test set, apply this temperature scaling to the logits before converting them to probabilities. This would make the probabilities more reliable, especially for the submission file.\n\nSo the core idea is to calibrate the model's output probabilities using temperature scaling during training, which requires adjusting the temperature parameter based on a validation set. The non-trivial crux is figuring out how to integrate this calibration step into the training loop without overfitting and ensuring that the temperature parameter is optimized for the test set's distribution.\n</think>\n\nCore idea: Introduce a temperature scaling calibration layer during inference to refine the model's output probabilities, ensuring they better reflect true class likelihoods by adjusting the softmax temperatures based on validation set statistics.  \nNon-trivial crux: Dynamically computing the optimal temperature parameter requires a validation set pass to estimate calibration, balancing the risk of overfitting while maintaining computational efficiency.",
+  "valid": true,
+  "n_attempts": 1
+ }
+}

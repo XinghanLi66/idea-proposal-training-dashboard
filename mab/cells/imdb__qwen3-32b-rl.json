@@ -1,0 +1,35 @@
+{
+ "task": "imdb",
+ "arm": "qwen3-32b-rl",
+ "arm_label": "Qwen3-32B RL",
+ "metric": "accuracy",
+ "baseline": 0.91089,
+ "lower_is_better": false,
+ "metric_mean": 0.909467,
+ "delta_pct": -0.156,
+ "ci_pct": 0.105,
+ "success": false,
+ "per_seed": [
+  {
+   "seed": "1",
+   "metric": 0.90992,
+   "delta_pct": -0.106
+  },
+  {
+   "seed": "2",
+   "metric": 0.9102,
+   "delta_pct": -0.076
+  },
+  {
+   "seed": "3",
+   "metric": 0.90828,
+   "delta_pct": -0.287
+  }
+ ],
+ "master_output": {
+  "idea": "**Core idea:** Replace the default `Trainer` with a custom `FinetuneTrainer` that (1) adds per-batch probability logging to track how confident the model is in each class during test prediction and (2) accumulates those probabilities to write a submission.csv containing per-class probabilities for each test example, not just predicted labels.\n\n**Non-trivial crux:** Naively appending probabilities at batch end causes out-of-order writes when using distributed training, so the custom trainer must map each prediction back to its original example ID *before* appending, and the final submission must be sorted by ID to match the test set's order.\n\n---\n\n**Reasoning path:**  \nStart from the task's non-trivial part: saving per-class probabilities, not just predicted labels. The skeleton code uses HuggingFace's `Trainer` and a `predict()` call that only gives labels. So the default machinery is exactly the wrong tool — it throws away the per-class probabilities that the task *requires*.\n\nThe honest move is to build a minimal, readable drop-in replacement for `Trainer`, not to monkey-patch. Why? Because a custom `FinetuneTrainer` can cleanly expose the probability tensor, and we can reuse almost all of its logic — only the prediction logging and CSV writing need to change. That keeps the change localized and maintainable.\n\nNow, what must that custom trainer do? Two things:  \n- On the *test* set, after the model emits logits, apply softmax to get per-class probabilities and save both the IDs and the probabilities.  \n- Write those to submission.csv — but the naive approach of appending per-batch will misorder IDs under distributed training, since different devices process different orders. So the fix is to (a) map each prediction back to its original ID *before* appending and (b) sort the final submission by ID to ensure it's in test set order.\n\nHow do I keep this from being a sprawling hack? I only override what's necessary: the prediction loop and the CSV writer, everything else stays as the base `Trainer`. And I only add the probability logging on the test set — no need to change behavior during training. That's the minimal, focused change I'm looking for.\n\nLastly, a subtle point: softmax is a probability distribution across the two classes, so it's sufficient to log just one of the two values (e.g., the positive class), since the other is `1 - p`. That keeps the output compact and the task's interface clean.",
+  "proposal": "<think>\n\n</think>\n\n**Core idea:** Replace the default `Trainer` with a custom `FinetuneTrainer` that (1) adds per-batch probability logging to track how confident the model is in each class during test prediction and (2) accumulates those probabilities to write a submission.csv containing per-class probabilities for each test example, not just predicted labels.\n\n**Non-trivial crux:** Naively appending probabilities at batch end causes out-of-order writes when using distributed training, so the custom trainer must map each prediction back to its original example ID *before* appending, and the final submission must be sorted by ID to match the test set's order.\n\n---\n\n**Reasoning path:**  \nStart from the task's non-trivial part: saving per-class probabilities, not just predicted labels. The skeleton code uses HuggingFace's `Trainer` and a `predict()` call that only gives labels. So the default machinery is exactly the wrong tool — it throws away the per-class probabilities that the task *requires*.\n\nThe honest move is to build a minimal, readable drop-in replacement for `Trainer`, not to monkey-patch. Why? Because a custom `FinetuneTrainer` can cleanly expose the probability tensor, and we can reuse almost all of its logic — only the prediction logging and CSV writing need to change. That keeps the change localized and maintainable.\n\nNow, what must that custom trainer do? Two things:  \n- On the *test* set, after the model emits logits, apply softmax to get per-class probabilities and save both the IDs and the probabilities.  \n- Write those to submission.csv — but the naive approach of appending per-batch will misorder IDs under distributed training, since different devices process different orders. So the fix is to (a) map each prediction back to its original ID *before* appending and (b) sort the final submission by ID to ensure it's in test set order.\n\nHow do I keep this from being a sprawling hack? I only override what's necessary: the prediction loop and the CSV writer, everything else stays as the base `Trainer`. And I only add the probability logging on the test set — no need to change behavior during training. That's the minimal, focused change I'm looking for.\n\nLastly, a subtle point: softmax is a probability distribution across the two classes, so it's sufficient to log just one of the two values (e.g., the positive class), since the other is `1 - p`. That keeps the output compact and the task's interface clean.",
+  "valid": true,
+  "n_attempts": 1
+ }
+}

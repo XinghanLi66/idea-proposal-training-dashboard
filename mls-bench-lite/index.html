@@ -68,16 +68,25 @@
   .tag{font-size:10.5px;color:var(--muted);background:#0b0e12;border:1px solid var(--border);border-radius:4px;padding:1px 6px}
   a{color:var(--accent)}
   .loading{color:var(--muted);padding:30px;text-align:center}
+  .fnmark{color:#ffcf70;font-weight:700}
+  sup.fnmark{font-size:8.5px;margin-left:1px}
+  tr.meanrow td.cell .c,tr.meanrow td.rowh{font-weight:700;border-top:2px solid var(--border)}
+  tr.meanrow td.rowh{color:var(--muted)}
+  #footnotes{margin:16px 2px 0;color:var(--muted);font-size:12.5px}
+  #footnotes h3{font-size:13px;color:var(--text);margin:0 0 8px}
+  #footnotes .fn{margin:5px 0;line-height:1.5}
+  .caveat{background:#3a2f14;border:1px solid #6b551f;border-radius:7px;padding:9px 12px;margin:8px 0 12px;color:#ffe0a3;font-size:12.5px}
 </style>
 </head>
 <body>
 <header>
   <h1>MLS-Bench-Lite — Results Dashboard</h1>
-  <div class="sub" id="sub">30 tasks × 18 arms · rescaled score (50 = strong baseline, 100 = upper bound). Click any cell for details.</div>
+  <div class="sub" id="sub">30 tasks × 20 arms (6 model families × base/SFT/RL + 2 frontier references) · rescaled score (50 = strong baseline, 100 = upper bound). Final matrix, 0 missing. Click any cell for details.</div>
   <div class="legend" id="legend"></div>
 </header>
 <div class="wrap">
   <div class="tablescroll"><table id="grid"></table></div>
+  <div id="footnotes"></div>
 </div>
 
 <div class="overlay" id="overlay"></div>
@@ -107,62 +116,59 @@ function scoreColor(v){
 }
 function scoreFg(v){ if(v==null) return "#e6edf3"; return (v>=42&&v<70)?"#1a1200":"#0b140b"; }
 
-const LEG=[
-  ["ok-scale","score (0→100)"],["st-zero","genuine 0-floor"],
-  ["st-failed","failed (no valid metric)"],["st-unfinished","unfinished / no data"]
-];
 function renderLegend(){
   const el=document.getElementById("legend");
   el.innerHTML="";
-  // score gradient chip
   const grad=document.createElement("span");
-  grad.innerHTML=`<span class="chip" style="width:60px;background:linear-gradient(90deg,${scoreColor(0)},${scoreColor(50)},${scoreColor(100)})"></span> real score 0·50·100`;
+  grad.innerHTML=`<span class="chip" style="width:70px;background:linear-gradient(90deg,${scoreColor(0)},${scoreColor(50)},${scoreColor(100)})"></span> score 0 · <b>50=strong baseline</b> · 100`;
   el.appendChild(grad);
-  [["st-zero","genuine 0-floor"],["st-failed","failed (no valid metric)"],["st-unfinished","unfinished / no data"]].forEach(([c,t])=>{
-    const s=document.createElement("span"); s.innerHTML=`<span class="chip ${c}"></span> ${t}`; el.appendChild(s);
-  });
+  const fn=document.createElement("span"); fn.innerHTML=`<span class="fnmark">†</span> caveat (see footnotes)`; el.appendChild(fn);
   const cc=IDX.counts;
-  const s=document.createElement("span");
-  s.style.color="var(--muted)";
-  s.textContent=`  —  ${cc.ok} scored · ${cc.zero} floor · ${cc.failed} failed · ${cc.unfinished} unfinished`;
+  const s=document.createElement("span"); s.style.color="var(--muted)";
+  s.textContent=`  —  ${cc.tasks}×${cc.arms} = ${cc.cells} cells, all scored (0 = faithful true-0) · ${cc.caveated} caveated`;
   el.appendChild(s);
 }
 
 function buildGrid(){
   const arms=IDX.arms, tasks=IDX.tasks;
-  // family header spans
   const fams=[]; arms.forEach(a=>{const last=fams[fams.length-1]; if(last&&last.name===a.family) last.span++; else fams.push({name:a.family,span:1});});
+  const famStartIdx=new Set(); {let s=0; fams.forEach(f=>{famStartIdx.add(s); s+=f.span;});}
+  const mean=IDX.arm_means||{};
   let html="<thead>";
-  // row 1: family groups
   html+="<tr><th class='rowh' rowspan='2'>Task <span style='color:var(--muted);font-weight:400'>(domain)</span></th>";
-  let ai=0;
   fams.forEach(f=>{html+=`<th class='fam' colspan='${f.span}'>${esc(f.name)}</th>`;});
   html+="</tr><tr>";
   arms.forEach((a,i)=>{
-    const famStart = fams.some((f,idx)=>{let s=fams.slice(0,idx).reduce((x,y)=>x+y.span,0);return s===i;});
-    html+=`<th class='arm ${famStart?'famsep':''}' title='${esc(a.label)}'>${esc(a.kind)}<span class='k'>${esc(a.key)}</span></th>`;
+    html+=`<th class='arm ${famStartIdx.has(i)?'famsep':''}' title='${esc(a.label)}'>${esc(a.kind)}<span class='k'>${esc(a.key)}</span></th>`;
   });
   html+="</tr></thead><tbody>";
   tasks.forEach(t=>{
     html+=`<tr><td class='rowh' title='${esc(t.slug)}'>${esc(t.name)}<span class='dom'>${esc(t.domain)}</span></td>`;
     arms.forEach((a,i)=>{
-      const famStart = fams.some((f,idx)=>{let s=fams.slice(0,idx).reduce((x,y)=>x+y.span,0);return s===i;});
       const c=IDX.cells[t.slug][a.key];
-      let cls="c",style="",txt="",title=`${t.slug} · ${a.key} · ${c.status}`;
-      if(c.status==="ok"){ style=`background:${scoreColor(c.score)};color:${scoreFg(c.score)}`; txt=(c.score==null?"·":c.score.toFixed(1)); }
-      else if(c.status==="zero"){ cls+=" st-zero"; txt="0*"; title+=" (genuine floor)"; }
-      else if(c.status==="failed"){ cls+=" st-failed"; txt="FAIL"; }
-      else { cls+=" st-unfinished nolink"; txt="—"; }
-      const clickable=c.detail;
-      html+=`<td class='cell ${famStart?'famsep':''}'><span class='${cls}${clickable?'':' nolink'}' style='${style}' title='${esc(title)}' ${clickable?`data-t='${esc(t.slug)}' data-a='${esc(a.key)}'`:""}>${txt}</span></td>`;
+      const style=`background:${scoreColor(c.score)};color:${scoreFg(c.score)}`;
+      const txt=(c.score==null?"·":c.score.toFixed(1));
+      const mark=c.fn?`<sup class='fnmark'>†${c.fn}</sup>`:"";
+      const title=`${t.slug} · ${a.key} = ${txt}${c.caveat?" (caveat †"+c.fn+")":""}`;
+      html+=`<td class='cell ${famStartIdx.has(i)?'famsep':''}'><span class='c' style='${style}' title='${esc(title)}' data-t='${esc(t.slug)}' data-a='${esc(a.key)}'>${txt}${mark}</span></td>`;
     });
     html+="</tr>";
   });
-  html+="</tbody>";
+  // arm-means footer
+  html+="<tr class='meanrow'><td class='rowh'>30-task mean</td>";
+  arms.forEach((a,i)=>{ const m=mean[a.key];
+    html+=`<td class='cell ${famStartIdx.has(i)?'famsep':''}'><span class='c nolink' style='background:${m==null?"#20262e":scoreColor(m)};color:${scoreFg(m)}'>${m==null?"·":m.toFixed(1)}</span></td>`;
+  });
+  html+="</tr></tbody>";
   document.getElementById("grid").innerHTML=html;
   document.querySelectorAll("#grid .c[data-t]").forEach(el=>{
     el.addEventListener("click",()=>openCell(el.dataset.t,el.dataset.a));
   });
+  // footnotes
+  const fnEl=document.getElementById("footnotes");
+  if(fnEl && IDX.caveats && IDX.caveats.length){
+    fnEl.innerHTML="<h3>Caveats</h3>"+IDX.caveats.map((c,i)=>`<div class='fn'><span class='fnmark'>†${i+1}</span> ${esc(c)}</div>`).join("");
+  }
 }
 
 // ---- modal ----
@@ -186,10 +192,10 @@ async function openCell(slug,arm){
   const cellMeta=IDX.cells[slug][arm];
   const armObj=IDX.arms.find(a=>a.key===arm);
   document.getElementById("m-title").textContent=`${IDX.tasks.find(t=>t.slug===slug).name}  ×  ${armObj.label}`;
-  let statusTxt=cellMeta.status==="ok"?`score ${cellMeta.score}`:cellMeta.status;
+  let statusTxt=`score ${cellMeta.score}`;
   document.getElementById("m-meta").innerHTML=
     `<span class='tag'>${esc(slug)}</span> <span class='tag'>${esc(arm)}</span> `+
-    `<span class='pill' style='${cellMeta.status==="ok"?`background:${scoreColor(cellMeta.score)};color:${scoreFg(cellMeta.score)};border:none`:""}'>${esc(statusTxt)}</span>`;
+    `<span class='pill' style='background:${scoreColor(cellMeta.score)};color:${scoreFg(cellMeta.score)};border:none'>${esc(statusTxt)}</span>`;
   let task,cell;
   try{
     [task,cell]=await Promise.all([
@@ -199,11 +205,12 @@ async function openCell(slug,arm){
   }catch(e){ body.innerHTML=`<div class='loading'>No detail available (${esc(e.message)})</div>`; return; }
 
   let h="";
+  if(cell.caveat){ h+=`<div class='caveat'><b>⚠ Caveat.</b> ${esc(cell.caveat)}</div>`; }
   // scores summary
   h+=`<div class='kv'>`+
-     `<span class='k'>Rescaled score</span><span>${cell.score==null?"—":cell.score+"  (50 = strong baseline, 100 = upper bound)"}</span>`+
-     `<span class='k'>Status</span><span>${esc(cell.status)}</span>`+
-     `<span class='k'>Runs (seeds)</span><span>${cellMeta.n_runs} run(s), ${cellMeta.n_scored} produced a valid metric</span>`+
+     `<span class='k'>Rescaled score</span><span>${cell.score==null?"—":cell.score+"  (50 = strong baseline, 100 = upper bound; 0 = faithful true-0)"}</span>`+
+     `<span class='k'>Worker</span><span>${esc(cell.worker||"claude-fable-5")}</span>`+
+     `<span class='k'>Runs (seeds)</span><span>${cellMeta.n_runs} run(s), ${cellMeta.n_scored} with a recorded metric</span>`+
      `</div>`;
 
   // problem description

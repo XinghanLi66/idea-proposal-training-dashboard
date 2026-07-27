@@ -2,8 +2,10 @@
  "task": "robo-diffusion-guidance",
  "arm": "sft32b",
  "arm_label": "Qwen3-32B SFT",
- "status": "failed",
- "score": null,
+ "status": "scored",
+ "score": 0.0,
+ "worker": "claude-fable-5",
+ "caveat": null,
  "master_output": {
   "idea": null,
   "proposal": "<think>\n\n</think>\n\n**Core idea:** Use the unused `w_cfg` argument to implement a **learned return-conditioned guidance schedule** — train a small neural network that maps (timestep, target_return) to a per-step `w_cfg` value, so that guidance strength adapts dynamically to how far the trajectory is from the target return.\n\n**Non-trivial crux:** A naive per-step `w_cfg(t, R)` schedule can cause training instability because the guidance weight directly modulates the reverse process; the learned scheduler must be carefully regularized and integrated into the existing `agent.update` loop — e.g., train it with a separate optimizer, freeze it after a few epochs, or clip its output range to a reasonable `(w_low, w_high)` interval.\n\n**Reasoning path:**  \n- Start from the observation that the default (classifier-guided) path explicitly re-ranks 64 candidates per env-step, which is expensive — and the CFG path already has a `w_cfg` knob that is not being used.\n- CFG's strength is that it is cheaper (no extra classifier) and allows the guidance weight to be a hyperparameter. But a fixed `w_cfg` is brittle: high values can distort the prior and low values can under-condition.\n- The decision-planning literature already hints that a target-return `R` is a natural conditioning signal, and that conditioning should evolve with how far the current trajectory is from the goal. So the natural generalization is to let `w_cfg` be a learned function of (timestep, R).\n- The design decision then becomes: should this schedule be a lookup table, a simple function, or a learned network? A learned network is the most expressive and general, but the crux is that it must be trained carefully, not naively plugged in — hence the regularization/clip/stepwise-freeze caveats.",

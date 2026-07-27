@@ -1,0 +1,35 @@
+{
+ "task": "cifar10",
+ "arm": "sft8b",
+ "arm_label": "Qwen3-8B SFT",
+ "metric": "accuracy",
+ "baseline": 0.51237,
+ "lower_is_better": false,
+ "metric_mean": 0.5858,
+ "delta_pct": 14.331,
+ "ci_pct": 3.834,
+ "success": true,
+ "per_seed": [
+  {
+   "seed": "1",
+   "metric": 0.5621,
+   "delta_pct": 9.706
+  },
+  {
+   "seed": "2",
+   "metric": 0.6032,
+   "delta_pct": 17.727
+  },
+  {
+   "seed": "3",
+   "metric": 0.5921,
+   "delta_pct": 15.561
+  }
+ ],
+ "master_output": {
+  "idea": "**Mocking:** I'm a researcher, so my instinct is to ask why the current setup isn't working before I tweak anything. The script trains for, say, 10 epochs—few, and the default learning rate schedule is probably too aggressive, so the model is already maxing out the optimizer before learning anything meaningful. That's the source of underfitting I'm seeing. The obvious move is to run more epochs, but the constraint is 'keep epochs within 10.' So I can't scale the training length. That forces the only honest path: I must make each epoch do more work. The standard response is 'add layers' or 'change the architecture.' I don't want to do that. My hypothesis is that the bottleneck is the learning rate, not the model capacity.\n\nWhy does this cut against the consensus? Because the default learning rate is a fixed schedule—linear or step—whereas the learning rate is itself a hyperparameter. The consensus treats it as a fixed knob. I treat it as a function. So the idea is to make the learning rate a *dynamic function of the epoch number*, not a constant or a step-down. A decreasing schedule with a decay factor—something like `lr * decay^epoch`—lets the learning rate fall smoothly and keeps it from overshooting early on. This is the same reasoning behind AdamW-style schedules and the cosine decay I've seen in practice: the decay factor is a free parameter I can search, and it turns the learning rate from a fixed number into a continuous, learnable variable.\n\nNow, why is this non-trivial and not just a code change? Two cruxes. First, the decay factor is a *hyperparameter* and must be searched, not set to a 'nice' number like 0.95—because a decay that's too aggressive kills the learning early, and one that's too mild doesn't get rid of the noise. The second crux is that the learning rate is only useful *when the optimizer is actually learning*. If the training loss is already saturated and the model isn't changing, a tiny learning rate is wasted; if it's still noisy, a large rate is wasted. So the schedule must sit on top of an optimizer whose behavior is stable across the schedule—AdamW, not SGD with a fixed step, because SGD's step is itself a schedule and would just overlap with the per-epoch decay and fight itself. The schedule only pays off if the optimizer is well-behaved and the learning rate is truly a free variable.\n\n**Core idea:** Replace the fixed learning rate with a per-epoch exponential decay function (`lr * decay^epoch`) as an optimizer schedule, turning the learning rate into a tunable hyperparameter while keeping the total epoch count low.\n\n**Non-trivial crux:** The decay factor must be searched (not set to a nice number) and the schedule only works on a stable optimizer like AdamW—otherwise the learning rate and optimizer's own schedule fight.",
+  "proposal": "<think>\n\n</think>\n\n**Mocking:** I'm a researcher, so my instinct is to ask why the current setup isn't working before I tweak anything. The script trains for, say, 10 epochs—few, and the default learning rate schedule is probably too aggressive, so the model is already maxing out the optimizer before learning anything meaningful. That's the source of underfitting I'm seeing. The obvious move is to run more epochs, but the constraint is 'keep epochs within 10.' So I can't scale the training length. That forces the only honest path: I must make each epoch do more work. The standard response is 'add layers' or 'change the architecture.' I don't want to do that. My hypothesis is that the bottleneck is the learning rate, not the model capacity.\n\nWhy does this cut against the consensus? Because the default learning rate is a fixed schedule—linear or step—whereas the learning rate is itself a hyperparameter. The consensus treats it as a fixed knob. I treat it as a function. So the idea is to make the learning rate a *dynamic function of the epoch number*, not a constant or a step-down. A decreasing schedule with a decay factor—something like `lr * decay^epoch`—lets the learning rate fall smoothly and keeps it from overshooting early on. This is the same reasoning behind AdamW-style schedules and the cosine decay I've seen in practice: the decay factor is a free parameter I can search, and it turns the learning rate from a fixed number into a continuous, learnable variable.\n\nNow, why is this non-trivial and not just a code change? Two cruxes. First, the decay factor is a *hyperparameter* and must be searched, not set to a 'nice' number like 0.95—because a decay that's too aggressive kills the learning early, and one that's too mild doesn't get rid of the noise. The second crux is that the learning rate is only useful *when the optimizer is actually learning*. If the training loss is already saturated and the model isn't changing, a tiny learning rate is wasted; if it's still noisy, a large rate is wasted. So the schedule must sit on top of an optimizer whose behavior is stable across the schedule—AdamW, not SGD with a fixed step, because SGD's step is itself a schedule and would just overlap with the per-epoch decay and fight itself. The schedule only pays off if the optimizer is well-behaved and the learning rate is truly a free variable.\n\n**Core idea:** Replace the fixed learning rate with a per-epoch exponential decay function (`lr * decay^epoch`) as an optimizer schedule, turning the learning rate into a tunable hyperparameter while keeping the total epoch count low.\n\n**Non-trivial crux:** The decay factor must be searched (not set to a nice number) and the schedule only works on a stable optimizer like AdamW—otherwise the learning rate and optimizer's own schedule fight.",
+  "valid": true,
+  "n_attempts": 1
+ }
+}

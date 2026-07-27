@@ -1,0 +1,35 @@
+{
+ "task": "house-price",
+ "arm": "sft32b",
+ "arm_label": "Qwen3-32B SFT",
+ "metric": "mae",
+ "baseline": 21676.12057,
+ "lower_is_better": true,
+ "metric_mean": 21632.687384,
+ "delta_pct": 0.2,
+ "ci_pct": 1.787,
+ "success": false,
+ "per_seed": [
+  {
+   "seed": "2",
+   "metric": 21841.290380136976,
+   "delta_pct": -0.762
+  },
+  {
+   "seed": "1",
+   "metric": 21150.021583333324,
+   "delta_pct": 2.427
+  },
+  {
+   "seed": "3",
+   "metric": 21906.750188641545,
+   "delta_pct": -1.064
+  }
+ ],
+ "master_output": {
+  "idea": "**Core idea:** Treat missing values in `LotFrontage` as a signal rather than a clean-up task — impute them using a k-nearest-neighbors (k-NN) strategy conditioned on `Neighborhood` and `LotConfig`, since proximity to neighbors and land configuration likely correlate with the property's frontage.\n\n**Non-trivial crux:** k-NN imputation introduces a dependency on the training set's structure and must be done within cross-validation folds to avoid data leakage, which means the imputer must be nested inside the pipeline and fitted only on the training partition of each fold.",
+  "proposal": "<think>\n\n</think>\n\n**Core idea:** Treat missing values in `LotFrontage` as a signal rather than a clean-up task — impute them using a k-nearest-neighbors (k-NN) strategy conditioned on `Neighborhood` and `LotConfig`, since proximity to neighbors and land configuration likely correlate with the property's frontage.\n\n**Non-trivial crux:** k-NN imputation introduces a dependency on the training set's structure and must be done within cross-validation folds to avoid data leakage, which means the imputer must be nested inside the pipeline and fitted only on the training partition of each fold.",
+  "valid": true,
+  "n_attempts": 1
+ }
+}

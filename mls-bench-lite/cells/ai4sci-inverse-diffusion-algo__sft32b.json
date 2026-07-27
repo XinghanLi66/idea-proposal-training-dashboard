@@ -2,8 +2,10 @@
  "task": "ai4sci-inverse-diffusion-algo",
  "arm": "sft32b",
  "arm_label": "Qwen3-32B SFT",
- "status": "ok",
- "score": 0.0,
+ "status": "scored",
+ "score": 62.1,
+ "worker": "claude-fable-5",
+ "caveat": null,
  "master_output": {
   "idea": null,
   "proposal": "<think>\n\n</think>\n\n**Core idea:** Use a learned diffusion prior to solve inverse problems via a two-stage hybrid of sampling and optimization, rather than relying solely on sampling with guidance. First sample from the prior to get a rough estimate, then refine it with a measurement-aware optimization step that uses the diffusion model's score as a regularizer and data fidelity as the objective.\n\n**Non-trivial crux:** The guidance must be applied in the score space, not the data space, so I must backpropagate through the diffusion model's score (not its denoising output) while ensuring the diffusion score and measurement gradient are on comparable scales via careful sigma-normalization.",

@@ -2,8 +2,10 @@
  "task": "quant-concept-drift",
  "arm": "base32b",
  "arm_label": "Qwen2.5-32B-Inst (base)",
- "status": "ok",
+ "status": "scored",
  "score": 32.6,
+ "worker": "claude-fable-5",
+ "caveat": null,
  "master_output": {
   "idea": null,
   "proposal": "To tackle the challenge of concept drift in stock prediction for the CSI300 index, one innovative approach would be to integrate an ensemble method that combines multiple models trained on different time windows with varying weights dynamically adjusted based on their recent performance. This method leverages the strengths of models trained on different temporal segments while mitigating the risks associated with a single model’s potential overfitting or underperformance during periods of significant market changes.\n\nHere’s how we can conceptualize this:\n\n1. **Multi-Window Training**: Train several models (e.g., LSTM, RNN, LightGBM) on different temporal windows (short-term, medium-term, long-term). Each window captures different aspects of market dynamics.\n\n2. **Dynamic Weighting Mechanism**: Implement a dynamic weighting mechanism where the contribution of each model’s prediction is adjusted based on its recent performance. For instance, if a short-term model has been performing well recently, it will have a higher weight in the final prediction.\n\n3. **Performance Evaluation**: Continuously evaluate the performance of each model using metrics like IC (Information Coefficient), ICIR (IC Information Ratio), and Rank IC on a rolling basis. Use these metrics to update the weights.\n\n4. **Adaptive Ensembling**: The final prediction is an adaptive ensemble of predictions from all models, weighted according to their recent performance. This ensures that the system adapts to changing market conditions and concept drifts effectively.\n\nBy integrating such a dynamic ensemble approach, the model can adapt more robustly to the evolving nature of financial markets and reduce the impact of concept drift on prediction accuracy.\n\n**Core idea:** Adaptive ensembling of models trained on different temporal windows, with weights updated based on recent performance.\n\n**Non-trivial crux:** Designing a robust dynamic weighting mechanism that efficiently evaluates and adjusts model contributions in real-time based on performance metrics.",

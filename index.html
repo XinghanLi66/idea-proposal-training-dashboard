@@ -36,7 +36,8 @@
     <p class="tag">Benchmark result dashboards for research-idea proposal generation (SFT + RL across model families).</p>
     <p class="sub">Each dashboard is a faithful task × arm results matrix: every scored cell drills down to the
     problem, baselines, the proposer (master) prompt and generated proposal, the worker's implementation
-    prompt and final code, and per-seed scores. Worker = Claude fable-5.</p>
+    prompt and final code, and per-seed scores. Worker = Claude fable-5 (opus-4-8 on protein tasks). <b>Headline:</b> frontier
+    proposers (Claude Fable 5, GPT-5.5) land mid-pack — beaten by several trained checkpoints.</p>
   </header>
 
   <h2 class="sec">Benchmarks</h2>
@@ -44,15 +45,15 @@
     <a class="card live" href="mls-bench-lite/index.html">
       <span class="status">● Live</span>
       <h3>MLS-Bench-Lite</h3>
-      <p>Closed-loop ML engineering benchmark — proposal implemented and scored end-to-end across 12 domains.</p>
-      <div class="meta"><span><b>30</b> tasks</span><span><b>18</b> arms</span><span>6 model families × base/SFT/RL</span></div>
+      <p>Closed-loop ML engineering benchmark — proposal implemented and scored end-to-end across 12 domains. Final matrix, 0 missing.</p>
+      <div class="meta"><span><b>30</b> tasks</span><span><b>20</b> arms</span><span>6 families × base/SFT/RL + 2 frontier</span></div>
     </a>
-    <div class="card soon">
-      <span class="status">◐ Coming soon</span>
+    <a class="card live" href="mab/index.html">
+      <span class="status">● Live</span>
       <h3>MLAgentBench (MAB)</h3>
-      <p>Second benchmark — agentic ML research tasks (cifar10, ogbn-arxiv, imdb, house-price, spaceship).</p>
-      <div class="meta"><span>eval env built</span><span>dashboard pending</span></div>
-    </div>
+      <p>Agentic ML research tasks (cifar10, ogbn-arxiv, imdb, house-price, spaceship) — Δ% over strong baseline, direction-corrected.</p>
+      <div class="meta"><span><b>5</b> tasks</span><span><b>20</b> arms</span><span>success = Δ ≥ +10%</span></div>
+    </a>
   </div>
 
   <h2 class="sec">Training data</h2>

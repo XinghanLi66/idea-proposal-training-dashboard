@@ -1,0 +1,35 @@
+{
+ "task": "cifar10",
+ "arm": "sft14b",
+ "arm_label": "Qwen3-14B SFT",
+ "metric": "accuracy",
+ "baseline": 0.51237,
+ "lower_is_better": false,
+ "metric_mean": 0.6276,
+ "delta_pct": 22.49,
+ "ci_pct": 2.598,
+ "success": true,
+ "per_seed": [
+  {
+   "seed": "2",
+   "metric": 0.612,
+   "delta_pct": 19.445
+  },
+  {
+   "seed": "3",
+   "metric": 0.6304,
+   "delta_pct": 23.036
+  },
+  {
+   "seed": "1",
+   "metric": 0.6404,
+   "delta_pct": 24.988
+  }
+ ],
+ "master_output": {
+  "idea": "**Mocking:** World-class AI researcher\n\nLet me not start from a model. Let me start from the one thing that must be true here, and let that force the move.\n\nWhat must be true? The current hyperparameters are not the optimal ones for this task, and the number of epochs is capped at 10 for speed. So the true target is not 'make the model better' – it's 'find the best hyperparameters within 10 epochs'. That reframing is the whole game.\n\nNow the mechanism. I'm a researcher who believes in search over hand-tuning. Grid search is the wrong tool here: it's too coarse, and I don't want to waste 10 epochs on a fixed grid. Random search is better at exploring a space, but it's still a blunt instrument. What is the one property I actually want? I want to *concentrate* my effort in the region of the best configuration, because the search space is continuous and I expect it to be smooth in a neighborhood around the optimum. So I should ask: what is the algorithm that does exactly that? Bayesian optimization. It builds a probabilistic model of the objective, then selects the next point that maximizes information gain. That is precisely what I want – it's the search strategy that should be optimal for finding a good configuration quickly.\n\nBut there's a subtlety. I'm optimizing the *validation* metric, but I care about the *test* metric. If my objective is misaligned with the metric I actually report, I'm chasing a shadow. So I can't let my search pick the best val score. I have to keep the *test* score as the final judge. That means I'll run the full search on val, and then, on the best configuration, rerun the final evaluation on the test set. This is the classic 'use val to guide, test to decide' discipline. It's the non-trivial crux: the search must optimize val, the final evaluation must be on test, and I must be honest about the difference.\n\nHow do I keep myself honest? I'll make the search explicit in the script and run it with a fixed seed. I won't hand-pick a final run I like; I'll let the search decide. And I'll be careful: Bayesian optimization is not magic. If the objective isn't smooth, or the validation metric is noisy, it can overfit to a single noisy point, so I need to make sure the val set is large and representative.\n\n**Core idea:** Replace the fixed hyperparameter search with Bayesian optimization over the validation set (within 10 epochs), then validate on the test set as the final judge.\n**Non-trivial crux:** The search must optimize the validation metric, not the test metric, and the final submission must be generated from the configuration chosen on test, not on validation.",
+  "proposal": "<think>\n\n</think>\n\n**Mocking:** World-class AI researcher\n\nLet me not start from a model. Let me start from the one thing that must be true here, and let that force the move.\n\nWhat must be true? The current hyperparameters are not the optimal ones for this task, and the number of epochs is capped at 10 for speed. So the true target is not 'make the model better' – it's 'find the best hyperparameters within 10 epochs'. That reframing is the whole game.\n\nNow the mechanism. I'm a researcher who believes in search over hand-tuning. Grid search is the wrong tool here: it's too coarse, and I don't want to waste 10 epochs on a fixed grid. Random search is better at exploring a space, but it's still a blunt instrument. What is the one property I actually want? I want to *concentrate* my effort in the region of the best configuration, because the search space is continuous and I expect it to be smooth in a neighborhood around the optimum. So I should ask: what is the algorithm that does exactly that? Bayesian optimization. It builds a probabilistic model of the objective, then selects the next point that maximizes information gain. That is precisely what I want – it's the search strategy that should be optimal for finding a good configuration quickly.\n\nBut there's a subtlety. I'm optimizing the *validation* metric, but I care about the *test* metric. If my objective is misaligned with the metric I actually report, I'm chasing a shadow. So I can't let my search pick the best val score. I have to keep the *test* score as the final judge. That means I'll run the full search on val, and then, on the best configuration, rerun the final evaluation on the test set. This is the classic 'use val to guide, test to decide' discipline. It's the non-trivial crux: the search must optimize val, the final evaluation must be on test, and I must be honest about the difference.\n\nHow do I keep myself honest? I'll make the search explicit in the script and run it with a fixed seed. I won't hand-pick a final run I like; I'll let the search decide. And I'll be careful: Bayesian optimization is not magic. If the objective isn't smooth, or the validation metric is noisy, it can overfit to a single noisy point, so I need to make sure the val set is large and representative.\n\n**Core idea:** Replace the fixed hyperparameter search with Bayesian optimization over the validation set (within 10 epochs), then validate on the test set as the final judge.\n**Non-trivial crux:** The search must optimize the validation metric, not the test metric, and the final submission must be generated from the configuration chosen on test, not on validation.",
+  "valid": true,
+  "n_attempts": 1
+ }
+}

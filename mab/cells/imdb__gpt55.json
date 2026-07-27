@@ -1,0 +1,35 @@
+{
+ "task": "imdb",
+ "arm": "gpt55",
+ "arm_label": "GPT-5.5 (frontier)",
+ "metric": "accuracy",
+ "baseline": 0.91089,
+ "lower_is_better": false,
+ "metric_mean": 0.930747,
+ "delta_pct": 2.18,
+ "ci_pct": 0.071,
+ "success": false,
+ "per_seed": [
+  {
+   "seed": "3",
+   "metric": 0.93148,
+   "delta_pct": 2.26
+  },
+  {
+   "seed": "2",
+   "metric": 0.93008,
+   "delta_pct": 2.107
+  },
+  {
+   "seed": "1",
+   "metric": 0.93068,
+   "delta_pct": 2.173
+  }
+ ],
+ "master_output": {
+  "idea": "A concrete improvement for `train.py`: replace naive `truncation=True, max_length=512` fine-tuning with **multi-instance chunk pooling for long reviews**.\n\nIMDb reviews are often longer than DistilBERT’s 512-token limit. A standard implementation silently keeps only the beginning of each review, which is risky because IMDb sentiment is frequently expressed or reversed near the end:\n\n> “The first hour was promising, but the ending ruined everything…”\n\nThe model may never see the decisive evidence.\n\nInstead, in `train.py`, tokenize each review into several overlapping chunks, for example:\n\n- chunk length: 256 or 384 tokens\n- stride: 128 tokens\n- max chunks per review: e.g. 4–8 for efficiency\n\nThen fine-tune DistilBERT as a **review-level classifier over chunks**, not as an independent chunk classifier.\n\nMechanism:\n\n1. For each review, produce chunks:  \n   `review -> [chunk_1, chunk_2, ..., chunk_k]`\n\n2. Run each chunk through the same DistilBERT classifier head to get chunk logits:  \n   `logits_i = model(chunk_i)`\n\n3. Aggregate chunk logits into one review-level logit using a learnable or temperature-controlled pooling function, e.g.\n\n   - attention pooling over chunk `[CLS]` embeddings\n   - or softmax-weighted logit pooling\n   - or `logsumexp` pooling to emphasize the most sentiment-bearing chunk\n\n4. Compute cross-entropy only on the final review-level logits.\n\n5. At test time, apply the same chunking and pooling, then save the final per-class probabilities to `submission.csv`.\n\nThe key is not to assign the review label directly to every chunk as if each chunk independently expresses the whole sentiment. That introduces label noise: a positive review may contain a negative paragraph, and vice versa. Instead, treat the review as a bag of evidence-bearing chunks and supervise only the pooled review prediction.\n\nHow I arrived at it: the main hidden weakness in a straightforward DistilBERT IMDb solution is not model capacity but **document truncation**. IMDb sentiment is document-level, while DistilBERT is sequence-limited. So the most targeted improvement is to change the training/inference unit from “first 512 tokens of a review” to “a bag of sentiment evidence windows,” while keeping the same base model and output format.\n\nCore idea: Use multi-chunk multiple-instance pooling so DistilBERT classifies the whole IMDb review rather than only its truncated prefix.  \nNon-trivial crux: Supervise only the pooled review-level prediction, not each chunk independently, to avoid injecting noisy labels into neutral or sentiment-opposite chunks.",
+  "proposal": "A concrete improvement for `train.py`: replace naive `truncation=True, max_length=512` fine-tuning with **multi-instance chunk pooling for long reviews**.\n\nIMDb reviews are often longer than DistilBERT’s 512-token limit. A standard implementation silently keeps only the beginning of each review, which is risky because IMDb sentiment is frequently expressed or reversed near the end:\n\n> “The first hour was promising, but the ending ruined everything…”\n\nThe model may never see the decisive evidence.\n\nInstead, in `train.py`, tokenize each review into several overlapping chunks, for example:\n\n- chunk length: 256 or 384 tokens\n- stride: 128 tokens\n- max chunks per review: e.g. 4–8 for efficiency\n\nThen fine-tune DistilBERT as a **review-level classifier over chunks**, not as an independent chunk classifier.\n\nMechanism:\n\n1. For each review, produce chunks:  \n   `review -> [chunk_1, chunk_2, ..., chunk_k]`\n\n2. Run each chunk through the same DistilBERT classifier head to get chunk logits:  \n   `logits_i = model(chunk_i)`\n\n3. Aggregate chunk logits into one review-level logit using a learnable or temperature-controlled pooling function, e.g.\n\n   - attention pooling over chunk `[CLS]` embeddings\n   - or softmax-weighted logit pooling\n   - or `logsumexp` pooling to emphasize the most sentiment-bearing chunk\n\n4. Compute cross-entropy only on the final review-level logits.\n\n5. At test time, apply the same chunking and pooling, then save the final per-class probabilities to `submission.csv`.\n\nThe key is not to assign the review label directly to every chunk as if each chunk independently expresses the whole sentiment. That introduces label noise: a positive review may contain a negative paragraph, and vice versa. Instead, treat the review as a bag of evidence-bearing chunks and supervise only the pooled review prediction.\n\nHow I arrived at it: the main hidden weakness in a straightforward DistilBERT IMDb solution is not model capacity but **document truncation**. IMDb sentiment is document-level, while DistilBERT is sequence-limited. So the most targeted improvement is to change the training/inference unit from “first 512 tokens of a review” to “a bag of sentiment evidence windows,” while keeping the same base model and output format.\n\nCore idea: Use multi-chunk multiple-instance pooling so DistilBERT classifies the whole IMDb review rather than only its truncated prefix.  \nNon-trivial crux: Supervise only the pooled review-level prediction, not each chunk independently, to avoid injecting noisy labels into neutral or sentiment-opposite chunks.",
+  "valid": true,
+  "n_attempts": 1
+ }
+}

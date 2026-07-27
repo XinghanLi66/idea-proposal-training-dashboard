@@ -1,0 +1,35 @@
+{
+ "task": "house-price",
+ "arm": "qwen3-32b-rl",
+ "arm_label": "Qwen3-32B RL",
+ "metric": "mae",
+ "baseline": 21676.12057,
+ "lower_is_better": true,
+ "metric_mean": 19602.798342,
+ "delta_pct": 9.565,
+ "ci_pct": 1.477,
+ "success": false,
+ "per_seed": [
+  {
+   "seed": "3",
+   "metric": 19771.243260719068,
+   "delta_pct": 8.788
+  },
+  {
+   "seed": "2",
+   "metric": 19833.00088604094,
+   "delta_pct": 8.503
+  },
+  {
+   "seed": "1",
+   "metric": 19204.150878451077,
+   "delta_pct": 11.404
+  }
+ ],
+ "master_output": {
+  "idea": "Core idea: Treat the 'MSZoning' feature as a hierarchy rather than a flat categorical variable — use a tree-based model's native hierarchy support to let 'RL' implicitly dominate over its subcategories, so the model learns the zoning structure instead of flattening it.\n\nNon-trivial crux: The hierarchy only helps if the tree's splits actually *use* it — you must verify via feature importance and partial dependence that the model is actually leveraging the hierarchy, not ignoring it due to poor encoding or weak signal.\n\n**Reasoning path (my style, in one paragraph):**  \nWhen I first read the data description, 'MSZoning' stood out because its categories cluster under 'RL' and 'RM' — that's not just a categorical variable, it's a *structured hierarchy*. My instinct is to keep structured data structured: flattening it risks throwing away a priori knowledge about which categories are semantically related. Tree models already have a built-in mechanism for handling this — they can split on a 'RL' node *and* its subcategories, with the hierarchy encoding implying that 'RL' dominates its subcategories. But this is a *prediction mechanism*, not a guarantee — the hierarchy only matters if the model actually *uses* it, so I'd check feature importance and partial dependence to see whether 'MSZoning' behaves like a useful hierarchy or collapses into noise. If the hierarchy doesn't show up there, I fall back to a regular categorical encoding, not force the structure — that's the discipline part. I'd also check whether the hierarchy helps more in the target-variable-aligned trees (like gradient-boosted trees) than in pure decision trees, since they have different inductive biases. And since I never read the CSV directly, I'd trust the description's 'RL/Residential Low Density' wording over any raw data, because the description explicitly explains the hierarchy.",
+  "proposal": "<think>\n\n</think>\n\nCore idea: Treat the 'MSZoning' feature as a hierarchy rather than a flat categorical variable — use a tree-based model's native hierarchy support to let 'RL' implicitly dominate over its subcategories, so the model learns the zoning structure instead of flattening it.\n\nNon-trivial crux: The hierarchy only helps if the tree's splits actually *use* it — you must verify via feature importance and partial dependence that the model is actually leveraging the hierarchy, not ignoring it due to poor encoding or weak signal.\n\n**Reasoning path (my style, in one paragraph):**  \nWhen I first read the data description, 'MSZoning' stood out because its categories cluster under 'RL' and 'RM' — that's not just a categorical variable, it's a *structured hierarchy*. My instinct is to keep structured data structured: flattening it risks throwing away a priori knowledge about which categories are semantically related. Tree models already have a built-in mechanism for handling this — they can split on a 'RL' node *and* its subcategories, with the hierarchy encoding implying that 'RL' dominates its subcategories. But this is a *prediction mechanism*, not a guarantee — the hierarchy only matters if the model actually *uses* it, so I'd check feature importance and partial dependence to see whether 'MSZoning' behaves like a useful hierarchy or collapses into noise. If the hierarchy doesn't show up there, I fall back to a regular categorical encoding, not force the structure — that's the discipline part. I'd also check whether the hierarchy helps more in the target-variable-aligned trees (like gradient-boosted trees) than in pure decision trees, since they have different inductive biases. And since I never read the CSV directly, I'd trust the description's 'RL/Residential Low Density' wording over any raw data, because the description explicitly explains the hierarchy.",
+  "valid": true,
+  "n_attempts": 1
+ }
+}

@@ -1,0 +1,30 @@
+{
+ "task": "imdb",
+ "arm": "sft32b",
+ "arm_label": "Qwen3-32B SFT",
+ "metric": "accuracy",
+ "baseline": 0.91089,
+ "lower_is_better": false,
+ "metric_mean": 0.90914,
+ "delta_pct": -0.192,
+ "ci_pct": 0.082,
+ "success": false,
+ "per_seed": [
+  {
+   "seed": "2",
+   "metric": 0.90968,
+   "delta_pct": -0.133
+  },
+  {
+   "seed": "1",
+   "metric": 0.9086,
+   "delta_pct": -0.251
+  }
+ ],
+ "master_output": {
+  "idea": "**Core idea:** Add a `logits_processor` to the trainer that records per-class probabilities for the test set and appends them to a `submission.csv` during evaluation, avoiding a separate inference pass and keeping the flow self-contained.\n\n**Non-trivial crux:** The logits must be extracted and mapped to class labels **before** the trainer applies its own softmax, and the CSV must be written only once with the correct index order—requiring a custom processor and care with the dataset's split indices.",
+  "proposal": "<think>\n\n</think>\n\n**Core idea:** Add a `logits_processor` to the trainer that records per-class probabilities for the test set and appends them to a `submission.csv` during evaluation, avoiding a separate inference pass and keeping the flow self-contained.\n\n**Non-trivial crux:** The logits must be extracted and mapped to class labels **before** the trainer applies its own softmax, and the CSV must be written only once with the correct index order—requiring a custom processor and care with the dataset's split indices.",
+  "valid": true,
+  "n_attempts": 1
+ }
+}

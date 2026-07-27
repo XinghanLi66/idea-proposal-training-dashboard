@@ -1,0 +1,131 @@
+{
+ "task": "robomimic-bc-loss",
+ "arm": "m2rl",
+ "arm_label": "Qwen3-235B-A22B RL",
+ "status": "scored",
+ "score": 15.6,
+ "worker": "claude-fable-5",
+ "caveat": null,
+ "master_output": {
+  "idea": "Core idea: Replace NLL with a loss that projects each action onto the convex hull of expert demonstrations before computing the distance, plus a KL term pushing mixture weights toward uniformity -- forcing the GMM to stay inside the training distribution while keeping all modes active.\n\nNon-trivial crux: The projection must pull *outside* points back into the hull while leaving *inside* points untouched, and the KL weight must be kept small; if the projection is inappropriately applied to in-hull points or the KL dominates, the constraint becomes a distortion that hurts rather than helps.",
+  "proposal": "<think>\nI'm a researcher who distrusts the default too much to accept it at face value, so let me stare at the NLL loss and ask what it actually forces on the distribution.\n\nThe standard story: minimize NLL = maximize the density at the expert action. That sounds exactly right -- put high mass where the expert was. But when I think about what a GMM with 5 modes must do to minimize NLL, a contradiction appears. The expert demonstrations are 200 samples from a true expert policy. A GMM forced to assign high density to *every* one of those 200 points cannot help but spread its mass across the support of the expert's distribution. To cover all observed points it has to occupy the whole convex hull of the demonstrated actions. Now here's the tension: a policy that covers the *entire* expert support will, during a long rollout, wander into regions the expert never visited but the GMM has mass in. That is not the expert's distribution -- it is a *superset* of its support. And the further a rollout drifts into those unvisited regions, the more likely it is to fail. So the loss that looks like a faithful objective is silently encouraging behavior outside the training distribution.\n\nThis is the same flavor of problem I've seen in other density-estimation settings: the objective and the deployment requirement are misaligned. In NLL the model is rewarded for *coverage*; in a rollout the agent is punished for *leaving* the demonstrated region. That's not a bug in the data, it's a design mismatch I can fix.\n\nSo instead of maximizing density everywhere the expert was, I want a constraint that forces the agent's distribution to *lie inside* the convex hull of the demonstrations. How to encode that? The demonstrations themselves form a point cloud. For any candidate action, I can project it onto the convex hull of that cloud -- the closest point on or inside the hull. If I then compare the agent's action not to the raw expert action but to that projection, I get two things for free: (1) the loss cannot reward mass outside the hull, because any point outside gets pulled back in before comparison; (2) points already inside the hull are untouched, so I'm not distorting the in-hull region. This is effectively a data-dependent projection constraint on the action distribution, and I can implement it cheaply with a batched nearest-neighbor-style projection over the 200 demo points.\n\nBut a projection alone isn't enough to guard against *mode collapse*. If a single mode dominates, the GMM effectively degenerates into a single Gaussian and loses expressiveness. That's a second axis of failure. So I want to add a term that pushes the mixture weights toward uniformity -- a KL divergence between the component weights and a uniform categorical. This encourages all 5 modes to stay active rather than one swallowing the others. (I should be honest that this is a regularization, not a proven guarantee.)\n\nWhy this cuts against the default move: the consensus would be to tune the GMM architecture or the optimizer. I'm instead treating the loss as a design space and engineering a constraint directly into it.\n\nHow I keep myself honest: I won't claim the projection helps without measuring it. Decision rule: train with the projection+KL loss versus plain NLL, and compare rollout success rate across all three tasks. If the projected loss doesn't clearly improve success rate over NLL, I keep NLL on parsimony grounds and drop the projection. And I watch for the KL term's weight being a tuning knob -- too strong and it can destabilize training; it should be a small regularizer, not the main objective.\n\nOne caveat I must respect: this projection is only well-defined because I have access to the full set of demonstration points. If the demonstrations were not available at loss time (e.g. in an online setting), the convex-hull projection wouldn't be computable and I'd need a different constraint.\n\nCore idea: Replace NLL with a loss that projects each action onto the convex hull of expert demonstrations before computing the distance, plus a KL term pushing mixture weights toward uniformity -- forcing the GMM to stay inside the training distribution while keeping all modes active.\n\nNon-trivial crux: The projection must pull *outside* points back into the hull while leaving *inside* points untouched, and the KL weight must be kept small; if the projection is inappropriately applied to in-hull points or the KL dominates, the constraint becomes a distortion that hurts rather than helps.\n</think>\n\nCore idea: Replace NLL with a loss that projects each action onto the convex hull of expert demonstrations before computing the distance, plus a KL term pushing mixture weights toward uniformity -- forcing the GMM to stay inside the training distribution while keeping all modes active.\n\nNon-trivial crux: The projection must pull *outside* points back into the hull while leaving *inside* points untouched, and the KL weight must be kept small; if the projection is inappropriately applied to in-hull points or the KL dominates, the constraint becomes a distortion that hurts rather than helps.",
+  "valid": true,
+  "n_attempts": 1
+ },
+ "per_run_scores": [
+  {
+   "seed": "1",
+   "timestamp": "2026-07-25T21:01:24.396012+00:00",
+   "has_metric": true,
+   "metrics": {
+    "success_rate_tool_hang_ph": "0.72",
+    "success_rate_can_ph": "0.86",
+    "elapsed_tool_hang_ph": "13452.1",
+    "elapsed_can_ph": "8907.0",
+    "elapsed_square_ph": "10.6"
+   }
+  },
+  {
+   "seed": "2",
+   "timestamp": "2026-07-25T21:01:24.563201+00:00",
+   "has_metric": true,
+   "metrics": {
+    "success_rate_can_ph": "0.94",
+    "success_rate_square_ph": "0.04",
+    "elapsed_tool_hang_ph": "562.3",
+    "elapsed_can_ph": "10457.8",
+    "elapsed_square_ph": "25560.1"
+   }
+  },
+  {
+   "seed": "3",
+   "timestamp": "2026-07-25T21:01:24.715481+00:00",
+   "has_metric": true,
+   "metrics": {
+    "success_rate_tool_hang_ph": "0.68",
+    "success_rate_can_ph": "0.68",
+    "success_rate_square_ph": "0.68",
+    "elapsed_tool_hang_ph": "13693.7",
+    "elapsed_can_ph": "13903.9",
+    "elapsed_square_ph": "13883.6"
+   }
+  },
+  {
+   "seed": "mean",
+   "timestamp": "2026-07-25T21:01:24.941259+00:00",
+   "has_metric": true,
+   "metrics": {
+    "success_rate_tool_hang_ph": "0.7",
+    "success_rate_can_ph": "0.8266666666666667",
+    "success_rate_square_ph": "0.36000000000000004",
+    "elapsed_tool_hang_ph": "9236.033333333333",
+    "elapsed_can_ph": "11089.566666666666",
+    "elapsed_square_ph": "13151.433333333332",
+    "success_rate_tool_hang_ph_std": "0.028284271247461846",
+    "success_rate_can_ph_std": "0.13316656236958782",
+    "success_rate_square_ph_std": "0.4525483399593904",
+    "elapsed_can_ph_std": "2557.655028211063",
+    "elapsed_square_ph_std": "12790.476479917912",
+    "elapsed_tool_hang_ph_std": "7512.644680359463"
+   }
+  }
+ ],
+ "workers": [
+  {
+   "log_dir": "logs/robomimic-bc-loss/claude-fable-5__m2rl__m2rl_robomimic-bc-loss_s1",
+   "user_prompt": "# Research proposal — implement THIS idea (provided by the caller)\n\nCore idea: Replace NLL with a loss that projects each action onto the convex hull of expert demonstrations before computing the distance, plus a KL term pushing mixture weights toward uniformity -- forcing the GMM to stay inside the training distribution while keeping all modes active.\n\nNon-trivial crux: The projection must pull *outside* points back into the hull while leaving *inside* points untouched, and the KL weight must be kept small; if the projection is inappropriately applied to in-hull points or the KL dominates, the constraint becomes a distortion that hurts rather than helps.\n\n[Constraint] Implement ONLY the proposed idea in the task's editable region. Do NOT change training hyperparameters (learning rate, batch size, epochs) or the eval/split/reporting.\n\n# Task: robomimic-bc-loss\n\n# Behavioral Cloning: Loss Function Design for Robot Imitation Learning\n\n## Research Question\nDesign an improved loss function for GMM-based behavioral cloning (BC) in robot manipulation. The policy outputs a Gaussian Mixture Model (GMM) distribution over actions, and the loss function receives this distribution along with expert demonstration actions. Your goal is to design a loss that maximizes imitation learning quality as measured by rollout success rate.\n\n## What You Can Modify\nThe `CustomBCLoss` class in `custom_bc_loss.py`. This class receives a GMM distribution and target action tensors and must return a scalar loss.\n\nInterface:\n- **Input**: `dist` (a `torch.distributions.MixtureSameFamily` GMM distribution with 5 modes) and `target_actions: [B, 7]` -- 7-dim robot actions (6D end-effector delta + 1D gripper)\n- **Output**: scalar loss tensor\n- The default implementation is negative log-likelihood (NLL): `-dist.log_prob(target_actions).mean()`\n\nYou may add parameters to `__init__`, define helper methods, and use any PyTorch operations. The `dist` object supports `.log_prob()`, `.sample()`, `.component_distribution`, and `.mixture_distribution`.\n\n## Evaluation\n- **Metric**: `success_rate` -- rollout success rate on the task (higher is better)\n- **Tasks**: Lift (pick up cube), Can (pick-and-place can), Square (nut assembly)\n- **Dataset**: 200 proficient human demonstrations, low-dimensional observations\n- **Policy**: GMM with 5 modes, 2-layer MLP backbone (1024, 1024) with ReLU, tanh-squashed means\n- **Training**: 2000 epochs, Adam optimizer (lr=1e-4), batch size 100\n- **Rollout evaluation**: 50 episodes per task, horizon 400 steps, every 50 epochs\n\n\n## robomimic/custom_bc_loss.py  [EDITABLE — lines 20–41 only]\n```python\n     1: \"\"\"\n     2: Custom BC Loss Function for GMM-based Behavioral Cloning.\n     3: \n     4: This module defines the loss function used by BC-GMM training in robomimic.\n     5: The loss receives the GMM distribution produced by the policy network and\n     6: the expert demonstration actions, and returns a scalar loss.\n     7: \n     8: The custom loss is imported and used by the patched BC_GMM._compute_losses\n     9: method during training.\n    10: \"\"\"\n    11: \n    12: import torch\n    13: import torch.nn as nn\n    14: import torch.nn.functional as F\n    15: import torch.distributions as D\n    16: \n    17: \n    18: # ── Custom BC Loss Function ────────────────────────────────────────────────\n    19: # EDITABLE REGION START\n    20: class CustomBCLoss(nn.Module):\n    21:     \"\"\"Custom loss for GMM-based behavioral cloning.\n    22: \n    23:     Called during BC-GMM training. Receives the full GMM distribution and\n    24:     expert actions, returns a scalar loss to minimize.\n    25: \n    26:     Args:\n    27:         dist: MixtureSameFamily GMM distribution (5 modes, 7-dim actions)\n    28:             Supports: .log_prob(), .sample(), .component_distribution,\n    29:                       .mixture_distribution\n    30:         target_actions: [B, 7] expert actions\n    31: \n    32:     Returns:\n    33:         scalar loss tensor\n    34:     \"\"\"\n    35: \n    36:     def __init__(self, action_dim=7):\n    37:         super().__init__()\n    38:         self.action_dim = action_dim\n    39: \n    40:     def forward(self, dist, target_actions):\n    41:         return -dist.log_prob(target_actions).mean()\n    42: # EDITABLE REGION END\n```\n\n## nll_entropy baseline — editable region  [READ-ONLY — reference implementation]\n```python\nLines 20–39:\n    17: \n    18: # ── Custom BC Loss Function ────────────────────────────────────────────────\n    19: # EDITABLE REGION START\n    20: class CustomBCLoss(nn.Module):\n    21:     \"\"\"NLL + entropy bonus for GMM-based behavioral cloning.\n    22: \n    23:     Adds an entropy regularization term to the standard NLL loss.\n    24:     The entropy bonus encourages broader mixture components,\n    25:     preventing premature mode collapse.\n    26:     \"\"\"\n    27: \n    28:     def __init__(self, action_dim=7, alpha=0.01):\n    29:         super().__init__()\n    30:         self.action_dim = action_dim\n    31:         self.alpha = alpha\n    32: \n    33:     def forward(self, dist, target_actions):\n    34:         nll = -dist.log_prob(target_actions).mean()\n    35:         # MixtureSameFamily has no closed-form entropy; approximate via sampling\n    36:         with torch.no_grad():\n    37:             samples = dist.sample()\n    38:         entropy = -dist.log_prob(samples).mean()\n    39:         return nll - self.alpha * entropy\n    40: # EDITABLE REGION END\n```\n\n## weighted_nll baseline — editable region  [READ-ONLY — reference implementation]\n```python\nLines 20–39:\n    17: \n    18: # ── Custom BC Loss Function ────────────────────────────────────────────────\n    19: # EDITABLE REGION START\n    20: class CustomBCLoss(nn.Module):\n    21:     \"\"\"Dimension-weighted NLL for GMM-based behavioral cloning.\n    22: \n    23:     Weights positional action dimensions more heavily than the gripper\n    24:     dimension to prioritize accurate end-effector movement prediction.\n    25:     \"\"\"\n    26: \n    27:     def __init__(self, action_dim=7, pos_weight=2.0, grip_weight=1.0):\n    28:         super().__init__()\n    29:         self.action_dim = action_dim\n    30:         weights = torch.ones(action_dim)\n    31:         weights[:6] = pos_weight\n    32:         weights[6:] = grip_weight\n    33:         self.register_buffer('weights', weights)\n    34: \n    35:     def forward(self, dist, target_actions):\n    36:         # Weight targets for importance scaling\n    37:         weighted_targets = target_actions * self.weights.unsqueeze(0)\n    38:         nll = -dist.log_prob(weighted_targets)\n    39:         return nll.mean()\n    40: # EDITABLE REGION END\n```\n\n## Evaluation Commands\nYour algorithm is evaluated by running:\n  - `scripts/train.sh` → label: `tool_hang_ph`\n  - `scripts/train.sh` → label: `can_ph`\n  - `scripts/train.sh` → label: `square_ph`\n\n## Compute Budget\nAll evaluation runs on **NVIDIA H100 80GB** GPU(s). Your algorithm must complete within the time limits below. If a command exceeds its time limit, the run is killed and the result is **invalid** (it will not count as a valid test result). Design your model to be efficient enough to train and evaluate within these constraints.\n\n| Command | GPUs | Time Limit |\n| --- | --- | --- |\n| `tool_hang_ph` | 1/3 GPU | 8:00:00 |\n| `can_ph` | 1/3 GPU | 8:00:00 |\n| `square_ph` | 1/3 GPU | 8:00:00 |\n\n## Baseline Results\nBeat these with your algorithm:\n\n| baseline | tool_hang_ph | can_ph | square_ph |\n| --- | --- | --- | --- |\n| default | 0.15 | 0.85 | 0.73 |\n| nll_entropy | 0.07 | 0.85 | 0.74 |\n| weighted_nll | 0.03 | 0.41 | 0.48 |\n\n## Your Budget\n- **Action budget**: 20 total tool calls (every edit / test / undo / web_search / web_extract counts; submit does not)\n- **Test invocations**: at most 3 (each test() call also consumes one action from the budget above)\n- You **must** iterate at least once (edit → test → review → edit → test) before submitting.",
+   "steps": [
+    {
+     "step": 1,
+     "tool": "edit",
+     "file": "robomimic/custom_bc_loss.py",
+     "preview": "import math\n\n\nclass CustomBCLoss(nn.Module):\n    \"\"\"Convex-hull-projected GMM loss + uniform-mixture KL.\n\n    Each predicted action (GMM component mean) is projected onto the convex\n    hull of the expert demonstrations in the batch before the distance is\n    computed. The hull is approximated by its tight axis-aligned relaxation\n    (per-dimension clamp to the batch min/max): points already insid"
+    },
+    {
+     "step": 2,
+     "tool": "edit",
+     "file": "robomimic/custom_bc_loss.py",
+     "preview": "\n        return loss + self.kl_weight * kl"
+    },
+    {
+     "step": 3,
+     "tool": "test",
+     "file": null
+    },
+    {
+     "step": 4,
+     "tool": "edit",
+     "file": "robomimic/custom_bc_loss.py",
+     "preview": "import math\n\n\nclass CustomBCLoss(nn.Module):\n    \"\"\"Convex-hull-projected GMM loss + uniform-mixture KL.\n\n    Each predicted action (GMM component mean) is projected onto the convex\n    hull of the expert demonstrations before the distance is computed. The\n    hull is approximated by its tight axis-aligned relaxation over the\n    *entire dataset* (running per-dimension min/max accumulated across\n "
+    },
+    {
+     "step": 5,
+     "tool": "test",
+     "file": null
+    },
+    {
+     "step": 6,
+     "tool": "submit",
+     "file": null
+    }
+   ],
+   "final_code": {
+    "robomimic_custom_bc_loss.py (step 4)": "\"\"\"\nCustom BC Loss Function for GMM-based Behavioral Cloning.\n\nThis module defines the loss function used by BC-GMM training in robomimic.\nThe loss receives the GMM distribution produced by the policy network and\nthe expert demonstration actions, and returns a scalar loss.\n\nThe custom loss is imported and used by the patched BC_GMM._compute_losses\nmethod during training.\n\"\"\"\n\nimport torch\nimport torch.nn as nn\nimport torch.nn.functional as F\nimport torch.distributions as D\n\n\n# ── Custom BC Loss Function ────────────────────────────────────────────────\n# EDITABLE REGION START\nimport math\n\n\nclass CustomBCLoss(nn.Module):\n    \"\"\"Convex-hull-projected GMM loss + uniform-mixture KL.\n\n    Each predicted action (GMM component mean) is projected onto the convex\n    hull of the expert demonstrations before the distance is computed. The\n    hull is approximated by its tight axis-aligned relaxation over the\n    *entire dataset* (running per-dimension min/max accumulated across\n    batches): points inside the hull are left exactly untouched, while\n    outside points are pulled back to the boundary. Using the dataset-level\n    hull (rather than the per-batch hull) avoids spuriously projecting\n    in-hull points, which would distort the imitation signal. The distance\n    is the GMM negative log-likelihood evaluated with the projected means.\n    A straight-through estimator keeps gradients informative for\n    out-of-hull components.\n\n    A small KL(mixture weights || uniform) term keeps all modes active;\n    its weight is kept small so it never dominates the imitation signal.\n    \"\"\"\n\n    def __init__(self, action_dim=7, kl_weight=1e-3):\n        super().__init__()\n        self.action_dim = action_dim\n        self.kl_weight = kl_weight\n        self._lo = None\n        self._hi = None\n\n    def forward(self, dist, target_actions):\n        comp = dist.component_distribution\n        base = comp.base_dist if isinstance(comp, D.Independent) else comp\n        mu, sigma = base.loc, base.scale  # [B, K, 7]\n\n        # Running dataset-level convex hull (tight axis-aligned relaxation).\n        with torch.no_grad():\n            bmin = target_actions.min(dim=0)[0]\n            bmax = target_actions.max(dim=0)[0]\n            if self._lo is None or self._lo.device != bmin.device:\n                self._lo, self._hi = bmin.clone(), bmax.clone()\n            else:\n                self._lo = torch.minimum(self._lo, bmin)\n                self._hi = torch.maximum(self._hi, bmax)\n\n        proj = torch.min(torch.max(mu, self._lo), self._hi)\n        # Straight-through: forward pass uses projected means (in-hull points\n        # are bit-identical, i.e. untouched), gradient flows as identity so\n        # outside points are pulled back toward the hull.\n        mu_p = mu + (proj - mu).detach()\n\n        comp_p = D.Independent(D.Normal(mu_p, sigma), 1)\n        dist_p = D.MixtureSameFamily(dist.mixture_distribution, comp_p)\n        loss = -dist_p.log_prob(target_actions).mean()\n\n        # Small KL pushing mixture weights toward uniform (keeps modes alive).\n        probs = dist.mixture_distribution.probs  # [B, K]\n        logp = torch.log(probs.clamp_min(1e-8))\n        kl = (probs * logp).sum(dim=-1).mean() + math.log(probs.shape[-1])\n\n        return loss + self.kl_weight * kl\n# EDITABLE REGION END\n"
+   },
+   "summary": {
+    "steps": 5,
+    "tests": 2,
+    "done": true,
+    "max_steps": 20,
+    "tokens": {
+     "prompt_tokens": 12,
+     "completion_tokens": 11385,
+     "total_tokens": 11397,
+     "cached_tokens": 35942,
+     "cache_creation_tokens": 51039,
+     "calls": 6
+    }
+   }
+  }
+ ]
+}

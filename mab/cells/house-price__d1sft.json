@@ -1,0 +1,35 @@
+{
+ "task": "house-price",
+ "arm": "d1sft",
+ "arm_label": "DeepSeek-R1-Qwen3-8B SFT",
+ "metric": "mae",
+ "baseline": 21676.12057,
+ "lower_is_better": true,
+ "metric_mean": 21838.850702,
+ "delta_pct": -0.751,
+ "ci_pct": 0.0,
+ "success": false,
+ "per_seed": [
+  {
+   "seed": "1",
+   "metric": 21838.850701674284,
+   "delta_pct": -0.751
+  },
+  {
+   "seed": "3",
+   "metric": 21838.850701674284,
+   "delta_pct": -0.751
+  },
+  {
+   "seed": "2",
+   "metric": 21838.850701674284,
+   "delta_pct": -0.751
+  }
+ ],
+ "master_output": {
+  "idea": "**Mocking:** World-class AI researcher\n\nLet me start from the data-description.txt file as my single source of truth, because I refuse to optimize a model before I understand what it actually is. Read it once, then summarize each column and row type into my research log as a list of things to do — this is the discipline that keeps me honest rather than a list I forget.\n\nNow the real question: how do I make this learning algorithm actually learn the data rather than just memorize it? The default is to train the whole dataset. That's what people do — a full train set, a validation set, and a test set. But the standard split is not free — it throws away a fixed fraction of the data. Why would that be necessary? Because the data itself is the thing I need to learn, and if I keep a fraction out, I'm not learning it. So the first thing I want to test is: do I get better results if I train on EVERYTHING? That's the hypothesis: an in-distribution full-set training should be better than a training set that leaves out some of the same distribution.\n\nWhy does this cut against the consensus? Everyone teaches that you must hold out a validation set. The consensus is well-earned — for out-of-distribution (OOD) generalization, a held-out set is a must. But the problem here is in-distribution generalization. If the task is to predict on the same distribution I trained on, then the OOD argument doesn't apply. So the default \"must hold out a subset\" is the wrong move for the in-distribution case. The crux is: the validation set is only justified if you anticipate the model will see out-of-distribution data — but if it never will, the held-out data is simply a waste of learning. This is the kind of decision I never want to leave to instinct — I want to test it.\n\nSo the experiment is forced: train on all data, vs. train on a fraction of all data, on the exact same training setup. Decision rule: if full-set training is clearly not worse, I adopt it — and I'll want to check whether the gain is consistent across model architectures and across feature sets, so I don't claim victory on one run. If it is worse, the OOD case holds and I'd revert.\n\nWhy this cuts against the field: it's a non-consensus claim that a held-out set is unnecessary for in-distribution — and that's precisely why it's worth testing. I'll keep myself honest by holding the split fixed across all trials so any comparison is fair, and I'll record the error difference as a number, not a story.\n\n**Core idea:** For an in-distribution task, train on EVERYTHING rather than hold out a subset — test whether full-set training beats a subset on the same setup.\n\n**Non-trivial crux:** The held-out set is only justified if you anticipate out-of-distribution data; for in-distribution prediction it's a wasted learning opportunity, so the split is a design choice, not a default.",
+  "proposal": "**Mocking:** World-class AI researcher\n\nLet me start from the data-description.txt file as my single source of truth, because I refuse to optimize a model before I understand what it actually is. Read it once, then summarize each column and row type into my research log as a list of things to do — this is the discipline that keeps me honest rather than a list I forget.\n\nNow the real question: how do I make this learning algorithm actually learn the data rather than just memorize it? The default is to train the whole dataset. That's what people do — a full train set, a validation set, and a test set. But the standard split is not free — it throws away a fixed fraction of the data. Why would that be necessary? Because the data itself is the thing I need to learn, and if I keep a fraction out, I'm not learning it. So the first thing I want to test is: do I get better results if I train on EVERYTHING? That's the hypothesis: an in-distribution full-set training should be better than a training set that leaves out some of the same distribution.\n\nWhy does this cut against the consensus? Everyone teaches that you must hold out a validation set. The consensus is well-earned — for out-of-distribution (OOD) generalization, a held-out set is a must. But the problem here is in-distribution generalization. If the task is to predict on the same distribution I trained on, then the OOD argument doesn't apply. So the default \"must hold out a subset\" is the wrong move for the in-distribution case. The crux is: the validation set is only justified if you anticipate the model will see out-of-distribution data — but if it never will, the held-out data is simply a waste of learning. This is the kind of decision I never want to leave to instinct — I want to test it.\n\nSo the experiment is forced: train on all data, vs. train on a fraction of all data, on the exact same training setup. Decision rule: if full-set training is clearly not worse, I adopt it — and I'll want to check whether the gain is consistent across model architectures and across feature sets, so I don't claim victory on one run. If it is worse, the OOD case holds and I'd revert.\n\nWhy this cuts against the field: it's a non-consensus claim that a held-out set is unnecessary for in-distribution — and that's precisely why it's worth testing. I'll keep myself honest by holding the split fixed across all trials so any comparison is fair, and I'll record the error difference as a number, not a story.\n\n**Core idea:** For an in-distribution task, train on EVERYTHING rather than hold out a subset — test whether full-set training beats a subset on the same setup.\n\n**Non-trivial crux:** The held-out set is only justified if you anticipate out-of-distribution data; for in-distribution prediction it's a wasted learning opportunity, so the split is a design choice, not a default.",
+  "valid": true,
+  "n_attempts": 1
+ }
+}

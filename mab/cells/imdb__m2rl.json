@@ -1,0 +1,35 @@
+{
+ "task": "imdb",
+ "arm": "m2rl",
+ "arm_label": "Qwen3-235B-A22B RL",
+ "metric": "accuracy",
+ "baseline": 0.91089,
+ "lower_is_better": false,
+ "metric_mean": 0.9074,
+ "delta_pct": -0.383,
+ "ci_pct": 0.19,
+ "success": false,
+ "per_seed": [
+  {
+   "seed": "3",
+   "metric": 0.9054,
+   "delta_pct": -0.603
+  },
+  {
+   "seed": "1",
+   "metric": 0.90912,
+   "delta_pct": -0.194
+  },
+  {
+   "seed": "2",
+   "metric": 0.90768,
+   "delta_pct": -0.352
+  }
+ ],
+ "master_output": {
+  "idea": "Core idea: Replace the standard [CLS] pooled representation with an attention-pooling head that aggregates the full sequence of hidden states, then train on binary cross-entropy and save per-class probabilities instead of hard predictions.\n\nNon-trivial crux: The attention head must be validated against a uniform-average baseline (if learned weights are nearly uniform, the extra mechanism isn't justified) and must be compared head-to-head with the pooled baseline under identical seed/hparams — and the saved probabilities are only meaningful if the model is well-calibrated, which isn't guaranteed.",
+  "proposal": "<think>\nOkay, let's think about this. I'm a researcher who likes to look at what's already standard and ask: is the default really the right way, or is it just the most convenient?\n\nThe standard move for fine-tuning a transformer like DistilBERT on a sentiment task is to take the [CLS] token's final hidden state, run it through a linear layer, and train a binary cross-entropy loss. That's the path of least resistance. But I want to push against that a little, because I keep seeing a contradiction in the literature: people report that using the *pooled* representation (the [CLS] state) is the standard, yet I've also read work where people get small but consistent gains by aggregating over the *sequence* of hidden states instead. So the default isn't a law; it's a convention that might be hiding something.\n\nWhy does the [CLS] token even carry sentiment? It was trained to be a sentence-level representation for tasks like NLI where a single vector suffices. But sentiment is more about a *distribution* of positive/negative words spread across the sequence. A single token might be a bottleneck — it can only compress what the whole sequence knows. So the intuition I want to test is: don't throw away the sequence. Let the model learn to *attend* over the entire hidden sequence to produce a sentence-level representation, then pass that to the final classifier. That keeps the transformer's own attention mechanism — which is already good at spotting key tokens — as the aggregator, rather than forcing it through a single fixed position.\n\nNow, how do I make this a real, falsifiable claim rather than just a hunch? I refuse to trust a single run. I'll build two identical training setups side by side: one using the plain pooled [CLS] state, one with an attention-pooling head on top. Same seed, same hyperparameters, same eval metric (F1 here, since it's a balanced binary sentiment task). Decision rule: if the attention version doesn't clearly beat the pooled version across runs, I keep the simpler one on parsimony grounds — 'if it ain't broke, don't fix it' is a real principle. If it does, I keep it; if it's a toss-up, I'd lean toward the simpler. Crucially, I don't get to peek at the test set — I evaluate on held-out validation only; the test is for the final public submission.\n\nOne thing I have to watch: attention pooling adds parameters and computation. I should check whether it actually changes anything by comparing the learned attention weights against a uniform average (i.e., set all weights to 1 and see if the learned weights are clearly different). If the weights are nearly uniform, the extra mechanism isn't earning its keep — that would be my signal to fall back to the pooled case, not a failure to tune.\n\nAnd the second half, saving per-class probabilities: the default is to emit hard predictions. But for a binary task, a classifier that's confident vs. one that's uncertain carries different value. So I want to save the *raw logits* (or a softmax over them) per class, not just the argmax. The caveat: if the model is miscalibrated, those probabilities can be misleading, so I should note that caveat rather than treat them as true confidences.\n\nHow I stay honest: I'll run this comparison with a fixed seed and report both metrics and the attention-weight diagnostic. If the attention head doesn't clearly outperform, I drop it and explain why. I won't claim a win in advance — that's the whole point of the paired comparison.\n\nCore idea: Replace the standard [CLS] pooled representation with an attention-pooling head that aggregates the full sequence of hidden states, then train on binary cross-entropy and save per-class probabilities instead of hard predictions.\n\nNon-trivial crux: The attention head must be validated against a uniform-average baseline (if weights are nearly uniform, the extra mechanism isn't justified) and must be compared head-to-head with the pooled baseline under identical conditions — and the saved probabilities are only meaningful if the model is well-calibrated, which isn't guaranteed.\n</think>\n\nCore idea: Replace the standard [CLS] pooled representation with an attention-pooling head that aggregates the full sequence of hidden states, then train on binary cross-entropy and save per-class probabilities instead of hard predictions.\n\nNon-trivial crux: The attention head must be validated against a uniform-average baseline (if learned weights are nearly uniform, the extra mechanism isn't justified) and must be compared head-to-head with the pooled baseline under identical seed/hparams — and the saved probabilities are only meaningful if the model is well-calibrated, which isn't guaranteed.",
+  "valid": true,
+  "n_attempts": 1
+ }
+}

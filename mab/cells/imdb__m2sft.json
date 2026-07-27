@@ -1,0 +1,35 @@
+{
+ "task": "imdb",
+ "arm": "m2sft",
+ "arm_label": "Qwen3-235B-A22B SFT",
+ "metric": "accuracy",
+ "baseline": 0.91089,
+ "lower_is_better": false,
+ "metric_mean": 0.909293,
+ "delta_pct": -0.175,
+ "ci_pct": 0.087,
+ "success": false,
+ "per_seed": [
+  {
+   "seed": "3",
+   "metric": 0.9088,
+   "delta_pct": -0.229
+  },
+  {
+   "seed": "1",
+   "metric": 0.9088,
+   "delta_pct": -0.229
+  },
+  {
+   "seed": "2",
+   "metric": 0.91028,
+   "delta_pct": -0.067
+  }
+ ],
+ "master_output": {
+  "idea": "Core idea: Optimize cross-entropy instead of accuracy to get well-calibrated class probabilities, use the appropriate DistilBERT tokenizer and model, sweep learning rate on a held-out validation set, and save softmax-applied probabilities for the test set.\n\nNon-trivial crux: The model's predicted probabilities must be validated against a class-distribution baseline to ensure they're calibrated and meaningful—not just numerically plausible—before being used for submission.",
+  "proposal": "<think>\nOkay, let me think about how to approach this. I'm a researcher who trusts mechanisms over intuition, so my instinct is to first pin down exactly what the task *requires* rather than reach for a trendy method. The task is two parts: fine-tune DistilBERT on IMDb sentiment, and save per-class probabilities for the test set. So before I even touch the model, I want to be precise about the objective.\n\nWhat's the actual loss I should be minimizing? The IMDb labels are binary, and the evaluation is accuracy. But accuracy is a *thresholded* metric—it only cares whether the predicted class matches, not how confident the model is. If I optimize for cross-entropy against the true labels, that's a proper scoring rule (log-loss), which is exactly what pushes predicted probabilities toward the true class frequencies. So the decision I want to make: optimize cross-entropy, not accuracy, because I need the *calibrated* probabilities for submission, and accuracy is not differentiable and doesn't directly reward probability calibration. This cuts against the reflex of people who optimize the evaluation metric directly. I should state that explicitly as the design choice.\n\nNext, data. The dataset comes from HuggingFace, so I'll load it with `load_dataset(\"imdb\")`, and the labels are already numeric 0/1. But the model expects tokenized inputs. The skeleton probably already handles this with a tokenizer, so I just need to make sure it's the right tokenizer for DistilBERT. DistilBERT is a distilled version of BERT, so it uses the same tokenizer as BERT—`DistilBertTokenizerFast`. I'll load that and apply it over the text column. And I should remember to truncate and pad so everything is the same length; the tokenizer handles that with `padding=\"max_length\"` and `truncation=True`.\n\nNow, the model itself. The skeleton is using `AutoModelForSequenceClassification` with `num_labels=2`, which is correct. But here's the part I want to be careful about: I shouldn't just throw the default AdamW on it and hope. Learning rates matter a lot for transformer fine-tuning. A naive large LR risks knocking the pretrained weights out of alignment; too small and it barely moves. So the plan is to run a quick learning-rate sweep—say a grid over 1e-5 to 5e-4—on a held-out validation split, and pick the rate that gives the best validation accuracy. That's not a one-shot thing; the sweep is part of the training loop I need to run.\n\nAnd the second piece of the task: saving probabilities. The model outputs logits, so I need to apply softmax to get probabilities per class, then stack the 0-class and 1-class columns into a submission with the same format as the sample. I'll use `np.exp(logits)` normalized row-wise, or `F.softmax` if I keep them in a tensor. Crucially, I should save the *validation* probabilities for the held-out split and compare them against a naive baseline (a dummy model that just predicts the class distribution), because if the model's calibrated probabilities don't beat that baseline, its probabilities aren't trustworthy even if its accuracy looks okay. That's the calibration check I'd want to do before trusting the submission.\n\nHow do I keep myself honest? I'll hold out a validation set, train at each LR in the sweep, and compare validation accuracy across learning rates. The decision rule: pick the learning rate that gives highest validation accuracy. If two rates are statistically indistinguishable, I'd prefer the simpler or more stable one rather than chasing a small edge. And I'll check that the saved probabilities are indeed calibrated against the baseline, not just numerically plausible.\n\nOne thing I'll *not* do: I won't add any fancy augmentation or ensemble unless the baseline is already solid. The baseline is the thing that has to be sound first.\n\nCore idea: Optimize cross-entropy instead of accuracy to get well-calibrated class probabilities, use the appropriate DistilBERT tokenizer and model, sweep learning rate on a held-out validation set, and save softmax-applied probabilities for the test set.\n\nNon-trivial crux: The model's predicted probabilities must be validated against a class-distribution baseline to ensure they're calibrated and meaningful—not just numerically plausible—before being used for submission.\n</think>\n\nCore idea: Optimize cross-entropy instead of accuracy to get well-calibrated class probabilities, use the appropriate DistilBERT tokenizer and model, sweep learning rate on a held-out validation set, and save softmax-applied probabilities for the test set.\n\nNon-trivial crux: The model's predicted probabilities must be validated against a class-distribution baseline to ensure they're calibrated and meaningful—not just numerically plausible—before being used for submission.",
+  "valid": true,
+  "n_attempts": 1
+ }
+}

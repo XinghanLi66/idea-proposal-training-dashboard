@@ -1,0 +1,35 @@
+{
+ "task": "cifar10",
+ "arm": "base8b",
+ "arm_label": "Qwen3-8B (base)",
+ "metric": "accuracy",
+ "baseline": 0.51237,
+ "lower_is_better": false,
+ "metric_mean": 0.494067,
+ "delta_pct": -3.572,
+ "ci_pct": 6.909,
+ "success": false,
+ "per_seed": [
+  {
+   "seed": "1",
+   "metric": 0.4586,
+   "delta_pct": -10.494
+  },
+  {
+   "seed": "3",
+   "metric": 0.5347,
+   "delta_pct": 4.358
+  },
+  {
+   "seed": "2",
+   "metric": 0.4889,
+   "delta_pct": -4.581
+  }
+ ],
+ "master_output": {
+  "idea": "Core idea: Introduce a dynamic class-weighted loss function that adapts during training by inversely scaling class weights based on the model's current per-class confidence scores, forcing it to prioritize underrepresented or misclassified classes in subsequent epochs.  \n\nNon-trivial crux: Ensuring the adaptive weighting mechanism avoids overfitting to transient performance fluctuations while maintaining computational efficiency during training.",
+  "proposal": "<think>\nOkay, so I need to improve the model performance in train.py without running too many epochs. The user wants a novel idea, not just the usual stuff like data augmentation or hyperparameter tuning. Let me think.\n\nHmm, the current setup is probably using standard training methods. Maybe the model isn't capturing some subtle patterns in the data. What if there's a way to make the model pay more attention to certain features or classes? Oh, right! Class imbalance is a common issue. But the user mentioned saving per-class probabilities, so maybe the model isn't handling the class distribution well.\n\nWait, what if I use a dynamic class weighting scheme that adapts during training? Like, instead of fixed weights, adjust them based on the model's confidence in each class. But how? Maybe during each epoch, calculate the loss contribution per class and adjust the weights inversely proportional to the model's current performance on that class. That way, the model focuses more on hard classes as it learns.\n\nBut how to implement that? Let me think. For each batch, compute the loss for each class, then update the weights. But that might be computationally heavy. Alternatively, during training, track the model's accuracy per class and use that to adjust the loss weights. For example, if a class is consistently misclassified, increase its weight in the loss function. This could be done with a scheduler that modifies the class weights based on the model's performance.\n\nWait, but how to integrate this into the training loop? Maybe using a custom loss function that takes into account the current class weights, which are updated based on the model's predictions. But the weights need to be adjusted dynamically. Maybe after each epoch, calculate the class-wise loss and update the weights for the next epoch. That way, the model gradually shifts focus towards harder classes.\n\nAnother angle: the test set requires per-class probabilities. Maybe the model isn't calibrating its outputs well. But that's more about post-processing. Wait, but if the model is overconfident in some classes, the probabilities might not be accurate. So, could combining the model's outputs with some form of calibration, like temperature scaling, help? But that's more of a post-hoc adjustment. However, integrating calibration during training might be a novel idea.\n\nWait, but the user wants a concrete idea within the training script. So, maybe a dynamic loss weighting approach that adapts based on the model's performance during training. Let me structure this. The core idea would be to adjust the class weights dynamically based on the model's current performance on each class. The crux is figuring out how to compute and update these weights efficiently without overfitting.\n\nBut how to compute the weights? Maybe during each epoch, calculate the average loss per class and invert it to get weights. For example, if a class has a higher average loss, its weight is increased. Then, during the next epoch, the model is trained with these adjusted weights. This would force the model to focus more on the classes it's struggling with. But how to implement this in the training loop?\n\nAlternatively, during each batch, compute the loss and use that to adjust the weights on the fly. But that might be too computationally intensive. Maybe a simpler approach is to use a learning rate scheduler that adjusts based on class performance. Wait, but that's more about the optimizer's learning rate.\n\nWait, another thought: using a hybrid loss function that combines cross-entropy with a term that encourages the model to be uncertain on difficult classes. But that's more of a regularizer. Hmm.\n\nAlternatively, maybe using a curriculum learning approach where the model first learns easy classes and then gradually introduces harder ones. But curriculum learning is more about the order of examples, not the class weights.\n\nWait, going back to the dynamic class weights. Let me think of an example. Suppose during training, the model has a certain accuracy per class. For each class, the weight is inversely proportional to the model's accuracy. So, if a class is being predicted with 90% accuracy, its weight is lower, while a class with 50% accuracy has a higher weight. This would make the model focus more on the classes it's struggling with. But how to compute this?\n\nIn practice, during each epoch, after training, compute the class-wise accuracy and adjust the weights for the next epoch. However, this would require storing the class weights and updating them each epoch. The crux is ensuring that this adjustment doesn't lead to overfitting or oscillations in the weights. Also, how to handle classes that are not present in the training data, but that's probably not an issue here.\n\nAnother point: the user wants to save per-class probabilities for the test set. If the model is calibrated better, the probabilities would be more accurate. So, by dynamically adjusting the weights, the model might learn better representations, leading to more accurate probabilities.\n\nSo the core idea is to dynamically adjust class weights during training based on the model's current performance on each class, forcing it to focus on harder classes. The non-trivial crux is implementing this adjustment without causing instability in the training process and ensuring that the weights are updated in a way that's effective and efficient.\n</think>\n\nCore idea: Introduce a dynamic class-weighted loss function that adapts during training by inversely scaling class weights based on the model's current per-class confidence scores, forcing it to prioritize underrepresented or misclassified classes in subsequent epochs.  \n\nNon-trivial crux: Ensuring the adaptive weighting mechanism avoids overfitting to transient performance fluctuations while maintaining computational efficiency during training.",
+  "valid": true,
+  "n_attempts": 1
+ }
+}

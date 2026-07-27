@@ -2,15 +2,72 @@
  "task": "robomimic-bc-loss",
  "arm": "qwen25sft",
  "arm_label": "Qwen2.5-32B SFT",
- "status": "failed",
- "score": null,
+ "status": "scored",
+ "score": 70.2,
+ "worker": "claude-fable-5",
+ "caveat": null,
  "master_output": {
   "idea": "Let me start from what I trust: the default NLL loss minimizes the distance between the predicted GMM and the single expert action, which is a point mass. That's fine if the expert action is the only correct one, but in many manipulation tasks there are multiple valid actions near the demonstrated one. The point-mass NLL loss throws away this information.\n\nSo let me be precise about the gap. The expert action is a sample from the *true* distribution of good actions at that state. The NLL loss ignores this: it treats the expert action as the only ground truth. But a better loss would ask: how well does my GMM cover the *distribution* of good actions? Not just one point.\n\nHow do I quantify 'coverage'? Coverage is the probability mass of the true distribution that lies under my model. For a GMM, this is intractable -- I'd have to integrate the true distribution against each mode. So instead I'll approximate coverage via sampling. Draw K samples from the true distribution, then average the GMM's density at those points. High coverage → high average density → low loss. This is the essence of the Maximum Mean Discrepancy (MMD) loss: measure the difference between two distributions by comparing their expectations on random samples.\n\nNow the crux: how do I get samples from the *true* distribution? I don't have it -- I only have one expert action per state. So I must construct it. A natural choice is to perturb the expert action with Gaussian noise. The variance controls how far into the 'valid action region' I reach. Too small: I'm back at the point-mass NLL. Too large: I'm measuring a region that contains invalid actions. I need to set the noise variance empirically -- it should match the typical deviation of valid actions from the expert.\n\nOne more subtlety. My loss is an average over samples, so its magnitude depends on K. To make it comparable across K, I'll normalize by the number of samples. And since the raw density can be very small, I'll exponentiate it to get probabilities before averaging.\n\nWhy does this cut against the consensus? Most BC losses still treat the expert action as the sole ground truth. Even MMD-style losses often use a fixed, hand-designed noise distribution rather than deriving it from the data. Here I'm arguing the noise variance itself is a hyperparameter to be tuned, and it may differ across tasks.\n\n**Core idea:** Replace NLL with a coverage-based loss: draw K samples from a Gaussian-perturbed expert action, compute the GMM's density at each sample, and minimize the negative mean of these densities, normalized by K.\n\n**Non-trivial crux:** The Gaussian perturbation variance is a hyperparameter that must be tuned to match the scale of valid action deviations; it cannot be a fixed constant across all tasks.",
   "proposal": "Let me start from what I trust: the default NLL loss minimizes the distance between the predicted GMM and the single expert action, which is a point mass. That's fine if the expert action is the only correct one, but in many manipulation tasks there are multiple valid actions near the demonstrated one. The point-mass NLL loss throws away this information.\n\nSo let me be precise about the gap. The expert action is a sample from the *true* distribution of good actions at that state. The NLL loss ignores this: it treats the expert action as the only ground truth. But a better loss would ask: how well does my GMM cover the *distribution* of good actions? Not just one point.\n\nHow do I quantify 'coverage'? Coverage is the probability mass of the true distribution that lies under my model. For a GMM, this is intractable -- I'd have to integrate the true distribution against each mode. So instead I'll approximate coverage via sampling. Draw K samples from the true distribution, then average the GMM's density at those points. High coverage → high average density → low loss. This is the essence of the Maximum Mean Discrepancy (MMD) loss: measure the difference between two distributions by comparing their expectations on random samples.\n\nNow the crux: how do I get samples from the *true* distribution? I don't have it -- I only have one expert action per state. So I must construct it. A natural choice is to perturb the expert action with Gaussian noise. The variance controls how far into the 'valid action region' I reach. Too small: I'm back at the point-mass NLL. Too large: I'm measuring a region that contains invalid actions. I need to set the noise variance empirically -- it should match the typical deviation of valid actions from the expert.\n\nOne more subtlety. My loss is an average over samples, so its magnitude depends on K. To make it comparable across K, I'll normalize by the number of samples. And since the raw density can be very small, I'll exponentiate it to get probabilities before averaging.\n\nWhy does this cut against the consensus? Most BC losses still treat the expert action as the sole ground truth. Even MMD-style losses often use a fixed, hand-designed noise distribution rather than deriving it from the data. Here I'm arguing the noise variance itself is a hyperparameter to be tuned, and it may differ across tasks.\n\n**Core idea:** Replace NLL with a coverage-based loss: draw K samples from a Gaussian-perturbed expert action, compute the GMM's density at each sample, and minimize the negative mean of these densities, normalized by K.\n\n**Non-trivial crux:** The Gaussian perturbation variance is a hyperparameter that must be tuned to match the scale of valid action deviations; it cannot be a fixed constant across all tasks.",
   "valid": true,
   "n_attempts": 1
  },
- "per_run_scores": [],
+ "per_run_scores": [
+  {
+   "seed": "1",
+   "timestamp": "2026-07-25T10:51:23.713627+00:00",
+   "has_metric": true,
+   "metrics": {
+    "success_rate_tool_hang_ph": "0.64",
+    "success_rate_can_ph": "0.88",
+    "elapsed_tool_hang_ph": "12021.5",
+    "elapsed_can_ph": "7895.5",
+    "elapsed_square_ph": "11.0"
+   }
+  },
+  {
+   "seed": "2",
+   "timestamp": "2026-07-25T10:51:24.132210+00:00",
+   "has_metric": true,
+   "metrics": {
+    "success_rate_tool_hang_ph": "0.84",
+    "success_rate_square_ph": "0.84",
+    "elapsed_tool_hang_ph": "8105.2",
+    "elapsed_can_ph": "11.8",
+    "elapsed_square_ph": "11915.4"
+   }
+  },
+  {
+   "seed": "3",
+   "timestamp": "2026-07-25T10:51:24.762762+00:00",
+   "has_metric": true,
+   "metrics": {
+    "success_rate_tool_hang_ph": "0.1",
+    "success_rate_square_ph": "0.9",
+    "elapsed_tool_hang_ph": "22787.4",
+    "elapsed_can_ph": "11.4",
+    "elapsed_square_ph": "8091.0"
+   }
+  },
+  {
+   "seed": "mean",
+   "timestamp": "2026-07-25T10:51:24.877918+00:00",
+   "has_metric": true,
+   "metrics": {
+    "success_rate_tool_hang_ph": "0.5266666666666666",
+    "success_rate_can_ph": "0.88",
+    "success_rate_square_ph": "0.87",
+    "elapsed_tool_hang_ph": "14304.7",
+    "elapsed_can_ph": "2639.5666666666666",
+    "elapsed_square_ph": "6672.466666666666",
+    "success_rate_tool_hang_ph_std": "0.38279672586548247",
+    "success_rate_square_ph_std": "0.04242640687119289",
+    "elapsed_can_ph_std": "4551.771791657984",
+    "elapsed_square_ph_std": "6077.652709174269",
+    "elapsed_tool_hang_ph_std": "7602.7298314487025"
+   }
+  }
+ ],
  "workers": [
   {
    "log_dir": "logs/robomimic-bc-loss/claude-fable-5__qwen25sft__qwen25sft_robomimic-bc-loss_s1",
@@ -37,17 +94,40 @@
      "step": 4,
      "tool": "test",
      "file": null
+    },
+    {
+     "step": 5,
+     "tool": "edit",
+     "file": "robomimic/custom_bc_loss.py",
+     "preview": "    def forward(self, dist, target_actions):\n        B = target_actions.shape[0]\n        K = self.num_samples\n\n        # Per-dimension noise std derived from batch action spread,\n        # clamped to a sane range for numerical stability.\n        with torch.no_grad():\n            act_std = target_actions.std(dim=0, keepdim=True)  # [1, 7]\n            sigma = (self.noise_scale * act_std).clamp(\n    "
+    },
+    {
+     "step": 6,
+     "tool": "test",
+     "file": null
+    },
+    {
+     "step": 7,
+     "tool": "submit",
+     "file": null
     }
    ],
    "final_code": {
-    "robomimic_custom_bc_loss.py (step 3)": "\"\"\"\nCustom BC Loss Function for GMM-based Behavioral Cloning.\n\nThis module defines the loss function used by BC-GMM training in robomimic.\nThe loss receives the GMM distribution produced by the policy network and\nthe expert demonstration actions, and returns a scalar loss.\n\nThe custom loss is imported and used by the patched BC_GMM._compute_losses\nmethod during training.\n\"\"\"\n\nimport torch\nimport torch.nn as nn\nimport torch.nn.functional as F\nimport torch.distributions as D\n\n\n# ── Custom BC Loss Function ────────────────────────────────────────────────\n# EDITABLE REGION START\nclass CustomBCLoss(nn.Module):\n    \"\"\"Coverage-based loss for GMM behavioral cloning.\n\n    Instead of point-mass NLL, draws K samples from a Gaussian-perturbed\n    expert action (approximating the distribution of valid actions), and\n    maximizes the GMM's average density over these samples (coverage),\n    normalized by K. The average of exponentiated densities is computed\n    in log-space (logsumexp) for numerical stability, since raw densities\n    over/underflow in float32.\n\n    The perturbation std is the non-trivial hyperparameter: it is derived\n    per-dimension from the batch action scale so it adapts across tasks\n    (e.g. tight tolerances in tool_hang vs. the wide gripper dimension).\n    \"\"\"\n\n    def __init__(self, action_dim=7, num_samples=32, noise_scale=0.05,\n                 min_noise_std=1e-3, max_noise_std=4e-2):\n        super().__init__()\n        self.action_dim = action_dim\n        # use an even number of samples for antithetic pairing\n        self.num_samples = max(2, (num_samples // 2) * 2)\n        self.noise_scale = noise_scale\n        self.min_noise_std = min_noise_std\n        self.max_noise_std = max_noise_std\n        # log K normalization constant for the coverage average\n        self.log_k = float(torch.tensor(float(self.num_samples)).log().item())\n\n    def forward(self, dist, target_actions):\n        B = target_actions.shape[0]\n        K = self.num_samples\n\n        # Per-dimension noise std derived from batch action spread,\n        # clamped to a sane range for numerical stability.\n        with torch.no_grad():\n            act_std = target_actions.std(dim=0, keepdim=True)  # [1, 7]\n            sigma = (self.noise_scale * act_std).clamp(\n                min=self.min_noise_std, max=self.max_noise_std)  # [1, 7]\n\n            # Antithetic sampling: K/2 noise draws mirrored, for lower\n            # variance coverage estimates at the same K.\n            half = K // 2\n            eps = torch.randn(\n                half, B, self.action_dim,\n                device=target_actions.device, dtype=target_actions.dtype)\n            eps = torch.cat([eps, -eps], dim=0)  # [K, B, 7]\n            samples = target_actions.unsqueeze(0) + eps * sigma.unsqueeze(0)\n\n        # GMM log-density at each perturbed expert sample: [K, B]\n        log_p = dist.log_prob(samples)\n\n        # Coverage = (1/K) * sum_k p(sample_k); computed in log-space:\n        # log_coverage = logsumexp_k(log_p) - log K  (stable exponentiation)\n        log_coverage = torch.logsumexp(log_p, dim=0) - self.log_k  # [B]\n\n        # Minimize negative coverage (in log space for stability)\n        return -log_coverage.mean()\n# EDITABLE REGION END\n# EDITABLE REGION END\n"
+    "robomimic_custom_bc_loss.py (step 5)": "\"\"\"\nCustom BC Loss Function for GMM-based Behavioral Cloning.\n\nThis module defines the loss function used by BC-GMM training in robomimic.\nThe loss receives the GMM distribution produced by the policy network and\nthe expert demonstration actions, and returns a scalar loss.\n\nThe custom loss is imported and used by the patched BC_GMM._compute_losses\nmethod during training.\n\"\"\"\n\nimport torch\nimport torch.nn as nn\nimport torch.nn.functional as F\nimport torch.distributions as D\n\n\n# ── Custom BC Loss Function ────────────────────────────────────────────────\n# EDITABLE REGION START\nclass CustomBCLoss(nn.Module):\n    \"\"\"Coverage-based loss for GMM behavioral cloning.\n\n    Instead of point-mass NLL, draws K samples from a Gaussian-perturbed\n    expert action (approximating the distribution of valid actions), and\n    maximizes the GMM's average density over these samples (coverage),\n    normalized by K. The average of exponentiated densities is computed\n    in log-space (logsumexp) for numerical stability, since raw densities\n    over/underflow in float32.\n\n    The perturbation std is the non-trivial hyperparameter: it is derived\n    per-dimension from the batch action scale so it adapts across tasks\n    (e.g. tight tolerances in tool_hang vs. the wide gripper dimension).\n    \"\"\"\n\n    def __init__(self, action_dim=7, num_samples=32, noise_scale=0.05,\n                 min_noise_std=1e-3, max_noise_std=4e-2):\n        super().__init__()\n        self.action_dim = action_dim\n        # use an even number of samples for antithetic pairing\n        self.num_samples = max(2, (num_samples // 2) * 2)\n        self.noise_scale = noise_scale\n        self.min_noise_std = min_noise_std\n        self.max_noise_std = max_noise_std\n    def forward(self, dist, target_actions):\n        B = target_actions.shape[0]\n        K = self.num_samples\n\n        # Per-dimension noise std derived from batch action spread,\n        # clamped to a sane range for numerical stability.\n        with torch.no_grad():\n            act_std = target_actions.std(dim=0, keepdim=True)  # [1, 7]\n            sigma = (self.noise_scale * act_std).clamp(\n                min=self.min_noise_std, max=self.max_noise_std)  # [1, 7]\n\n            # Antithetic sampling: K/2 noise draws mirrored, for lower\n            # variance coverage estimates at the same K.\n            half = K // 2\n            eps = torch.randn(\n                half, B, self.action_dim,\n                device=target_actions.device, dtype=target_actions.dtype)\n            eps = torch.cat([eps, -eps], dim=0)  # [K, B, 7]\n            # Anchor with the zero-noise draw (the expert action itself),\n            # so coverage always accounts for the demonstrated action.\n            zero = torch.zeros(\n                1, B, self.action_dim,\n                device=target_actions.device, dtype=target_actions.dtype)\n            eps = torch.cat([zero, eps], dim=0)  # [K+1, B, 7]\n            samples = target_actions.unsqueeze(0) + eps * sigma.unsqueeze(0)\n\n        # GMM log-density at each perturbed expert sample: [K+1, B]\n        log_p = dist.log_prob(samples)\n\n        # Coverage = (1/(K+1)) * sum_k p(sample_k); computed in log-space:\n        # log_coverage = logsumexp_k(log_p) - log(K+1) (stable exponentiation)\n        log_k = float(torch.tensor(float(K + 1)).log().item())\n        log_coverage = torch.logsumexp(log_p, dim=0) - log_k  # [B]\n\n        # Minimize negative coverage (in log space for stability)\n        return -log_coverage.mean()\n# EDITABLE REGION END\n# EDITABLE REGION END\n"
    },
    "summary": {
-    "steps": null,
-    "tests": null,
-    "done": null,
-    "max_steps": null,
-    "tokens": null
+    "steps": 6,
+    "tests": 3,
+    "done": true,
+    "max_steps": 20,
+    "tokens": {
+     "prompt_tokens": 14,
+     "completion_tokens": 12194,
+     "total_tokens": 12208,
+     "cached_tokens": 45344,
+     "cache_creation_tokens": 80619,
+     "calls": 7
+    }
    }
   }
  ]

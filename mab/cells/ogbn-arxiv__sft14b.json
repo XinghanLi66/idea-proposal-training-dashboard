@@ -1,0 +1,35 @@
+{
+ "task": "ogbn-arxiv",
+ "arm": "sft14b",
+ "arm_label": "Qwen3-14B SFT",
+ "metric": "test_acc",
+ "baseline": 0.31559,
+ "lower_is_better": false,
+ "metric_mean": 0.54535,
+ "delta_pct": 72.803,
+ "ci_pct": 2.428,
+ "success": true,
+ "per_seed": [
+  {
+   "seed": "1",
+   "metric": 0.53817665576199,
+   "delta_pct": 70.53
+  },
+  {
+   "seed": "2",
+   "metric": 0.5434438203403082,
+   "delta_pct": 72.199
+  },
+  {
+   "seed": "3",
+   "metric": 0.5544307964528938,
+   "delta_pct": 75.681
+  }
+ ],
+ "master_output": {
+  "idea": "**Mocking:** World-class AI researcher\n\nLet me start from what the training script is doing, not from a recipe. The code runs a fixed number of epochs with a fixed learning rate and batch size. That's a decision, not a law. The decision rule I want to interrogate: why accept a single fixed hyperparameter setting when the objective landscape is almost surely non-convex and the optimal setting is likely not uniform across the data? I'm a researcher, so I'll treat this as a hypothesis to be falsified, not a fact to be obeyed.\n\nHere's the move I keep coming back to: search the hyperparameter space instead of guessing. Grid search is the default, but it's a brute-force trap — it samples regularly, so it can miss sharp valleys and it wastes compute on regions that don't matter. The smarter choice is a Bayesian optimizer. Why Bayesian? Because it builds a probabilistic model of the objective and chooses the next point to probe by maximizing expected improvement — it actively learns where to look, not just covers ground. This is the mechanism that makes it non-trivial and worth spending on a few epochs rather than the whole budget.\n\nNow, the honest constraint: I'm allowed only 10 epochs. That means I can't afford to run many full training runs. So I have to make each run count. That's where transfer learning cuts in — I don't start from random weights, I start from a pretrained model. The pretrained weights act as an informative prior over the parameters, so the search can jump toward good regions faster. This is the free lunch that lets a short search still yield strong results: a small number of runs on a pretrained model is effectively a large number on random weights.\n\nHow I keep myself honest: I don't declare victory until the optimizer has found a good setting and the validation metric stops improving. If early stopping shows the metric is still rising, I keep the search going — the search is only as good as its patience. And I validate against the baseline with the same epoch budget, because a faster optimizer only pays off if it beats the same compute, not if it's slower and prettier.\n\n**Core idea:** Replace fixed hyperparameters with a Bayesian optimizer over a pretrained model to search for the best setting in the small budget of 10 epochs.\n\n**Non-trivial crux:** The Bayesian optimizer gains its value from a good prior (pretrained weights) and from early stopping — without both, the short search can't reliably find a good setting.",
+  "proposal": "<think>\n\n</think>\n\n**Mocking:** World-class AI researcher\n\nLet me start from what the training script is doing, not from a recipe. The code runs a fixed number of epochs with a fixed learning rate and batch size. That's a decision, not a law. The decision rule I want to interrogate: why accept a single fixed hyperparameter setting when the objective landscape is almost surely non-convex and the optimal setting is likely not uniform across the data? I'm a researcher, so I'll treat this as a hypothesis to be falsified, not a fact to be obeyed.\n\nHere's the move I keep coming back to: search the hyperparameter space instead of guessing. Grid search is the default, but it's a brute-force trap — it samples regularly, so it can miss sharp valleys and it wastes compute on regions that don't matter. The smarter choice is a Bayesian optimizer. Why Bayesian? Because it builds a probabilistic model of the objective and chooses the next point to probe by maximizing expected improvement — it actively learns where to look, not just covers ground. This is the mechanism that makes it non-trivial and worth spending on a few epochs rather than the whole budget.\n\nNow, the honest constraint: I'm allowed only 10 epochs. That means I can't afford to run many full training runs. So I have to make each run count. That's where transfer learning cuts in — I don't start from random weights, I start from a pretrained model. The pretrained weights act as an informative prior over the parameters, so the search can jump toward good regions faster. This is the free lunch that lets a short search still yield strong results: a small number of runs on a pretrained model is effectively a large number on random weights.\n\nHow I keep myself honest: I don't declare victory until the optimizer has found a good setting and the validation metric stops improving. If early stopping shows the metric is still rising, I keep the search going — the search is only as good as its patience. And I validate against the baseline with the same epoch budget, because a faster optimizer only pays off if it beats the same compute, not if it's slower and prettier.\n\n**Core idea:** Replace fixed hyperparameters with a Bayesian optimizer over a pretrained model to search for the best setting in the small budget of 10 epochs.\n\n**Non-trivial crux:** The Bayesian optimizer gains its value from a good prior (pretrained weights) and from early stopping — without both, the short search can't reliably find a good setting.",
+  "valid": true,
+  "n_attempts": 1
+ }
+}

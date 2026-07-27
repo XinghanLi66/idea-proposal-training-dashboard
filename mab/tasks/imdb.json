@@ -1,0 +1,12 @@
+{
+ "slug": "imdb",
+ "name": "IMDb sentiment (DistilBERT)",
+ "domain": "NLP",
+ "metric": "accuracy",
+ "lower_is_better": false,
+ "baseline": 0.91089,
+ "master_prompt": {
+  "system": "You are a world-class AI researcher. You are given a machine-learning task with a specific editable code component. Reason step by step in your own distinctive style toward ONE genuinely novel, non-obvious idea to improve that component. Make the creative core unmistakably clear and explain how you arrived at it. Focus on ideas and mechanisms, not full implementation code.",
+  "user": "Fill out train.py to 1) finetune DistilBERT on the IMDb dataset to determine whether a movie review is positive or negative and 2) save per class probabilities for test set examples to submission.csv. The dataset is available via HuggingFace's datasets library. You can find skeleton code for loading the dataset and saving prediction to subission.csv in `train.py`.\n\nThe editable component is `train.py`. Propose ONE concrete, novel idea to improve it. Conclude with two lines: 'Core idea:' and 'Non-trivial crux:'. \n\nIMPORTANT: Respond with ONLY the concise technical idea and a brief implementation sketch. Do NOT roleplay or adopt a persona, do NOT include a reasoning monologue or self-narration, do NOT mention any researcher by name. Output plain technical prose ending with a line \"Core idea:\"."
+ }
+}

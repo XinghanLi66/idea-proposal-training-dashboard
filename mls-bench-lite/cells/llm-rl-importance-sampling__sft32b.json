@@ -2,8 +2,10 @@
  "task": "llm-rl-importance-sampling",
  "arm": "sft32b",
  "arm_label": "Qwen3-32B SFT",
- "status": "failed",
- "score": null,
+ "status": "scored",
+ "score": 0.0,
+ "worker": "claude-fable-5",
+ "caveat": null,
  "master_output": {
   "idea": null,
   "proposal": "<think>\n\n</think>\n\n**Mocking:** [Thinking as the researcher]\n\nThe decision rule I'll apply is: when the signal is noisy, coarse-graining helps. So I want to ask — which tokens contribute the most noise to my policy gradient? The late tokens, because their log-ratio is a sum of all preceding changes; each step compounds drift, so late-token ratios have much higher variance than early ones. That's the *observation*.\n\nNow the *leverage point*. I can't eliminate the noise, but I can treat it like a signal vs. noise tradeoff — and that's exactly where clipping and early-stopping are standard tools. So I'll apply a stop-gradient *only on the late tokens* — keep the clean early ratios, zero the gradient on the noisy late ones. This is analogous to clipping a signal at a threshold: the clean part still trains, the noisy part is ignored. This cuts variance without throwing away the whole sequence.\n\nHow do I decide which tokens are late? By the log-ratio magnitude: if `|log(r_{i,t})| > threshold`, I detach the ratio. The threshold is a hyperparameter I'll sweep, but the decision rule stays fixed — *only stop-gradient the noisy tokens, not the whole sequence*.\n\nWhy is this non-trivial? Because naive sequence-level IS (one scalar per sequence) throws away *all* per-token correction, while I want to keep most of it. And because simply applying a token-level clip to late tokens could zero out the gradient on the very tokens that need it — that's what I want to *avoid*. So the crux is: *only stop-gradient the noisy late tokens, not all tokens, and avoid zeroing the gradient entirely* — the clipping is a stop-gradient, not a hard clip.\n\nCore idea: Apply a stop-gradient only to late tokens (with |log(ratio)| > threshold), preserving per-token correction on clean early tokens while avoiding gradient-zeroing on the noisy ones.\nNon-trivial crux: The clipping is a stop-gradient not a hard clip, and only applied to the noisy late tokens — detaching the *ratio* on the noisy tokens, not the *gradient* on all tokens.",

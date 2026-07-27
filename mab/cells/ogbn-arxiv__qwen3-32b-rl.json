@@ -1,0 +1,35 @@
+{
+ "task": "ogbn-arxiv",
+ "arm": "qwen3-32b-rl",
+ "arm_label": "Qwen3-32B RL",
+ "metric": "test_acc",
+ "baseline": 0.31559,
+ "lower_is_better": false,
+ "metric_mean": 0.505696,
+ "delta_pct": 60.238,
+ "ci_pct": 1.946,
+ "success": true,
+ "per_seed": [
+  {
+   "seed": "2",
+   "metric": 0.5083225315309755,
+   "delta_pct": 61.071
+  },
+  {
+   "seed": "3",
+   "metric": 0.5106269160339897,
+   "delta_pct": 61.801
+  },
+  {
+   "seed": "1",
+   "metric": 0.498137975022118,
+   "delta_pct": 57.843
+  }
+ ],
+ "master_output": {
+  "idea": "**Core idea:** Replace the current optimizer with a **LAMB optimizer**, which is known to be more robust and stable for large-batch training, and combine it with **learning rate warmup** (a linear or cosine schedule that slowly increases the LR at the beginning) rather than a fixed LR — this avoids sharp early divergence and improves convergence speed within the limited epoch budget.\n\n**Non-trivial crux:** LAMB's layer-wise adaptive updates and warmup are sensitive to batch size and initial LR: a large LR may still diverge without warmup, and LAMB's adaptive scaling means a standard LR grid search is less effective — instead, warmup must be tuned as a coupled variable alongside the peak LR.",
+  "proposal": "<think>\n\n</think>\n\n**Core idea:** Replace the current optimizer with a **LAMB optimizer**, which is known to be more robust and stable for large-batch training, and combine it with **learning rate warmup** (a linear or cosine schedule that slowly increases the LR at the beginning) rather than a fixed LR — this avoids sharp early divergence and improves convergence speed within the limited epoch budget.\n\n**Non-trivial crux:** LAMB's layer-wise adaptive updates and warmup are sensitive to batch size and initial LR: a large LR may still diverge without warmup, and LAMB's adaptive scaling means a standard LR grid search is less effective — instead, warmup must be tuned as a coupled variable alongside the peak LR.",
+  "valid": true,
+  "n_attempts": 1
+ }
+}

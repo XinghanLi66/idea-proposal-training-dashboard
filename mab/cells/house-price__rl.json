@@ -1,0 +1,35 @@
+{
+ "task": "house-price",
+ "arm": "rl",
+ "arm_label": "Qwen2.5-32B RL",
+ "metric": "mae",
+ "baseline": 21676.12057,
+ "lower_is_better": true,
+ "metric_mean": 21491.196675,
+ "delta_pct": 0.853,
+ "ci_pct": 0.485,
+ "success": false,
+ "per_seed": [
+  {
+   "seed": "1",
+   "metric": 21452.07459817352,
+   "delta_pct": 1.034
+  },
+  {
+   "seed": "2",
+   "metric": 21402.148125570806,
+   "delta_pct": 1.264
+  },
+  {
+   "seed": "3",
+   "metric": 21619.36730022832,
+   "delta_pct": 0.262
+  }
+ ],
+ "master_output": {
+  "idea": "**Mocking:** AI Researcher\n\nLet me start from the artifact, as usual — `data_description.txt`. I don't want to jump into `train.py` yet; I want to let the data itself suggest the move. So I'll read the description carefully, looking for a feature that's either (a) strangely absent from common ML pipelines but present here, or (b) a feature whose encoding could be radically rethought.\n\nI notice something odd: there's an 'age' field and a 'date_of_birth' field. Ordinarily, you'd use one or the other — age is more directly relevant to most outcomes, while date_of_birth is raw and needs transformation. But having both is a red flag. It suggests a hidden structure: the age might actually be derived from the date_of_birth, meaning they're not independent pieces of information. This is the kind of overlap that can silently poison your model — if the age is computed from the birth date, then any signal in the age is already represented in the birth date, so using both inflates the apparent importance of this single piece of information and can make the model overfit.\n\nNow the leap. Rather than just drop one, I want to ask whether the *difference* between these two fields could carry information. In many datasets, the discrepancy between a computed value and its source can reveal noise, error, or even deliberate misreporting. Here, the difference between reported age and age inferred from DOB might be a proxy for honesty, or for how recently the record was updated. That's a feature no one would add by default — it's a latent variable embedded in the data's internal consistency.\n\nWhy does this cut against consensus? Because the reflex move in such a case is usually to drop the redundant field. My intuition is that the redundancy is exactly where the signal lives — the gap, not the values themselves.\n\nSo the decision rule becomes: compute the age from DOB myself, compare it to the reported age, and treat the absolute difference as a new feature. Then I should A/B test this against a baseline that drops one of the original fields entirely, holding everything else constant — same model architecture, same hyperparameters, same training regime. The metric to watch is validation set performance, because the point is to see whether this feature generalizes rather than merely fitting the training noise.\n\nAnd I keep myself honest by adding a guardrail: if the difference feature doesn't clearly beat the simpler baseline on held-out data, I discard it. No feature stays in the pipeline without earning its place on validation.\n\n**Core idea:** Treat the absolute difference between the reported age and the age computed from date_of_birth as a new feature, hypothesizing that this 'discrepancy' encodes hidden information about record accuracy or recency, and A/B test it against dropping one of the original fields.\n\n**Non-trivial crux:** The signal lies not in the values themselves but in their inconsistency — the derived feature only pays off if it captures a latent variable (honesty/recency) that the redundant pair otherwise masks, and must be validated on unseen data before being kept.",
+  "proposal": "**Mocking:** AI Researcher\n\nLet me start from the artifact, as usual — `data_description.txt`. I don't want to jump into `train.py` yet; I want to let the data itself suggest the move. So I'll read the description carefully, looking for a feature that's either (a) strangely absent from common ML pipelines but present here, or (b) a feature whose encoding could be radically rethought.\n\nI notice something odd: there's an 'age' field and a 'date_of_birth' field. Ordinarily, you'd use one or the other — age is more directly relevant to most outcomes, while date_of_birth is raw and needs transformation. But having both is a red flag. It suggests a hidden structure: the age might actually be derived from the date_of_birth, meaning they're not independent pieces of information. This is the kind of overlap that can silently poison your model — if the age is computed from the birth date, then any signal in the age is already represented in the birth date, so using both inflates the apparent importance of this single piece of information and can make the model overfit.\n\nNow the leap. Rather than just drop one, I want to ask whether the *difference* between these two fields could carry information. In many datasets, the discrepancy between a computed value and its source can reveal noise, error, or even deliberate misreporting. Here, the difference between reported age and age inferred from DOB might be a proxy for honesty, or for how recently the record was updated. That's a feature no one would add by default — it's a latent variable embedded in the data's internal consistency.\n\nWhy does this cut against consensus? Because the reflex move in such a case is usually to drop the redundant field. My intuition is that the redundancy is exactly where the signal lives — the gap, not the values themselves.\n\nSo the decision rule becomes: compute the age from DOB myself, compare it to the reported age, and treat the absolute difference as a new feature. Then I should A/B test this against a baseline that drops one of the original fields entirely, holding everything else constant — same model architecture, same hyperparameters, same training regime. The metric to watch is validation set performance, because the point is to see whether this feature generalizes rather than merely fitting the training noise.\n\nAnd I keep myself honest by adding a guardrail: if the difference feature doesn't clearly beat the simpler baseline on held-out data, I discard it. No feature stays in the pipeline without earning its place on validation.\n\n**Core idea:** Treat the absolute difference between the reported age and the age computed from date_of_birth as a new feature, hypothesizing that this 'discrepancy' encodes hidden information about record accuracy or recency, and A/B test it against dropping one of the original fields.\n\n**Non-trivial crux:** The signal lies not in the values themselves but in their inconsistency — the derived feature only pays off if it captures a latent variable (honesty/recency) that the redundant pair otherwise masks, and must be validated on unseen data before being kept.",
+  "valid": true,
+  "n_attempts": 1
+ }
+}

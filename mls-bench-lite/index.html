@@ -5,24 +5,23 @@
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>Idea-Proposal Training — Results (MLS-Bench-Lite + MAB)</title>
 <style>
-  :root{
-    --bg:#0f1216;--panel:#161b22;--panel2:#1c232d;--border:#2b333d;--text:#e6edf3;--muted:#8b98a5;--accent:#58a6ff;--green:#3fb950;--rose:#f7768e;
-  }
+  :root{--bg:#0f1216;--panel:#161b22;--panel2:#1c232d;--border:#2b333d;--text:#e6edf3;--muted:#8b98a5;--accent:#58a6ff;--green:#3fb950;--rose:#f7768e;}
   *{box-sizing:border-box}
   body{margin:0;background:var(--bg);color:var(--text);font:14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
-  header{padding:12px 20px 0;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--bg);z-index:20}
+  header{padding:12px 20px;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--bg);z-index:30}
   header a.back{color:var(--muted);text-decoration:none;font-size:12.5px}
   header a.back:hover{color:var(--text)}
   header h1{margin:6px 0 2px;font-size:17px;font-weight:650}
   header .sub{color:var(--muted);font-size:12.5px}
-  .tabs{display:flex;gap:6px;margin-top:10px}
-  .tab{padding:8px 16px;cursor:pointer;border:1px solid transparent;border-bottom:none;border-radius:8px 8px 0 0;color:var(--muted);font-weight:600;font-size:13px}
-  .tab.on{background:var(--panel);border-color:var(--border);color:var(--text)}
-  .legend{display:flex;gap:14px;flex-wrap:wrap;margin:10px 0 12px;font-size:12px;align-items:center}
-  .legend span{display:inline-flex;align-items:center;gap:6px}
+  .jump{margin-top:8px;font-size:12.5px}
+  .jump a{color:var(--accent);text-decoration:none;margin-right:14px;font-weight:600}
+  .wrap{padding:14px 20px 80px}
+  section{margin:0 0 40px}
+  section h2{font-size:16px;margin:8px 0 2px;font-weight:650;scroll-margin-top:80px}
+  section .desc{color:var(--muted);font-size:12.5px;margin-bottom:4px}
+  .legend{display:flex;gap:14px;flex-wrap:wrap;margin:8px 0 10px;font-size:12px;align-items:center}
   .chip{width:14px;height:14px;border-radius:3px;display:inline-block;border:1px solid var(--border)}
-  .wrap{padding:12px 20px 60px}
-  .tablescroll{overflow:auto;max-height:calc(100vh - 230px);border:1px solid var(--border);border-radius:8px}
+  .tablescroll{overflow:auto;max-height:78vh;border:1px solid var(--border);border-radius:8px}
   table{border-collapse:separate;border-spacing:0;font-size:12px}
   th,td{white-space:nowrap}
   thead th{position:sticky;top:0;background:var(--panel);z-index:10;border-bottom:1px solid var(--border);padding:6px 7px;font-weight:600}
@@ -35,16 +34,16 @@
   tbody tr:hover td.rowh{background:var(--panel2)}
   td.cell{text-align:center;padding:0;border-bottom:1px solid #10141a;border-left:1px solid #10141a}
   td.cell .c{display:block;padding:6px 4px;min-width:52px;cursor:pointer;font-variant-numeric:tabular-nums;font-weight:600}
-  td.cell .c.nolink{cursor:default;font-weight:600}
+  td.cell .c.nolink{cursor:default}
   td.cell .c:hover{outline:2px solid var(--accent);outline-offset:-2px}
   .famsep{border-left:2px solid var(--border)!important}
   tr.meanrow td.cell .c,tr.meanrow td.rowh{font-weight:700;border-top:2px solid var(--border)}
   tr.meanrow td.rowh{color:var(--muted)}
   .fnmark{color:#ffcf70;font-weight:700}
   sup.fnmark{font-size:8.5px;margin-left:1px}
-  #footnotes{margin:16px 2px 0;color:var(--muted);font-size:12.5px}
-  #footnotes h3{font-size:13px;color:var(--text);margin:0 0 8px}
-  #footnotes .fn{margin:5px 0;line-height:1.5}
+  .footnotes{margin:12px 2px 0;color:var(--muted);font-size:12.5px}
+  .footnotes h3{font-size:13px;color:var(--text);margin:0 0 8px}
+  .footnotes .fn{margin:5px 0;line-height:1.5}
   .overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;z-index:50}
   .overlay.on{display:block}
   .modal{position:fixed;top:0;right:0;height:100%;width:min(920px,94vw);background:var(--panel);border-left:1px solid var(--border);z-index:51;transform:translateX(100%);transition:transform .18s;display:flex;flex-direction:column}
@@ -64,24 +63,32 @@
   .runrow{display:flex;gap:10px;align-items:center;flex-wrap:wrap;padding:5px 0;border-bottom:1px solid var(--border);font-size:12px}
   .tag{font-size:10.5px;color:var(--muted);background:#0b0e12;border:1px solid var(--border);border-radius:4px;padding:1px 6px}
   a{color:var(--accent)}
-  .loading{color:var(--muted);padding:30px;text-align:center}
+  .loading{color:var(--muted);padding:20px}
   .caveat{background:#3a2f14;border:1px solid #6b551f;border-radius:7px;padding:9px 12px;margin:8px 0 12px;color:#ffe0a3;font-size:12.5px}
 </style>
 </head>
 <body>
 <header>
   <a class="back" href="../index.html">← project home</a>
-  <h1 id="h-title">Results Dashboard</h1>
-  <div class="sub" id="sub"></div>
-  <div class="tabs">
-    <div class="tab on" id="tab-mls" data-tab="mls">MLS-Bench-Lite · 30×20</div>
-    <div class="tab" id="tab-mab" data-tab="mab">MLAgentBench (MAB) · 5×20</div>
-  </div>
+  <h1>Idea-Proposal Training — Results</h1>
+  <div class="sub">Two benchmarks, both shown below. Rescaled score (MLS) / Δ%-over-baseline (MAB). Click any cell for full detail.</div>
+  <div class="jump">Jump to: <a href="#mls">MLS-Bench-Lite (30×20)</a> <a href="#mab">MLAgentBench / MAB (5×20)</a></div>
 </header>
 <div class="wrap">
-  <div class="legend" id="legend"></div>
-  <div class="tablescroll"><table id="grid"></table></div>
-  <div id="footnotes"></div>
+  <section id="mls">
+    <h2>MLS-Bench-Lite — 30 tasks × 20 arms</h2>
+    <div class="desc">Closed-loop ML engineering. Rescaled score: 50 = strong baseline, 100 = upper bound; 0 = faithful true-0. Final matrix, 0 missing.</div>
+    <div class="legend" id="legend-mls"></div>
+    <div class="tablescroll"><table id="grid-mls"><tbody><tr><td class="loading">Loading MLS…</td></tr></tbody></table></div>
+    <div class="footnotes" id="fn-mls"></div>
+  </section>
+  <section id="mab">
+    <h2>MLAgentBench (MAB) — 5 tasks × 20 arms</h2>
+    <div class="desc">Agentic ML research tasks. Δ% over strong baseline (direction-corrected; + = better); ✓ = success (Δ ≥ +10%).</div>
+    <div class="legend" id="legend-mab"></div>
+    <div class="tablescroll"><table id="grid-mab"><tbody><tr><td class="loading">Loading MAB…</td></tr></tbody></table></div>
+    <div class="footnotes" id="fn-mab"></div>
+  </section>
 </div>
 
 <div class="overlay" id="overlay"></div>
@@ -92,11 +99,10 @@
 
 <script>
 const MLS_BASE=".", MAB_BASE="../mab";
-let MLS=null, MAB=null, TAB="mls";
+let MLS=null, MAB=null;
 function esc(s){return (s==null?"":String(s)).replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));}
 async function fj(p){const r=await fetch(p); if(!r.ok) throw new Error(p+" "+r.status); return r.json();}
 
-/* ---------- color scales ---------- */
 function scoreColor(v){ if(v==null) return "#20262e";
   const t=Math.max(0,Math.min(100,v))/100; let r,g,b;
   if(t<0.5){const u=t/0.5; r=Math.round(90+120*u); g=Math.round(45+130*u); b=Math.round(30+20*u);}
@@ -108,14 +114,9 @@ function dColor(v){ if(v==null) return "#20262e";
   const u=Math.min(1,-v/20); return `rgb(${Math.round(80+130*u)},${Math.round(50-10*u)},${Math.round(60-10*u)})`; }
 function dFg(v){ if(v==null) return "#e6edf3"; return (v>=15||v<=-8)?"#0b140b":"#dfe7ee"; }
 
-/* ---------- generic family header ---------- */
-function famInfo(arms){
+function famHead(arms,rowhLabel){
   const fams=[]; arms.forEach(a=>{const l=fams[fams.length-1]; if(l&&l.name===a.family) l.span++; else fams.push({name:a.family,span:1});});
   const fs=new Set(); {let s=0; fams.forEach(f=>{fs.add(s); s+=f.span;});}
-  return {fams,fs};
-}
-function headHTML(arms,rowhLabel){
-  const {fams,fs}=famInfo(arms);
   let h="<thead><tr><th class='rowh' rowspan='2'>"+rowhLabel+"</th>";
   fams.forEach(f=>h+=`<th class='fam' colspan='${f.span}'>${esc(f.name)}</th>`);
   h+="</tr><tr>";
@@ -123,66 +124,55 @@ function headHTML(arms,rowhLabel){
   h+="</tr></thead>"; return {h,fs};
 }
 
-/* ---------- MLS ---------- */
-function legendMLS(){
-  const cc=MLS.counts;
-  document.getElementById("legend").innerHTML=
+/* ---- MLS ---- */
+function renderMLS(){
+  const cc=MLS.counts, arms=MLS.arms, tasks=MLS.tasks, mean=MLS.arm_means||{};
+  document.getElementById("legend-mls").innerHTML=
     `<span><span class="chip" style="width:70px;background:linear-gradient(90deg,${scoreColor(0)},${scoreColor(50)},${scoreColor(100)})"></span> score 0 · <b>50=strong baseline</b> · 100</span>`+
-    `<span><span class="fnmark">†</span> caveat (see footnotes)</span>`+
+    `<span><span class="fnmark">†</span> caveat (footnotes below)</span>`+
     `<span style="color:var(--muted)">${cc.tasks}×${cc.arms} = ${cc.cells} cells, all scored (0 = faithful true-0) · ${cc.caveated} caveated</span>`;
-}
-function buildMLS(){
-  const arms=MLS.arms, tasks=MLS.tasks, mean=MLS.arm_means||{};
-  const {h:head,fs}=headHTML(arms,"Task <span style='color:var(--muted);font-weight:400'>(domain)</span>");
+  const {h:head,fs}=famHead(arms,"Task <span style='color:var(--muted);font-weight:400'>(domain)</span>");
   let html=head+"<tbody>";
   tasks.forEach(t=>{
     html+=`<tr><td class='rowh' title='${esc(t.slug)}'>${esc(t.name)}<span class='dom'>${esc(t.domain)}</span></td>`;
-    arms.forEach((a,i)=>{
-      const c=MLS.cells[t.slug][a.key], txt=(c.score==null?"·":c.score.toFixed(1));
+    arms.forEach((a,i)=>{const c=MLS.cells[t.slug][a.key], txt=(c.score==null?"·":c.score.toFixed(1));
       const mark=c.fn?`<sup class='fnmark'>†${c.fn}</sup>`:"";
-      html+=`<td class='cell ${fs.has(i)?'famsep':''}'><span class='c' style='background:${scoreColor(c.score)};color:${scoreFg(c.score)}' title='${esc(t.slug+" · "+a.key+" = "+txt+(c.caveat?" (†"+c.fn+")":""))}' data-t='${esc(t.slug)}' data-a='${esc(a.key)}'>${txt}${mark}</span></td>`;
-    });
+      html+=`<td class='cell ${fs.has(i)?'famsep':''}'><span class='c' style='background:${scoreColor(c.score)};color:${scoreFg(c.score)}' title='${esc(t.slug+" · "+a.key+" = "+txt+(c.caveat?" (†"+c.fn+")":""))}' data-t='${esc(t.slug)}' data-a='${esc(a.key)}'>${txt}${mark}</span></td>`;});
     html+="</tr>";
   });
   html+="<tr class='meanrow'><td class='rowh'>30-task mean</td>";
   arms.forEach((a,i)=>{const m=mean[a.key]; html+=`<td class='cell ${fs.has(i)?'famsep':''}'><span class='c nolink' style='background:${m==null?"#20262e":scoreColor(m)};color:${scoreFg(m)}'>${m==null?"·":m.toFixed(1)}</span></td>`;});
   html+="</tr></tbody>";
-  document.getElementById("grid").innerHTML=html;
-  document.querySelectorAll("#grid .c[data-t]").forEach(el=>el.addEventListener("click",()=>openMLS(el.dataset.t,el.dataset.a)));
-  const fn=document.getElementById("footnotes");
-  fn.innerHTML = (MLS.caveats&&MLS.caveats.length)?("<h3>Caveats</h3>"+MLS.caveats.map((c,i)=>`<div class='fn'><span class='fnmark'>†${i+1}</span> ${esc(c)}</div>`).join("")):"";
+  document.getElementById("grid-mls").innerHTML=html;
+  document.querySelectorAll("#grid-mls .c[data-t]").forEach(el=>el.addEventListener("click",()=>openMLS(el.dataset.t,el.dataset.a)));
+  document.getElementById("fn-mls").innerHTML=(MLS.caveats&&MLS.caveats.length)?("<h3>Caveats</h3>"+MLS.caveats.map((c,i)=>`<div class='fn'><span class='fnmark'>†${i+1}</span> ${esc(c)}</div>`).join("")):"";
 }
 
-/* ---------- MAB ---------- */
-function legendMAB(){
-  document.getElementById("legend").innerHTML=
+/* ---- MAB ---- */
+function renderMAB(){
+  const arms=MAB.arms, tasks=MAB.tasks, mean=MAB.arm_means||{}, sc=MAB.arm_success||{};
+  document.getElementById("legend-mab").innerHTML=
     `<span><span class="chip" style="width:70px;background:linear-gradient(90deg,${dColor(-20)},${dColor(0)},${dColor(30)})"></span> Δ% −20 · 0 · +30</span>`+
     `<span>✓ = success (Δ ≥ +${MAB.success_threshold_pct}%)</span>`+
-    `<span style="color:var(--muted)">5×20 · Δ% over strong baseline (direction-corrected; + = better)</span>`;
-}
-function buildMAB(){
-  const arms=MAB.arms, tasks=MAB.tasks, mean=MAB.arm_means||{}, sc=MAB.arm_success||{};
-  const {h:head,fs}=headHTML(arms,"Task <span style='color:var(--muted);font-weight:400'>(metric)</span>");
+    `<span style="color:var(--muted)">5×${arms.length} · Δ% over strong baseline (direction-corrected; + = better)</span>`;
+  const {h:head,fs}=famHead(arms,"Task <span style='color:var(--muted);font-weight:400'>(metric)</span>");
   let html=head+"<tbody>";
   tasks.forEach(t=>{
     html+=`<tr><td class='rowh' title='${esc(t.slug)}'>${esc(t.name)}<span class='dom'>${esc(t.metric)}${t.lower_is_better?" ↓":""} · base ${esc(t.baseline)}</span></td>`;
-    arms.forEach((a,i)=>{
-      const c=MAB.cells[t.slug][a.key], v=c.delta_pct;
+    arms.forEach((a,i)=>{const c=MAB.cells[t.slug][a.key], v=c.delta_pct;
       const txt=(v==null?"·":(v>0?"+":"")+v.toFixed(1))+(c.success?" ✓":"");
-      html+=`<td class='cell ${fs.has(i)?'famsep':''}'><span class='c' style='background:${dColor(v)};color:${dFg(v)}' title='${esc(t.slug+" · "+a.key+": Δ="+(v==null?"NA":v+"%")+(c.ci_pct?" ±"+c.ci_pct:"")+" (mean "+c.metric_mean+", n="+c.n_seeds+")")}' data-t='${esc(t.slug)}' data-a='${esc(a.key)}'>${txt}</span></td>`;
-    });
+      html+=`<td class='cell ${fs.has(i)?'famsep':''}'><span class='c' style='background:${dColor(v)};color:${dFg(v)}' title='${esc(t.slug+" · "+a.key+": Δ="+(v==null?"NA":v+"%")+(c.ci_pct?" ±"+c.ci_pct:"")+" (mean "+c.metric_mean+", n="+c.n_seeds+")")}' data-t='${esc(t.slug)}' data-a='${esc(a.key)}'>${txt}</span></td>`;});
     html+="</tr>";
   });
   html+="<tr class='meanrow'><td class='rowh'>mean Δ% (5 tasks)</td>";
   arms.forEach((a,i)=>{const v=mean[a.key]; html+=`<td class='cell ${fs.has(i)?'famsep':''}'><span class='c nolink' style='background:${dColor(v)};color:${dFg(v)}' title='${(sc[a.key]||0)+"/5 success"}'>${v==null?"·":(v>0?"+":"")+v.toFixed(1)}</span></td>`;});
   html+="</tr></tbody>";
-  document.getElementById("grid").innerHTML=html;
-  document.querySelectorAll("#grid .c[data-t]").forEach(el=>el.addEventListener("click",()=>openMAB(el.dataset.t,el.dataset.a)));
-  const fn=document.getElementById("footnotes");
-  fn.innerHTML = (MAB.notes&&MAB.notes.length)?("<h3>Notes</h3>"+MAB.notes.map(n=>`<div class='fn'>• ${esc(n)}</div>`).join("")):"";
+  document.getElementById("grid-mab").innerHTML=html;
+  document.querySelectorAll("#grid-mab .c[data-t]").forEach(el=>el.addEventListener("click",()=>openMAB(el.dataset.t,el.dataset.a)));
+  document.getElementById("fn-mab").innerHTML=(MAB.notes&&MAB.notes.length)?("<h3>Notes</h3>"+MAB.notes.map(n=>`<div class='fn'>• ${esc(n)}</div>`).join("")):"";
 }
 
-/* ---------- modal shared ---------- */
+/* ---- modal ---- */
 const overlay=document.getElementById("overlay"),modal=document.getElementById("modal");
 function closeM(){overlay.classList.remove("on");modal.classList.remove("on");}
 overlay.onclick=closeM; document.getElementById("m-close").onclick=closeM;
@@ -227,7 +217,6 @@ async function openMLS(slug,arm){
   h+=sec(`Worker runs (${(cell.workers||[]).length})`,(cell.workers||[]).length>0,wh||"<em>no worker logs surfaced</em>");
   body.innerHTML=h; body.scrollTop=0;
 }
-
 async function openMAB(slug,arm){
   overlay.classList.add("on");modal.classList.add("on");
   const body=document.getElementById("m-body"); body.innerHTML="<div class='loading'>Loading…</div>";
@@ -248,25 +237,13 @@ async function openMAB(slug,arm){
   body.innerHTML=h; body.scrollTop=0;
 }
 
-/* ---------- tabs ---------- */
-async function setTab(tab){
-  TAB=tab; closeM();
-  document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("on",t.dataset.tab===tab));
-  if(tab==="mls"){
-    document.getElementById("h-title").textContent="MLS-Bench-Lite — Results";
-    document.getElementById("sub").textContent="30 tasks × 20 arms (6 model families × base/SFT/RL + 2 frontier references) · rescaled score, 50 = strong baseline. Final matrix, 0 missing. Click any cell.";
-    if(!MLS) MLS=await fj(`${MLS_BASE}/index.json`);
-    legendMLS(); buildMLS();
-  }else{
-    document.getElementById("h-title").textContent="MLAgentBench (MAB) — Results";
-    document.getElementById("sub").textContent="5 tasks × 20 arms · Δ% over strong baseline (direction-corrected; + = better); success = Δ ≥ +10%. Click any cell.";
-    if(!MAB){ try{ MAB=await fj(`${MAB_BASE}/index.json`); }catch(e){ document.getElementById("grid").innerHTML=`<div class='loading'>MAB data unavailable (${esc(e.message)})</div>`; return; } }
-    legendMAB(); buildMAB();
-  }
-  location.hash=tab;
-}
-document.querySelectorAll(".tab").forEach(t=>t.addEventListener("click",()=>setTab(t.dataset.tab)));
-(async function(){ await setTab(location.hash==="#mab"?"mab":"mls"); })();
+(async function(){
+  try{ MLS=await fj(`${MLS_BASE}/index.json`); renderMLS(); }
+  catch(e){ document.getElementById("grid-mls").innerHTML=`<tbody><tr><td class='loading'>MLS load failed: ${esc(e.message)}</td></tr></tbody>`; }
+  try{ MAB=await fj(`${MAB_BASE}/index.json`); renderMAB(); }
+  catch(e){ document.getElementById("grid-mab").innerHTML=`<tbody><tr><td class='loading'>MAB load failed: ${esc(e.message)}</td></tr></tbody>`; }
+  if(location.hash==="#mab") document.getElementById("mab").scrollIntoView();
+})();
 </script>
 </body>
 </html>

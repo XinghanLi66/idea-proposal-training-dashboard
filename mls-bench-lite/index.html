@@ -3,287 +3,270 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>MLS-Bench-Lite — Results Dashboard (30 tasks × 18 arms)</title>
+<title>Idea-Proposal Training — Results (MLS-Bench-Lite + MAB)</title>
 <style>
   :root{
-    --bg:#0f1216; --panel:#161b22; --panel2:#1c232d; --border:#2b333d;
-    --text:#e6edf3; --muted:#8b98a5; --accent:#58a6ff;
-    /* status palette (dark-first, colorblind-aware) */
-    --ok-lo:#4a3b12; --ok-hi:#3fb950;         /* score gradient endpoints handled in JS */
-    --failed:#7d2b2b; --failed-fg:#ffb4a8;
-    --unfinished:#20262e; --unfinished-fg:#5c6773;
-    --zero:#3a2f4a; --zero-fg:#c9b6e6;
+    --bg:#0f1216;--panel:#161b22;--panel2:#1c232d;--border:#2b333d;--text:#e6edf3;--muted:#8b98a5;--accent:#58a6ff;--green:#3fb950;--rose:#f7768e;
   }
   *{box-sizing:border-box}
   body{margin:0;background:var(--bg);color:var(--text);font:14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
-  header{padding:14px 20px;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--bg);z-index:20}
-  header h1{margin:0;font-size:17px;font-weight:650}
-  header .sub{color:var(--muted);font-size:12.5px;margin-top:3px}
-  .legend{display:flex;gap:14px;flex-wrap:wrap;margin-top:9px;font-size:12px}
+  header{padding:12px 20px 0;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--bg);z-index:20}
+  header a.back{color:var(--muted);text-decoration:none;font-size:12.5px}
+  header a.back:hover{color:var(--text)}
+  header h1{margin:6px 0 2px;font-size:17px;font-weight:650}
+  header .sub{color:var(--muted);font-size:12.5px}
+  .tabs{display:flex;gap:6px;margin-top:10px}
+  .tab{padding:8px 16px;cursor:pointer;border:1px solid transparent;border-bottom:none;border-radius:8px 8px 0 0;color:var(--muted);font-weight:600;font-size:13px}
+  .tab.on{background:var(--panel);border-color:var(--border);color:var(--text)}
+  .legend{display:flex;gap:14px;flex-wrap:wrap;margin:10px 0 12px;font-size:12px;align-items:center}
   .legend span{display:inline-flex;align-items:center;gap:6px}
   .chip{width:14px;height:14px;border-radius:3px;display:inline-block;border:1px solid var(--border)}
-  .wrap{padding:14px 20px 60px}
-  .tablescroll{overflow:auto;max-height:calc(100vh - 210px);border:1px solid var(--border);border-radius:8px}
+  .wrap{padding:12px 20px 60px}
+  .tablescroll{overflow:auto;max-height:calc(100vh - 230px);border:1px solid var(--border);border-radius:8px}
   table{border-collapse:separate;border-spacing:0;font-size:12px}
   th,td{white-space:nowrap}
   thead th{position:sticky;top:0;background:var(--panel);z-index:10;border-bottom:1px solid var(--border);padding:6px 7px;font-weight:600}
   thead th.fam{font-size:10.5px;color:var(--muted);text-align:center;border-left:1px solid var(--border)}
   thead th.arm{font-size:10.5px;text-align:center;min-width:52px;font-weight:600}
   thead th.arm .k{color:var(--muted);font-weight:400;font-size:9.5px;display:block}
-  th.rowh{position:sticky;left:0;z-index:11;background:var(--panel);text-align:left;padding:6px 10px;border-right:1px solid var(--border);min-width:230px}
-  td.rowh{position:sticky;left:0;z-index:5;background:var(--panel);text-align:left;padding:5px 10px;border-right:1px solid var(--border);max-width:250px;overflow:hidden;text-overflow:ellipsis}
+  th.rowh{position:sticky;left:0;z-index:11;background:var(--panel);text-align:left;padding:6px 10px;border-right:1px solid var(--border);min-width:220px}
+  td.rowh{position:sticky;left:0;z-index:5;background:var(--panel);text-align:left;padding:5px 10px;border-right:1px solid var(--border);max-width:260px;overflow:hidden;text-overflow:ellipsis}
   td.rowh .dom{color:var(--muted);font-size:10px;display:block}
   tbody tr:hover td.rowh{background:var(--panel2)}
   td.cell{text-align:center;padding:0;border-bottom:1px solid #10141a;border-left:1px solid #10141a}
   td.cell .c{display:block;padding:6px 4px;min-width:52px;cursor:pointer;font-variant-numeric:tabular-nums;font-weight:600}
-  td.cell .c.nolink{cursor:default;font-weight:400}
+  td.cell .c.nolink{cursor:default;font-weight:600}
   td.cell .c:hover{outline:2px solid var(--accent);outline-offset:-2px}
-  .st-failed{background:var(--failed);color:var(--failed-fg)}
-  .st-unfinished{background:var(--unfinished);color:var(--unfinished-fg)}
-  .st-zero{background:var(--zero);color:var(--zero-fg)}
   .famsep{border-left:2px solid var(--border)!important}
-  /* modal */
+  tr.meanrow td.cell .c,tr.meanrow td.rowh{font-weight:700;border-top:2px solid var(--border)}
+  tr.meanrow td.rowh{color:var(--muted)}
+  .fnmark{color:#ffcf70;font-weight:700}
+  sup.fnmark{font-size:8.5px;margin-left:1px}
+  #footnotes{margin:16px 2px 0;color:var(--muted);font-size:12.5px}
+  #footnotes h3{font-size:13px;color:var(--text);margin:0 0 8px}
+  #footnotes .fn{margin:5px 0;line-height:1.5}
   .overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;z-index:50}
   .overlay.on{display:block}
-  .modal{position:fixed;top:0;right:0;height:100%;width:min(920px,94vw);background:var(--panel);border-left:1px solid var(--border);z-index:51;transform:translateX(100%);transition:transform .18s ease;display:flex;flex-direction:column}
+  .modal{position:fixed;top:0;right:0;height:100%;width:min(920px,94vw);background:var(--panel);border-left:1px solid var(--border);z-index:51;transform:translateX(100%);transition:transform .18s;display:flex;flex-direction:column}
   .modal.on{transform:none}
-  .modal .mh{padding:14px 18px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
-  .modal .mh h2{margin:0;font-size:15px}
-  .modal .mh .meta{color:var(--muted);font-size:12px;margin-top:4px}
-  .modal .mb{overflow:auto;padding:6px 18px 40px}
-  .x{cursor:pointer;color:var(--muted);font-size:22px;line-height:1;border:none;background:none}
-  .x:hover{color:var(--text)}
+  .mh{padding:14px 18px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
+  .mh h2{margin:0;font-size:15px}.mh .meta{color:var(--muted);font-size:12px;margin-top:4px}
+  .mb{overflow:auto;padding:6px 18px 40px}
+  .x{cursor:pointer;color:var(--muted);font-size:22px;border:none;background:none}.x:hover{color:var(--text)}
   details{border:1px solid var(--border);border-radius:7px;margin:10px 0;background:var(--panel2)}
-  details>summary{cursor:pointer;padding:9px 12px;font-weight:600;list-style:none}
-  details>summary::-webkit-details-marker{display:none}
-  details>summary:before{content:"▸ ";color:var(--muted)}
-  details[open]>summary:before{content:"▾ "}
+  summary{cursor:pointer;padding:9px 12px;font-weight:600;list-style:none}summary::-webkit-details-marker{display:none}
+  summary:before{content:"▸ ";color:var(--muted)}details[open]>summary:before{content:"▾ "}
   .body{padding:2px 12px 12px}
-  pre{background:#0b0e12;border:1px solid var(--border);border-radius:6px;padding:10px;overflow:auto;font:11.5px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace;white-space:pre-wrap;word-break:break-word;max-height:460px}
+  pre{background:#0b0e12;border:1px solid var(--border);border-radius:6px;padding:10px;overflow:auto;font:11.5px/1.5 ui-monospace,Menlo,monospace;white-space:pre-wrap;word-break:break-word;max-height:460px}
   pre.code{white-space:pre;word-break:normal}
+  .kv{display:grid;grid-template-columns:auto 1fr;gap:2px 14px;font-size:12.5px;margin:8px 0}.kv .k{color:var(--muted)}
   .pill{display:inline-block;padding:1px 8px;border-radius:20px;font-size:11px;font-weight:600;border:1px solid var(--border)}
-  .kv{display:grid;grid-template-columns:auto 1fr;gap:2px 14px;font-size:12.5px;margin:8px 0}
-  .kv .k{color:var(--muted)}
   .runrow{display:flex;gap:10px;align-items:center;flex-wrap:wrap;padding:5px 0;border-bottom:1px solid var(--border);font-size:12px}
   .tag{font-size:10.5px;color:var(--muted);background:#0b0e12;border:1px solid var(--border);border-radius:4px;padding:1px 6px}
   a{color:var(--accent)}
   .loading{color:var(--muted);padding:30px;text-align:center}
-  .fnmark{color:#ffcf70;font-weight:700}
-  sup.fnmark{font-size:8.5px;margin-left:1px}
-  tr.meanrow td.cell .c,tr.meanrow td.rowh{font-weight:700;border-top:2px solid var(--border)}
-  tr.meanrow td.rowh{color:var(--muted)}
-  #footnotes{margin:16px 2px 0;color:var(--muted);font-size:12.5px}
-  #footnotes h3{font-size:13px;color:var(--text);margin:0 0 8px}
-  #footnotes .fn{margin:5px 0;line-height:1.5}
   .caveat{background:#3a2f14;border:1px solid #6b551f;border-radius:7px;padding:9px 12px;margin:8px 0 12px;color:#ffe0a3;font-size:12.5px}
 </style>
 </head>
 <body>
 <header>
-  <h1>MLS-Bench-Lite — Results Dashboard</h1>
-  <div class="sub" id="sub">30 tasks × 20 arms (6 model families × base/SFT/RL + 2 frontier references) · rescaled score (50 = strong baseline, 100 = upper bound). Final matrix, 0 missing. Click any cell for details.</div>
-  <div class="legend" id="legend"></div>
+  <a class="back" href="../index.html">← project home</a>
+  <h1 id="h-title">Results Dashboard</h1>
+  <div class="sub" id="sub"></div>
+  <div class="tabs">
+    <div class="tab on" id="tab-mls" data-tab="mls">MLS-Bench-Lite · 30×20</div>
+    <div class="tab" id="tab-mab" data-tab="mab">MLAgentBench (MAB) · 5×20</div>
+  </div>
 </header>
 <div class="wrap">
+  <div class="legend" id="legend"></div>
   <div class="tablescroll"><table id="grid"></table></div>
   <div id="footnotes"></div>
 </div>
 
 <div class="overlay" id="overlay"></div>
 <aside class="modal" id="modal">
-  <div class="mh">
-    <div><h2 id="m-title">—</h2><div class="meta" id="m-meta"></div></div>
-    <button class="x" id="m-close">×</button>
-  </div>
+  <div class="mh"><div><h2 id="m-title">—</h2><div class="meta" id="m-meta"></div></div><button class="x" id="m-close">×</button></div>
   <div class="mb" id="m-body"><div class="loading">Loading…</div></div>
 </aside>
 
 <script>
-const BASE = ".";
-let IDX = null;
-
+const MLS_BASE=".", MAB_BASE="../mab";
+let MLS=null, MAB=null, TAB="mls";
 function esc(s){return (s==null?"":String(s)).replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));}
+async function fj(p){const r=await fetch(p); if(!r.ok) throw new Error(p+" "+r.status); return r.json();}
 
-// score -> background color (viridis-ish through the meaningful 0..100 range, 50=strong baseline)
-function scoreColor(v){
-  if(v==null) return "#20262e";
-  const t=Math.max(0,Math.min(100,v))/100;
-  // dark-red(low) -> amber(50) -> green(high)
-  let r,g,b;
+/* ---------- color scales ---------- */
+function scoreColor(v){ if(v==null) return "#20262e";
+  const t=Math.max(0,Math.min(100,v))/100; let r,g,b;
   if(t<0.5){const u=t/0.5; r=Math.round(90+120*u); g=Math.round(45+130*u); b=Math.round(30+20*u);}
   else{const u=(t-0.5)/0.5; r=Math.round(210-150*u); g=Math.round(175+10*u); b=Math.round(50+40*u);}
-  return `rgb(${r},${g},${b})`;
-}
+  return `rgb(${r},${g},${b})`; }
 function scoreFg(v){ if(v==null) return "#e6edf3"; return (v>=42&&v<70)?"#1a1200":"#0b140b"; }
+function dColor(v){ if(v==null) return "#20262e";
+  if(v>=0){const u=Math.min(1,v/30); return `rgb(${Math.round(40-10*u)},${Math.round(70+115*u)},${Math.round(55-5*u)})`;}
+  const u=Math.min(1,-v/20); return `rgb(${Math.round(80+130*u)},${Math.round(50-10*u)},${Math.round(60-10*u)})`; }
+function dFg(v){ if(v==null) return "#e6edf3"; return (v>=15||v<=-8)?"#0b140b":"#dfe7ee"; }
 
-function renderLegend(){
-  const el=document.getElementById("legend");
-  el.innerHTML="";
-  const grad=document.createElement("span");
-  grad.innerHTML=`<span class="chip" style="width:70px;background:linear-gradient(90deg,${scoreColor(0)},${scoreColor(50)},${scoreColor(100)})"></span> score 0 · <b>50=strong baseline</b> · 100`;
-  el.appendChild(grad);
-  const fn=document.createElement("span"); fn.innerHTML=`<span class="fnmark">†</span> caveat (see footnotes)`; el.appendChild(fn);
-  const cc=IDX.counts;
-  const s=document.createElement("span"); s.style.color="var(--muted)";
-  s.textContent=`  —  ${cc.tasks}×${cc.arms} = ${cc.cells} cells, all scored (0 = faithful true-0) · ${cc.caveated} caveated`;
-  el.appendChild(s);
+/* ---------- generic family header ---------- */
+function famInfo(arms){
+  const fams=[]; arms.forEach(a=>{const l=fams[fams.length-1]; if(l&&l.name===a.family) l.span++; else fams.push({name:a.family,span:1});});
+  const fs=new Set(); {let s=0; fams.forEach(f=>{fs.add(s); s+=f.span;});}
+  return {fams,fs};
+}
+function headHTML(arms,rowhLabel){
+  const {fams,fs}=famInfo(arms);
+  let h="<thead><tr><th class='rowh' rowspan='2'>"+rowhLabel+"</th>";
+  fams.forEach(f=>h+=`<th class='fam' colspan='${f.span}'>${esc(f.name)}</th>`);
+  h+="</tr><tr>";
+  arms.forEach((a,i)=>h+=`<th class='arm ${fs.has(i)?'famsep':''}' title='${esc(a.label)}'>${esc(a.kind)}<span class='k'>${esc(a.key)}</span></th>`);
+  h+="</tr></thead>"; return {h,fs};
 }
 
-function buildGrid(){
-  const arms=IDX.arms, tasks=IDX.tasks;
-  const fams=[]; arms.forEach(a=>{const last=fams[fams.length-1]; if(last&&last.name===a.family) last.span++; else fams.push({name:a.family,span:1});});
-  const famStartIdx=new Set(); {let s=0; fams.forEach(f=>{famStartIdx.add(s); s+=f.span;});}
-  const mean=IDX.arm_means||{};
-  let html="<thead>";
-  html+="<tr><th class='rowh' rowspan='2'>Task <span style='color:var(--muted);font-weight:400'>(domain)</span></th>";
-  fams.forEach(f=>{html+=`<th class='fam' colspan='${f.span}'>${esc(f.name)}</th>`;});
-  html+="</tr><tr>";
-  arms.forEach((a,i)=>{
-    html+=`<th class='arm ${famStartIdx.has(i)?'famsep':''}' title='${esc(a.label)}'>${esc(a.kind)}<span class='k'>${esc(a.key)}</span></th>`;
-  });
-  html+="</tr></thead><tbody>";
+/* ---------- MLS ---------- */
+function legendMLS(){
+  const cc=MLS.counts;
+  document.getElementById("legend").innerHTML=
+    `<span><span class="chip" style="width:70px;background:linear-gradient(90deg,${scoreColor(0)},${scoreColor(50)},${scoreColor(100)})"></span> score 0 · <b>50=strong baseline</b> · 100</span>`+
+    `<span><span class="fnmark">†</span> caveat (see footnotes)</span>`+
+    `<span style="color:var(--muted)">${cc.tasks}×${cc.arms} = ${cc.cells} cells, all scored (0 = faithful true-0) · ${cc.caveated} caveated</span>`;
+}
+function buildMLS(){
+  const arms=MLS.arms, tasks=MLS.tasks, mean=MLS.arm_means||{};
+  const {h:head,fs}=headHTML(arms,"Task <span style='color:var(--muted);font-weight:400'>(domain)</span>");
+  let html=head+"<tbody>";
   tasks.forEach(t=>{
     html+=`<tr><td class='rowh' title='${esc(t.slug)}'>${esc(t.name)}<span class='dom'>${esc(t.domain)}</span></td>`;
     arms.forEach((a,i)=>{
-      const c=IDX.cells[t.slug][a.key];
-      const style=`background:${scoreColor(c.score)};color:${scoreFg(c.score)}`;
-      const txt=(c.score==null?"·":c.score.toFixed(1));
+      const c=MLS.cells[t.slug][a.key], txt=(c.score==null?"·":c.score.toFixed(1));
       const mark=c.fn?`<sup class='fnmark'>†${c.fn}</sup>`:"";
-      const title=`${t.slug} · ${a.key} = ${txt}${c.caveat?" (caveat †"+c.fn+")":""}`;
-      html+=`<td class='cell ${famStartIdx.has(i)?'famsep':''}'><span class='c' style='${style}' title='${esc(title)}' data-t='${esc(t.slug)}' data-a='${esc(a.key)}'>${txt}${mark}</span></td>`;
+      html+=`<td class='cell ${fs.has(i)?'famsep':''}'><span class='c' style='background:${scoreColor(c.score)};color:${scoreFg(c.score)}' title='${esc(t.slug+" · "+a.key+" = "+txt+(c.caveat?" (†"+c.fn+")":""))}' data-t='${esc(t.slug)}' data-a='${esc(a.key)}'>${txt}${mark}</span></td>`;
     });
     html+="</tr>";
   });
-  // arm-means footer
   html+="<tr class='meanrow'><td class='rowh'>30-task mean</td>";
-  arms.forEach((a,i)=>{ const m=mean[a.key];
-    html+=`<td class='cell ${famStartIdx.has(i)?'famsep':''}'><span class='c nolink' style='background:${m==null?"#20262e":scoreColor(m)};color:${scoreFg(m)}'>${m==null?"·":m.toFixed(1)}</span></td>`;
-  });
+  arms.forEach((a,i)=>{const m=mean[a.key]; html+=`<td class='cell ${fs.has(i)?'famsep':''}'><span class='c nolink' style='background:${m==null?"#20262e":scoreColor(m)};color:${scoreFg(m)}'>${m==null?"·":m.toFixed(1)}</span></td>`;});
   html+="</tr></tbody>";
   document.getElementById("grid").innerHTML=html;
-  document.querySelectorAll("#grid .c[data-t]").forEach(el=>{
-    el.addEventListener("click",()=>openCell(el.dataset.t,el.dataset.a));
+  document.querySelectorAll("#grid .c[data-t]").forEach(el=>el.addEventListener("click",()=>openMLS(el.dataset.t,el.dataset.a)));
+  const fn=document.getElementById("footnotes");
+  fn.innerHTML = (MLS.caveats&&MLS.caveats.length)?("<h3>Caveats</h3>"+MLS.caveats.map((c,i)=>`<div class='fn'><span class='fnmark'>†${i+1}</span> ${esc(c)}</div>`).join("")):"";
+}
+
+/* ---------- MAB ---------- */
+function legendMAB(){
+  document.getElementById("legend").innerHTML=
+    `<span><span class="chip" style="width:70px;background:linear-gradient(90deg,${dColor(-20)},${dColor(0)},${dColor(30)})"></span> Δ% −20 · 0 · +30</span>`+
+    `<span>✓ = success (Δ ≥ +${MAB.success_threshold_pct}%)</span>`+
+    `<span style="color:var(--muted)">5×20 · Δ% over strong baseline (direction-corrected; + = better)</span>`;
+}
+function buildMAB(){
+  const arms=MAB.arms, tasks=MAB.tasks, mean=MAB.arm_means||{}, sc=MAB.arm_success||{};
+  const {h:head,fs}=headHTML(arms,"Task <span style='color:var(--muted);font-weight:400'>(metric)</span>");
+  let html=head+"<tbody>";
+  tasks.forEach(t=>{
+    html+=`<tr><td class='rowh' title='${esc(t.slug)}'>${esc(t.name)}<span class='dom'>${esc(t.metric)}${t.lower_is_better?" ↓":""} · base ${esc(t.baseline)}</span></td>`;
+    arms.forEach((a,i)=>{
+      const c=MAB.cells[t.slug][a.key], v=c.delta_pct;
+      const txt=(v==null?"·":(v>0?"+":"")+v.toFixed(1))+(c.success?" ✓":"");
+      html+=`<td class='cell ${fs.has(i)?'famsep':''}'><span class='c' style='background:${dColor(v)};color:${dFg(v)}' title='${esc(t.slug+" · "+a.key+": Δ="+(v==null?"NA":v+"%")+(c.ci_pct?" ±"+c.ci_pct:"")+" (mean "+c.metric_mean+", n="+c.n_seeds+")")}' data-t='${esc(t.slug)}' data-a='${esc(a.key)}'>${txt}</span></td>`;
+    });
+    html+="</tr>";
   });
-  // footnotes
-  const fnEl=document.getElementById("footnotes");
-  if(fnEl && IDX.caveats && IDX.caveats.length){
-    fnEl.innerHTML="<h3>Caveats</h3>"+IDX.caveats.map((c,i)=>`<div class='fn'><span class='fnmark'>†${i+1}</span> ${esc(c)}</div>`).join("");
-  }
+  html+="<tr class='meanrow'><td class='rowh'>mean Δ% (5 tasks)</td>";
+  arms.forEach((a,i)=>{const v=mean[a.key]; html+=`<td class='cell ${fs.has(i)?'famsep':''}'><span class='c nolink' style='background:${dColor(v)};color:${dFg(v)}' title='${(sc[a.key]||0)+"/5 success"}'>${v==null?"·":(v>0?"+":"")+v.toFixed(1)}</span></td>`;});
+  html+="</tr></tbody>";
+  document.getElementById("grid").innerHTML=html;
+  document.querySelectorAll("#grid .c[data-t]").forEach(el=>el.addEventListener("click",()=>openMAB(el.dataset.t,el.dataset.a)));
+  const fn=document.getElementById("footnotes");
+  fn.innerHTML = (MAB.notes&&MAB.notes.length)?("<h3>Notes</h3>"+MAB.notes.map(n=>`<div class='fn'>• ${esc(n)}</div>`).join("")):"";
 }
 
-// ---- modal ----
-const overlay=document.getElementById("overlay"), modal=document.getElementById("modal");
-function closeModal(){overlay.classList.remove("on");modal.classList.remove("on");}
-overlay.addEventListener("click",closeModal);
-document.getElementById("m-close").addEventListener("click",closeModal);
-document.addEventListener("keydown",e=>{if(e.key==="Escape")closeModal();});
+/* ---------- modal shared ---------- */
+const overlay=document.getElementById("overlay"),modal=document.getElementById("modal");
+function closeM(){overlay.classList.remove("on");modal.classList.remove("on");}
+overlay.onclick=closeM; document.getElementById("m-close").onclick=closeM;
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closeM();});
+function sec(t,o,inner){return `<details ${o?"open":""}><summary>${esc(t)}</summary><div class='body'>${inner}</div></details>`;}
+function pre(s,code){return `<pre class='${code?"code":""}'>${esc(s)}</pre>`;}
 
-async function fetchJSON(p){const r=await fetch(p);if(!r.ok)throw new Error(p+" "+r.status);return r.json();}
-
-function section(title,openp,inner){
-  return `<details ${openp?"open":""}><summary>${esc(title)}</summary><div class='body'>${inner}</div></details>`;
-}
-function preBlock(s,code){return `<pre class='${code?"code":""}'>${esc(s)}</pre>`;}
-
-async function openCell(slug,arm){
+async function openMLS(slug,arm){
   overlay.classList.add("on");modal.classList.add("on");
-  const body=document.getElementById("m-body");
-  body.innerHTML="<div class='loading'>Loading…</div>";
-  const cellMeta=IDX.cells[slug][arm];
-  const armObj=IDX.arms.find(a=>a.key===arm);
-  document.getElementById("m-title").textContent=`${IDX.tasks.find(t=>t.slug===slug).name}  ×  ${armObj.label}`;
-  let statusTxt=`score ${cellMeta.score}`;
-  document.getElementById("m-meta").innerHTML=
-    `<span class='tag'>${esc(slug)}</span> <span class='tag'>${esc(arm)}</span> `+
-    `<span class='pill' style='background:${scoreColor(cellMeta.score)};color:${scoreFg(cellMeta.score)};border:none'>${esc(statusTxt)}</span>`;
+  const body=document.getElementById("m-body"); body.innerHTML="<div class='loading'>Loading…</div>";
+  const cm=MLS.cells[slug][arm], a=MLS.arms.find(x=>x.key===arm);
+  document.getElementById("m-title").textContent=`${MLS.tasks.find(t=>t.slug===slug).name}  ×  ${a.label}`;
+  document.getElementById("m-meta").innerHTML=`<span class='tag'>${esc(slug)}</span> <span class='tag'>${esc(arm)}</span> <span class='pill' style='background:${scoreColor(cm.score)};color:${scoreFg(cm.score)};border:none'>score ${esc(cm.score)}</span>`;
   let task,cell;
-  try{
-    [task,cell]=await Promise.all([
-      fetchJSON(`${BASE}/tasks/${slug}.json`),
-      fetchJSON(`${BASE}/cells/${slug}__${arm}.json`)
-    ]);
-  }catch(e){ body.innerHTML=`<div class='loading'>No detail available (${esc(e.message)})</div>`; return; }
-
+  try{ [task,cell]=await Promise.all([fj(`${MLS_BASE}/tasks/${slug}.json`),fj(`${MLS_BASE}/cells/${slug}__${arm}.json`)]); }
+  catch(e){ body.innerHTML=`<div class='loading'>No detail (${esc(e.message)})</div>`; return; }
   let h="";
-  if(cell.caveat){ h+=`<div class='caveat'><b>⚠ Caveat.</b> ${esc(cell.caveat)}</div>`; }
-  // scores summary
-  h+=`<div class='kv'>`+
-     `<span class='k'>Rescaled score</span><span>${cell.score==null?"—":cell.score+"  (50 = strong baseline, 100 = upper bound; 0 = faithful true-0)"}</span>`+
+  if(cell.caveat) h+=`<div class='caveat'><b>⚠ Caveat.</b> ${esc(cell.caveat)}</div>`;
+  h+=`<div class='kv'><span class='k'>Rescaled score</span><span>${cell.score==null?"—":cell.score+"  (50 = strong baseline, 100 = upper bound; 0 = faithful true-0)"}</span>`+
      `<span class='k'>Worker</span><span>${esc(cell.worker||"claude-fable-5")}</span>`+
-     `<span class='k'>Runs (seeds)</span><span>${cellMeta.n_runs} run(s), ${cellMeta.n_scored} with a recorded metric</span>`+
-     `</div>`;
-
-  // problem description
-  h+=section("Problem description",false, task.description?preBlock(task.description):"<em>not available</em>");
-
-  // baselines
+     `<span class='k'>Runs (seeds)</span><span>${cm.n_runs} run(s), ${cm.n_scored} with a recorded metric</span></div>`;
+  h+=sec("Problem description",false, task.description?pre(task.description):"<em>not available</em>");
   let bl="<em>not available</em>";
   if(task.baselines&&task.baselines.methods&&task.baselines.methods.length){
-    bl=`<div style='color:var(--muted);font-size:12px;margin-bottom:6px'>${esc(task.baselines.note)}</div>`;
-    bl+=task.baselines.methods.map(m=>`<div class='runrow'><span class='pill'>${esc(m.name)}</span> <span class='tag'>raw metrics</span> `+
-        Object.entries(m.metrics).slice(0,8).map(([k,v])=>`${esc(k)}=<b>${esc(v)}</b>`).join(" · ")+`</div>`).join("");
+    bl=`<div style='color:var(--muted);font-size:12px;margin-bottom:6px'>${esc(task.baselines.note)}</div>`+
+       task.baselines.methods.map(m=>`<div class='runrow'><span class='pill'>${esc(m.name)}</span> `+Object.entries(m.metrics).slice(0,8).map(([k,v])=>`${esc(k)}=<b>${esc(v)}</b>`).join(" · ")+`</div>`).join("");
   }
-  h+=section("Weak / strong baselines",false,bl);
-
-  // master prompt
-  const mp=task.master_prompt||{};
-  let mph="";
-  if(mp.system) mph+=section("system",false,preBlock(mp.system));
-  if(mp.user) mph+=section("user",true,preBlock(mp.user));
-  if(!mph) mph="<em>not available</em>";
-  h+=section("Master (proposer) prompt",false,mph);
-
-  // master output / idea (the mocked human-researcher proposal)
-  const mo=cell.master_output||{};
-  let moh="";
-  moh+=`<div class='kv'><span class='k'>valid</span><span>${esc(mo.valid)}</span><span class='k'>attempts</span><span>${esc(mo.n_attempts)}</span></div>`;
-  if(mo.idea) moh+=section("idea (mocked human researcher)",true,preBlock(mo.idea));
-  if(mo.proposal) moh+=section("full proposal / master output",false,preBlock(mo.proposal));
-  if(!mo.idea&&!mo.proposal) moh+="<em>not available</em>";
-  h+=section("Master output — researcher proposal",true,moh);
-
-  // per-run scores
-  let rr="";
-  if(cell.per_run_scores&&cell.per_run_scores.length){
-    rr=cell.per_run_scores.map((r,i)=>`<div class='runrow'><span class='tag'>seed ${esc(r.seed)}</span>`+
-      (r.has_metric?Object.entries(r.metrics).slice(0,8).map(([k,v])=>`${esc(k)}=<b>${esc(v)}</b>`).join(" · "):"<span style='color:var(--failed-fg)'>no metric</span>")+
-      `</div>`).join("");
-  }else rr="<em>single run / not recorded separately</em>";
-  h+=section("Per-run (per-seed) scores",false,rr);
-
-  // workers
-  let wh="";
-  (cell.workers||[]).forEach((w,i)=>{
-    let inner="";
-    inner+=`<div class='kv'><span class='k'>log</span><span><span class='tag'>${esc(w.log_dir)}</span></span>`+
-           `<span class='k'>summary</span><span>steps=${esc(w.summary.steps)} tests=${esc(w.summary.tests)} done=${esc(w.summary.done)}</span></div>`;
-    if(w.user_prompt) inner+=section("worker prompt (user handoff)",false,preBlock(w.user_prompt));
-    if(w.steps&&w.steps.length){
-      const st=w.steps.map(s=>`step ${s.step==null?"?":s.step} · ${s.tool||"?"}${s.file?" · "+s.file:""}`+(s.preview?"\n"+s.preview:"")+(s.text?"\n"+s.text:"")).join("\n\n");
-      inner+=section("worker edit trace",false,preBlock(st));
-    }
-    if(w.final_code&&Object.keys(w.final_code).length){
-      let fc=Object.entries(w.final_code).map(([name,code])=>section(name,false,preBlock(code,true))).join("");
-      inner+=section("final worker code",true,fc);
-    }
-    wh+=section(`Worker run ${i+1} — ${esc(w.log_dir.split("/").pop())}`,i===0,inner);
+  h+=sec("Weak / strong baselines",false,bl);
+  const mp=task.master_prompt||{}; let mph=""; if(mp.system) mph+=sec("system",false,pre(mp.system)); if(mp.user) mph+=sec("user",true,pre(mp.user));
+  h+=sec("Master (proposer) prompt",false,mph||"<em>not available</em>");
+  const mo=cell.master_output||{}; let moh=`<div class='kv'><span class='k'>valid</span><span>${esc(mo.valid)}</span><span class='k'>attempts</span><span>${esc(mo.n_attempts)}</span></div>`;
+  if(mo.idea) moh+=sec("idea (mocked researcher)",true,pre(mo.idea)); if(mo.proposal) moh+=sec("full proposal",false,pre(mo.proposal));
+  h+=sec("Master output — researcher proposal",true,moh);
+  let rr=(cell.per_run_scores||[]).map(r=>`<div class='runrow'><span class='tag'>seed ${esc(r.seed)}</span>`+(r.has_metric?Object.entries(r.metrics).slice(0,8).map(([k,v])=>`${esc(k)}=<b>${esc(v)}</b>`).join(" · "):"<span style='color:var(--rose)'>no metric row</span>")+`</div>`).join("")||"<em>n/a</em>";
+  h+=sec("Per-seed metric rows",false,rr);
+  let wh=""; (cell.workers||[]).forEach((w,i)=>{
+    let inner=`<div class='kv'><span class='k'>log</span><span><span class='tag'>${esc(w.log_dir)}</span></span><span class='k'>summary</span><span>steps=${esc(w.summary.steps)} tests=${esc(w.summary.tests)} done=${esc(w.summary.done)}</span></div>`;
+    if(w.user_prompt) inner+=sec("worker prompt",false,pre(w.user_prompt));
+    if(w.final_code&&Object.keys(w.final_code).length) inner+=sec("final worker code",i===0,Object.entries(w.final_code).map(([n,c])=>sec(n,false,pre(c,true))).join(""));
+    wh+=sec(`Worker run ${i+1} — ${esc(w.log_dir.split("/").pop())}`,i===0,inner);
   });
-  if(!wh) wh="<em>no worker logs</em>";
-  h+=section(`Worker runs (${(cell.workers||[]).length})`,true,wh);
-
-  body.innerHTML=h;
-  body.scrollTop=0;
+  h+=sec(`Worker runs (${(cell.workers||[]).length})`,(cell.workers||[]).length>0,wh||"<em>no worker logs surfaced</em>");
+  body.innerHTML=h; body.scrollTop=0;
 }
 
-(async function(){
-  try{
-    IDX=await fetchJSON(`${BASE}/index.json`);
-    renderLegend();
-    buildGrid();
-  }catch(e){
-    document.body.innerHTML=`<div class='loading'>Failed to load index.json — serve this directory over HTTP.<br>${esc(e.message)}</div>`;
+async function openMAB(slug,arm){
+  overlay.classList.add("on");modal.classList.add("on");
+  const body=document.getElementById("m-body"); body.innerHTML="<div class='loading'>Loading…</div>";
+  const cm=MAB.cells[slug][arm], a=MAB.arms.find(x=>x.key===arm);
+  document.getElementById("m-title").textContent=`${MAB.tasks.find(t=>t.slug===slug).name}  ×  ${a.label}`;
+  document.getElementById("m-meta").innerHTML=`<span class='tag'>${esc(slug)}</span> <span class='tag'>${esc(arm)}</span> <span class='pill' style='background:${dColor(cm.delta_pct)};color:${dFg(cm.delta_pct)};border:none'>Δ ${cm.delta_pct==null?"NA":cm.delta_pct+"%"}${cm.success?" ✓":""}</span>`;
+  let task,cell;
+  try{ [task,cell]=await Promise.all([fj(`${MAB_BASE}/tasks/${slug}.json`),fj(`${MAB_BASE}/cells/${slug}__${arm}.json`)]); }
+  catch(e){ body.innerHTML=`<div class='loading'>No detail (${esc(e.message)})</div>`; return; }
+  let h=`<div class='kv'><span class='k'>Δ over baseline</span><span>${cell.delta_pct==null?"—":cell.delta_pct+"%"+(cell.ci_pct?" ± "+cell.ci_pct:"")}  ${cell.success?"— <b style='color:var(--green)'>success</b>":""}</span>`+
+    `<span class='k'>Metric (${esc(cell.metric)}${cell.lower_is_better?" ↓":""})</span><span>mean ${esc(cell.metric_mean)} vs baseline ${esc(cell.baseline)}</span>`+
+    `<span class='k'>Seeds</span><span>${cell.per_seed?cell.per_seed.length:0}</span></div>`;
+  h+=sec("Per-seed results",true,(cell.per_seed||[]).map(s=>`<div class='runrow'><span class='tag'>seed ${esc(s.seed)}</span> metric=<b>${esc(s.metric)}</b> · Δ=${s.delta_pct==null?"NA":s.delta_pct+"%"}</div>`).join("")||"<em>none</em>");
+  const mp=task.master_prompt||{}; let mph=""; if(mp.system) mph+=sec("system",false,pre(mp.system)); if(mp.user) mph+=sec("user",true,pre(mp.user));
+  h+=sec("Master (proposer) prompt",false,mph||"<em>not available</em>");
+  const mo=cell.master_output||{}; let moh=""; if(mo.idea) moh+=sec("idea",true,pre(mo.idea)); if(mo.proposal) moh+=sec("full proposal",false,pre(mo.proposal));
+  h+=sec("Master output — researcher proposal",true,moh||"<em>not available</em>");
+  body.innerHTML=h; body.scrollTop=0;
+}
+
+/* ---------- tabs ---------- */
+async function setTab(tab){
+  TAB=tab; closeM();
+  document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("on",t.dataset.tab===tab));
+  if(tab==="mls"){
+    document.getElementById("h-title").textContent="MLS-Bench-Lite — Results";
+    document.getElementById("sub").textContent="30 tasks × 20 arms (6 model families × base/SFT/RL + 2 frontier references) · rescaled score, 50 = strong baseline. Final matrix, 0 missing. Click any cell.";
+    if(!MLS) MLS=await fj(`${MLS_BASE}/index.json`);
+    legendMLS(); buildMLS();
+  }else{
+    document.getElementById("h-title").textContent="MLAgentBench (MAB) — Results";
+    document.getElementById("sub").textContent="5 tasks × 20 arms · Δ% over strong baseline (direction-corrected; + = better); success = Δ ≥ +10%. Click any cell.";
+    if(!MAB){ try{ MAB=await fj(`${MAB_BASE}/index.json`); }catch(e){ document.getElementById("grid").innerHTML=`<div class='loading'>MAB data unavailable (${esc(e.message)})</div>`; return; } }
+    legendMAB(); buildMAB();
   }
-})();
+  location.hash=tab;
+}
+document.querySelectorAll(".tab").forEach(t=>t.addEventListener("click",()=>setTab(t.dataset.tab)));
+(async function(){ await setTab(location.hash==="#mab"?"mab":"mls"); })();
 </script>
 </body>
 </html>

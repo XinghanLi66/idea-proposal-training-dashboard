@@ -1022,5 +1022,10 @@
   "fable5": 3,
   "gpt55": 2
  },
+ "notes": [
+  "d1 arms (DeepSeek-R1-Qwen3-8B) use the tokenizer-fixed proposals.",
+  "Frontier proposers (Claude Fable 5, GPT-5.5) land mid-pack — consistent with MLS-Bench-Lite.",
+  "Aggregated report.json is still 3-arm/stale; this matrix is sourced from results/*.csv (20 arms + baseline) and validates exactly against report.md."
+ ],
  "generated_from": "mab_dashboard_extract.py"
 }

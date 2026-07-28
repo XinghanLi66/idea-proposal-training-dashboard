@@ -1,0 +1,52 @@
+{
+ "task": "spaceship-titanic",
+ "arm": "purefable5",
+ "arm_label": "Claude Fable 5 (native, no proposal)",
+ "metric": "accuracy",
+ "baseline": 0.72283,
+ "lower_is_better": false,
+ "metric_mean": 0.806977,
+ "delta_pct": 11.641,
+ "ci_pct": 0.564,
+ "success": true,
+ "native": true,
+ "note": "Native MLS-Bench agent — the worker solves the task from scratch with NO master proposal (aligns with the original MLS-Bench / kimi-k2.7 setup).",
+ "per_seed": [
+  {
+   "seed": "1",
+   "metric": 0.8131109833237493,
+   "delta_pct": 12.49
+  },
+  {
+   "seed": "2",
+   "metric": 0.8096607245543416,
+   "delta_pct": 12.013
+  },
+  {
+   "seed": "1",
+   "metric": 0.8096607245543416,
+   "delta_pct": 12.013
+  },
+  {
+   "seed": "2",
+   "metric": 0.8085106382978723,
+   "delta_pct": 11.853
+  },
+  {
+   "seed": "3",
+   "metric": 0.7975848188614146,
+   "delta_pct": 10.342
+  },
+  {
+   "seed": "3",
+   "metric": 0.8033352501437608,
+   "delta_pct": 11.138
+  }
+ ],
+ "master_output": {
+  "idea": null,
+  "proposal": null,
+  "valid": null,
+  "n_attempts": null
+ }
+}

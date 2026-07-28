@@ -13,8 +13,8 @@ for item in index.html index.json README.md tasks cells raw_scores; do
   rm -rf "$DEST/$item"; [ -e "$SRC/$item" ] && cp -r "$SRC/$item" "$DEST/$item"
 done
 
-# MLAgentBench (5x20)
-SRC="$HARNESS/runs/researcher_cot/mab_dashboard"; DEST=mab; mkdir -p "$DEST"
+# MLAgentBench (5 x N) — source dir name is 'mab' (== the ../mab path the page fetches)
+SRC="$HARNESS/runs/researcher_cot/mab"; DEST=mab; mkdir -p "$DEST"
 for item in index.html index.json tasks cells; do
   rm -rf "$DEST/$item"; [ -e "$SRC/$item" ] && cp -r "$SRC/$item" "$DEST/$item"
 done
@@ -24,7 +24,7 @@ python3 "$HARNESS/scripts/build_data_samples.py" --out "$(pwd)/data-samples"
 
 git add -A
 if git diff --cached --quiet; then echo "no changes"; else
-  git commit -q -m "sync dashboards (MLS 30x20 + MAB 5x20) + data samples $(date -u +%Y-%m-%dT%H:%MZ)"
+  git commit -q -m "sync dashboards (MLS + MAB) + data samples $(date -u +%Y-%m-%dT%H:%MZ)"
   echo "committed. push with: git push origin main"
 fi
 

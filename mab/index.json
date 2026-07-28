@@ -161,6 +161,12 @@
    "label": "GPT-5.5 (frontier)",
    "family": "Frontier (reference)",
    "kind": "ref"
+  },
+  {
+   "key": "purefable5",
+   "label": "Claude Fable 5 (native, no proposal)",
+   "family": "Native (no proposal)",
+   "kind": "native"
   }
  ],
  "cells": {
@@ -324,6 +330,14 @@
     "ci_pct": 1.959,
     "success": false,
     "detail": true
+   },
+   "purefable5": {
+    "delta_pct": 79.981,
+    "metric_mean": 0.922167,
+    "n_seeds": 3,
+    "ci_pct": 0.418,
+    "success": true,
+    "detail": true
    }
   },
   "ogbn-arxiv": {
@@ -486,6 +500,14 @@
     "ci_pct": 13.764,
     "success": false,
     "detail": true
+   },
+   "purefable5": {
+    "delta_pct": 126.218,
+    "metric_mean": 0.71392,
+    "n_seeds": 3,
+    "ci_pct": 1.296,
+    "success": true,
+    "detail": true
    }
   },
   "imdb": {
@@ -646,6 +668,14 @@
     "metric_mean": 0.930747,
     "n_seeds": 3,
     "ci_pct": 0.071,
+    "success": false,
+    "detail": true
+   },
+   "purefable5": {
+    "delta_pct": 1.826,
+    "metric_mean": 0.92752,
+    "n_seeds": 3,
+    "ci_pct": 0.354,
     "success": false,
     "detail": true
    }
@@ -810,6 +840,14 @@
     "ci_pct": 3.161,
     "success": true,
     "detail": true
+   },
+   "purefable5": {
+    "delta_pct": 29.15,
+    "metric_mean": 15357.609843,
+    "n_seeds": 4,
+    "ci_pct": 0.748,
+    "success": true,
+    "detail": true
    }
   },
   "spaceship-titanic": {
@@ -972,12 +1010,20 @@
     "ci_pct": 0.297,
     "success": true,
     "detail": true
+   },
+   "purefable5": {
+    "delta_pct": 11.641,
+    "metric_mean": 0.806977,
+    "n_seeds": 6,
+    "ci_pct": 0.564,
+    "success": true,
+    "detail": true
    }
   }
  },
  "success_threshold_pct": 10.0,
  "scale": "Δ% over strong baseline (direction-corrected: + = better). success = Δ ≥ +10%",
- "source": "results/<task>.csv (per-seed, 20 arms + baseline); task metadata + baseline from report.json",
+ "source": "results/<task>.csv (per-seed, all arms + baseline); task metadata + baseline from report.json",
  "arm_means": {
   "base8b": 13.241,
   "sft8b": -4.157,
@@ -998,7 +1044,8 @@
   "m2sft": 15.611,
   "m2rl": 16.334,
   "fable5": 14.327,
-  "gpt55": 8.181
+  "gpt55": 8.181,
+  "purefable5": 49.763
  },
  "arm_success": {
   "base8b": 1,
@@ -1020,7 +1067,8 @@
   "m2sft": 2,
   "m2rl": 3,
   "fable5": 3,
-  "gpt55": 2
+  "gpt55": 2,
+  "purefable5": 4
  },
  "notes": [
   "d1 arms (DeepSeek-R1-Qwen3-8B) use the tokenizer-fixed proposals.",

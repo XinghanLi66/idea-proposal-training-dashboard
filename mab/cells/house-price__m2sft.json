@@ -9,6 +9,8 @@
  "delta_pct": 14.275,
  "ci_pct": 2.261,
  "success": true,
+ "native": false,
+ "note": null,
  "per_seed": [
   {
    "seed": "1",

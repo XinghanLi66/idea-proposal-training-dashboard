@@ -1,0 +1,37 @@
+{
+ "task": "cifar10",
+ "arm": "purefable5",
+ "arm_label": "Claude Fable 5 (native, no proposal)",
+ "metric": "accuracy",
+ "baseline": 0.51237,
+ "lower_is_better": false,
+ "metric_mean": 0.922167,
+ "delta_pct": 79.981,
+ "ci_pct": 0.418,
+ "success": true,
+ "native": true,
+ "note": "Native MLS-Bench agent — the worker solves the task from scratch with NO master proposal (aligns with the original MLS-Bench / kimi-k2.7 setup).",
+ "per_seed": [
+  {
+   "seed": "1",
+   "metric": 0.9241,
+   "delta_pct": 80.358
+  },
+  {
+   "seed": "2",
+   "metric": 0.9228,
+   "delta_pct": 80.104
+  },
+  {
+   "seed": "3",
+   "metric": 0.9196,
+   "delta_pct": 79.48
+  }
+ ],
+ "master_output": {
+  "idea": null,
+  "proposal": null,
+  "valid": null,
+  "n_attempts": null
+ }
+}

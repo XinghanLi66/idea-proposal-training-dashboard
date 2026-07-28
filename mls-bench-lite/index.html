@@ -229,11 +229,14 @@ async function openMAB(slug,arm){
   let h=`<div class='kv'><span class='k'>Δ over baseline</span><span>${cell.delta_pct==null?"—":cell.delta_pct+"%"+(cell.ci_pct?" ± "+cell.ci_pct:"")}  ${cell.success?"— <b style='color:var(--green)'>success</b>":""}</span>`+
     `<span class='k'>Metric (${esc(cell.metric)}${cell.lower_is_better?" ↓":""})</span><span>mean ${esc(cell.metric_mean)} vs baseline ${esc(cell.baseline)}</span>`+
     `<span class='k'>Seeds</span><span>${cell.per_seed?cell.per_seed.length:0}</span></div>`;
+  if(cell.native&&cell.note) h+=`<div class='caveat'><b>Native agent.</b> ${esc(cell.note)}</div>`;
   h+=sec("Per-seed results",true,(cell.per_seed||[]).map(s=>`<div class='runrow'><span class='tag'>seed ${esc(s.seed)}</span> metric=<b>${esc(s.metric)}</b> · Δ=${s.delta_pct==null?"NA":s.delta_pct+"%"}</div>`).join("")||"<em>none</em>");
-  const mp=task.master_prompt||{}; let mph=""; if(mp.system) mph+=sec("system",false,pre(mp.system)); if(mp.user) mph+=sec("user",true,pre(mp.user));
-  h+=sec("Master (proposer) prompt",false,mph||"<em>not available</em>");
-  const mo=cell.master_output||{}; let moh=""; if(mo.idea) moh+=sec("idea",true,pre(mo.idea)); if(mo.proposal) moh+=sec("full proposal",false,pre(mo.proposal));
-  h+=sec("Master output — researcher proposal",true,moh||"<em>not available</em>");
+  if(!cell.native){
+    const mp=task.master_prompt||{}; let mph=""; if(mp.system) mph+=sec("system",false,pre(mp.system)); if(mp.user) mph+=sec("user",true,pre(mp.user));
+    h+=sec("Master (proposer) prompt",false,mph||"<em>not available</em>");
+    const mo=cell.master_output||{}; let moh=""; if(mo.idea) moh+=sec("idea",true,pre(mo.idea)); if(mo.proposal) moh+=sec("full proposal",false,pre(mo.proposal));
+    h+=sec("Master output — researcher proposal",true,moh||"<em>not available</em>");
+  }
   body.innerHTML=h; body.scrollTop=0;
 }
 

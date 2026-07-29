@@ -81,6 +81,7 @@
     <div class="legend" id="legend-mls"></div>
     <div class="tablescroll"><table id="grid-mls"><tbody><tr><td class="loading">Loading MLS…</td></tr></tbody></table></div>
     <div class="footnotes" id="fn-mls"></div>
+    <details id="raw-ref" style="margin-top:14px"><summary>Raw native baseline anchors (absolute reference — the rescaled 50 is calibrated to the best baseline)</summary><div class="body" id="raw-ref-body"></div></details>
   </section>
   <section id="mab">
     <h2>MLAgentBench (MAB) — 5 tasks × 20 arms</h2>
@@ -146,6 +147,19 @@ function renderMLS(){
   document.getElementById("grid-mls").innerHTML=html;
   document.querySelectorAll("#grid-mls .c[data-t]").forEach(el=>el.addEventListener("click",()=>openMLS(el.dataset.t,el.dataset.a)));
   document.getElementById("fn-mls").innerHTML=(MLS.caveats&&MLS.caveats.length)?("<h3>Caveats</h3>"+MLS.caveats.map((c,i)=>`<div class='fn'><span class='fnmark'>†${i+1}</span> ${esc(c)}</div>`).join("")):"";
+  // raw native baseline anchors (absolute reference)
+  const rb=document.getElementById("raw-ref-body");
+  if(rb){
+    let r=`<div style="color:var(--muted);font-size:12px;margin:2px 0 8px">Native (un-rescaled) metric values for each task's baseline methods. The strongest of these is what the rescaled <b>50</b> is calibrated to; 100 = theoretical upper bound. Per-arm raw metrics are in each cell's detail (click a cell → Per-seed metric rows).</div>`;
+    r+="<div style='overflow:auto'><table style='font-size:11.5px'><thead><tr><th class='rowh' style='min-width:200px'>Task</th><th style='text-align:left;padding:4px 8px'>Baseline methods → raw native metrics</th></tr></thead><tbody>";
+    tasks.forEach(t=>{
+      const bl=t.raw_baselines||[];
+      const cell=bl.length? bl.map(m=>`<b>${esc(m.name)}</b>: `+Object.entries(m.metrics).slice(0,10).map(([k,v])=>`${esc(k)}=${esc(v)}`).join(", ")).join("<br>") : "<em style='color:var(--muted)'>no baseline anchors (faithful-0 / capability-floor task)</em>";
+      r+=`<tr><td class='rowh' style='min-width:200px'>${esc(t.name)}<span class='dom'>${esc(t.slug)}</span></td><td style='padding:5px 8px;white-space:normal;line-height:1.6'>${cell}</td></tr>`;
+    });
+    r+="</tbody></table></div>";
+    rb.innerHTML=r;
+  }
 }
 
 /* ---- MAB ---- */
@@ -191,6 +205,7 @@ async function openMLS(slug,arm){
   catch(e){ body.innerHTML=`<div class='loading'>No detail (${esc(e.message)})</div>`; return; }
   let h="";
   if(cell.caveat) h+=`<div class='caveat'><b>⚠ Caveat.</b> ${esc(cell.caveat)}</div>`;
+  if(cell.native&&cell.note) h+=`<div class='caveat'><b>Native agent.</b> ${esc(cell.note)}</div>`;
   h+=`<div class='kv'><span class='k'>Rescaled score</span><span>${cell.score==null?"—":cell.score+"  (50 = strong baseline, 100 = upper bound; 0 = faithful true-0)"}</span>`+
      `<span class='k'>Worker</span><span>${esc(cell.worker||"claude-fable-5")}</span>`+
      `<span class='k'>Runs (seeds)</span><span>${cm.n_runs} run(s), ${cm.n_scored} with a recorded metric</span></div>`;

@@ -6,6 +6,8 @@
  "score": 50.3,
  "worker": "claude-fable-5",
  "caveat": null,
+ "native": false,
+ "note": null,
  "master_output": {
   "idea": null,
   "proposal": "<think>\n\n</think>\n\n**Core idea:** Introduce a *dynamic block-length adaptation* that tunes `block_length` per step to trade off semi-autoregressive accuracy and fully-parallel speed, driven by the token prediction confidence: in early (low-confidence) steps, use short `block_length` to refine tokens locally; in later (high-confidence) steps, expand `block_length` to decode fully in parallel.\n\n**Non-trivial crux:** The schedule must smoothly interpolate between the two regimes while obeying the `block_length <= gen_length` constraint and ensuring that early short blocks never write into later positions, which requires carefully aligning the token selection logic with the block progression and keeping a single forward pass per step.",

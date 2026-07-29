@@ -6,6 +6,8 @@
  "score": 57.2,
  "worker": "claude-fable-5",
  "caveat": null,
+ "native": false,
+ "note": null,
  "master_output": {
   "idea": null,
   "proposal": "### Step-by-Step Reasoning\n\nTo improve the `SparseAttention` module, let's consider the specific context of the Needle-In-A-Haystack (NIH) retrieval task, which requires identifying relevant information within a large context. Traditional sparse attention mechanisms like sliding windows or block-sparsity might miss important long-range dependencies crucial for NIH tasks. We need a mechanism that can adaptively focus on potentially relevant information while maintaining the sparsity budget.\n\n### Core Idea\n\nIntroduce a **context-aware adaptive sparsity pattern** that leverages local and global context to dynamically adjust the attention pattern. Specifically, the module will compute a small number of global tokens (e.g., centroids) from the entire context, then use these centroids to guide the selection of local tokens for each query position. This way, the attention mechanism can focus on both local details and globally important tokens.\n\n### Non-Trivial Crux\n\nThe challenge lies in efficiently computing the global centroids and integrating them into the attention mechanism without violating the sparsity constraint. This involves designing a lightweight method to identify and utilize these centroids in the attention calculation, ensuring that the overall computational cost remains within the fixed sparsity budget.\n\nBy focusing on both local and global context, this approach aims to capture long-range dependencies effectively, improving performance on the NIH task while preserving the sparsity requirement.",

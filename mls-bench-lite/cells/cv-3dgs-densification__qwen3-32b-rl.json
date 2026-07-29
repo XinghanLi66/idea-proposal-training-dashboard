@@ -6,6 +6,8 @@
  "score": 0.0,
  "worker": "claude-fable-5",
  "caveat": null,
+ "native": false,
+ "note": null,
  "master_output": {
   "idea": "Core idea: Implement a gradient-curvature-based densification signal that dynamically adjusts split/clone thresholds using second-order curvature information, rather than relying on fixed thresholds or only first-order gradients.\n\nNon-trivial crux: Computing curvature requires Hessian approximations that are expensive and noisy in a rendering context, so I'll estimate it via finite differences of gradient norms between consecutive optimization steps while being careful to only update on even steps and use a small epsilon to control the finite difference tradeoff.",
   "proposal": "<think>\n\n</think>\n\nCore idea: Implement a gradient-curvature-based densification signal that dynamically adjusts split/clone thresholds using second-order curvature information, rather than relying on fixed thresholds or only first-order gradients.\n\nNon-trivial crux: Computing curvature requires Hessian approximations that are expensive and noisy in a rendering context, so I'll estimate it via finite differences of gradient norms between consecutive optimization steps while being careful to only update on even steps and use a small epsilon to control the finite difference tradeoff.",

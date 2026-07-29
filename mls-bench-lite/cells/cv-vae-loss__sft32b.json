@@ -6,6 +6,8 @@
  "score": 31.9,
  "worker": "claude-fable-5",
  "caveat": null,
+ "native": false,
+ "note": null,
  "master_output": {
   "idea": null,
   "proposal": "<think>\n\n</think>\n\nCore idea:  \nIntroduce a frequency-band-aware reconstruction loss by applying separate weights to different FFT frequency bands, with low frequencies (semantic structure) weighted more than high frequencies (texture/detail), and dynamically adjust the weighting schedule over training.\n\nNon-trivial crux:  \nThe weighting must be learned rather than fixed — the optimal frequency balance depends on the data and latent capacity, so a static schedule risks under-prioritizing either structure or texture; a fixed weighting at initialization and then freezing it can't adapt to model maturation.",

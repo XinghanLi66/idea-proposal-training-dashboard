@@ -6,6 +6,8 @@
  "score": 76.0,
  "worker": "claude-fable-5",
  "caveat": null,
+ "native": false,
+ "note": null,
  "master_output": {
   "idea": null,
   "proposal": "To tackle the challenge of designing a novel planning algorithm that outperforms standard derivative-free methods in leveraging a JEPA world model for goal-conditioned navigation, we can explore a hybrid approach that combines the strengths of model-based planning with reinforcement learning techniques. Specifically, we can incorporate a learned policy that guides the sampling process during planning. This policy could be pre-trained or fine-tuned using the same JEPA world model to provide more informed action proposals.\n\n### Core Idea:\nIntegrate a pre-trained policy into the planning loop to bias the sampling towards more promising action sequences. This policy can be derived from the same JEPA model or another compatible model trained specifically to guide exploration in the Two Rooms environment. By conditioning the action sampling on the output of this policy, we can leverage learned heuristics that help avoid local minima and improve convergence to optimal paths.\n\n### Non-trivial Crux:\nThe critical aspect is to balance between exploration and exploitation effectively. The pre-trained policy should not dominate the sampling process but rather serve as a guiding influence, allowing the planner to still explore diverse action sequences while being steered towards areas of the action space that have historically led to successful outcomes. This requires careful tuning of the policy's influence over the sampling distribution and ensuring that the planner remains flexible enough to adapt to varying initial conditions and goals.",

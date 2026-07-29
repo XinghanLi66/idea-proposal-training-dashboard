@@ -6,6 +6,8 @@
  "score": 0.0,
  "worker": "claude-fable-5",
  "caveat": "Uniform capability-floor 0.0 for all arms (real success_rate=0.0 in pod logs; CSV metrics are blank placeholders). 6 arms re-inserted after a leaderboard lock-contention window.",
+ "native": false,
+ "note": null,
  "master_output": {
   "idea": null,
   "proposal": "**Core idea:** Replace a single shared latent representation for policy and value function with **two dedicated networks**—a separate policy network and a separate value network—each with their own normalization and initialization, and connect the value function only to the policy's latent representation so it never sees the simulator state.\n\n**Non-trivial crux:** The design is only correct if the value function is deliberately kept ignorant of the simulator state; if it sees it, the whole 'generalization to real hardware' claim collapses. A shared latent space forces the policy to memorize simulator-specific features that the value function may never validate, creating the very leak the dual-representation is meant to eliminate.",

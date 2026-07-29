@@ -6,6 +6,8 @@
  "score": 0.0,
  "worker": "claude-fable-5",
  "caveat": null,
+ "native": false,
+ "note": null,
  "master_output": {
   "idea": null,
   "proposal": "<think>\n\n</think>\n\n**Core idea:** Inject position noise and reset opacities only when the average opacity gradient magnitude is low, so densification is guided by reconstruction demand rather than fixed schedule.\n\n**Non-trivial crux:** The gradient magnitude threshold must be scene-adaptive (a fraction of the running average, not a fixed number), and opacities should be reset to a warm value (e.g. 0.01) rather than cold zero to avoid stalling the optimizer.",

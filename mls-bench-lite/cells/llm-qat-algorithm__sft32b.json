@@ -6,6 +6,8 @@
  "score": 64.7,
  "worker": "claude-fable-5",
  "caveat": null,
+ "native": false,
+ "note": null,
  "master_output": {
   "idea": null,
   "proposal": "<think>\n\n</think>\n\nCore idea: Treat the per-group quantization scale as a *learned parameter* instead of an observed quantity, and add a small, bit-width-adaptive regularization to it — this turns the scale into a dual objective, minimizing reconstruction error while keeping it compact and bit-compatible. Replace STE with LSQ-style gradient estimation (learn scale+round in backward), and warm up the noise budget rather than the scale.\n\nNon-trivial crux: The regularization must be bit-width-aware — too much at INT4/3 and it over-constrains; too little at INT2 and the scale diverges — so it should decrease with bit-width and be scaled by the group size, not the global batch.",

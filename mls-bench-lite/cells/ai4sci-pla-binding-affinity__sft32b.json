@@ -6,6 +6,8 @@
  "score": 40.6,
  "worker": "claude-opus-4-8",
  "caveat": "Worker swapped to claude-opus-4-8 (fable-5 content-filter blocks protein tasks). Per-task swap, uniform across all arms.",
+ "native": false,
+ "note": null,
  "master_output": {
   "idea": null,
   "proposal": "<think>\n\n</think>\n\nCore idea: Replace the symmetric CIG+NIG heterogeneous aggregation with an asymmetric, edge-type-aware aggregation that separately computes ligand→pocket and pocket→ligand contributions before combining them, inspired by the dual-perspective modeling in EHIGN.\n\nNon-trivial crux: The edge-type-aware aggregation must maintain per-edge type normalization while correctly aligning the distinct intra-edge and inter-edge feature spaces, and the final prediction must be a single shared value per complex rather than two values needing correction.",

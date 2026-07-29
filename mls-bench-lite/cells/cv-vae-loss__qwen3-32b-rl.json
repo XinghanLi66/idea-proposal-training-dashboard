@@ -6,6 +6,8 @@
  "score": 2.9,
  "worker": "claude-fable-5",
  "caveat": null,
+ "native": false,
+ "note": null,
  "master_output": {
   "idea": "Core idea: Use the prism hypothesis to design a frequency-weighted L2 loss where low-frequency bands (semantic structure) are penalized more strongly than high-frequency bands (fine detail), with the weighting schedule itself trained as a learnable parameter vector.\n\nNon-trivial crux: The weighting must be learned per frequency band rather than assumed fixed, and the Fourier shift must be applied to center frequencies so that the low/high split is meaningful — otherwise the centering is arbitrary and the band separation collapses, which breaks the frequency-specific regularization.",
   "proposal": "<think>\n\n</think>\n\nCore idea: Use the prism hypothesis to design a frequency-weighted L2 loss where low-frequency bands (semantic structure) are penalized more strongly than high-frequency bands (fine detail), with the weighting schedule itself trained as a learnable parameter vector.\n\nNon-trivial crux: The weighting must be learned per frequency band rather than assumed fixed, and the Fourier shift must be applied to center frequencies so that the low/high split is meaningful — otherwise the centering is arbitrary and the band separation collapses, which breaks the frequency-specific regularization.",

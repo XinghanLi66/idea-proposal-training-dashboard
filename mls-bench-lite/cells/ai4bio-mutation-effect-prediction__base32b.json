@@ -6,6 +6,8 @@
  "score": 47.6,
  "worker": "claude-opus-4-8",
  "caveat": "Worker swapped to claude-opus-4-8 (fable-5 content-filter blocks protein tasks). Per-task swap, uniform across all arms.",
+ "native": false,
+ "note": null,
  "master_output": {
   "idea": null,
   "proposal": "To improve the `MutationPredictor` class for predicting the fitness effect of protein mutations, we need to focus on effectively leveraging both the mean-pooled embedding and the delta embedding. A novel approach could involve integrating attention mechanisms to weigh the importance of different dimensions in the embeddings more dynamically. This can help capture complex interactions within the high-dimensional space of protein embeddings.\n\n### Core Idea:\nIntroduce a multi-head self-attention mechanism to process the concatenated embedding and delta_embedding. This allows the model to dynamically emphasize relevant parts of the input features, which might be crucial for capturing nuanced effects of mutations.\n\n### Non-trivial Crux:\nThe challenge lies in designing an effective way to combine the self-attention output with the subsequent layers to ensure that the model captures both global and local features effectively while maintaining computational efficiency.",

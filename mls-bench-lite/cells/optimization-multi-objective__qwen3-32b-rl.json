@@ -6,6 +6,8 @@
  "score": 45.1,
  "worker": "claude-fable-5",
  "caveat": null,
+ "native": false,
+ "note": null,
  "master_output": {
   "idea": "**Core idea:** In the `survive` method, hybridize the environmental selection by combining decomposition (reference-vectors + subproblem scalarization) for convergence with an adaptive geometry-based distance metric for diversity, instead of using one paradigm alone.\n\n**Non-trivial crux:** The hybrid must be *biased toward the decomposition paradigm* (convergence) at the start, then smoothly transition toward the geometry-based metric (diversity) as the population nears the Pareto front, so that premature diversity overruling convergence is avoided.",
   "proposal": "<think>\n\n</think>\n\n**Core idea:** In the `survive` method, hybridize the environmental selection by combining decomposition (reference-vectors + subproblem scalarization) for convergence with an adaptive geometry-based distance metric for diversity, instead of using one paradigm alone.\n\n**Non-trivial crux:** The hybrid must be *biased toward the decomposition paradigm* (convergence) at the start, then smoothly transition toward the geometry-based metric (diversity) as the population nears the Pareto front, so that premature diversity overruling convergence is avoided.",
